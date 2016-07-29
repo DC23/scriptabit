@@ -43,7 +43,10 @@ Or, implement the feature yourself and submit a pull request.
 Development
 -----------
 
-To set up scriptabit for local development:
+Setting up your Git Repository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To set up `scriptabit` for local development:
 
 1. Fork the `scriptabit` repo on GitHub.
 2. Clone your fork locally::
@@ -75,6 +78,9 @@ To set up scriptabit for local development:
 
 6. Submit a pull request through the GitHub website.
 
+The Development Environment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 There is a makefile in the project root with targets for the most common
 development operations such as lint checks, running unit tests, building the
 documentation, and building installer packages. `tox` does not have a target,
@@ -90,6 +96,15 @@ incremented in all required files. Please see the bumpversion documentation for
 usage instructions, and do not edit the version strings directly.
 
 Version numbers follow the `Semantic versioning guidelines <semver.org>`_.
+
+I recommend using a Python virtual environment for development. Although not
+essential, it is helpful to isolate the project from other Python packages that
+may be installed. Once you create and activate the virtual environment, the
+command `make develop` will install all the development dependencies and
+`scriptabit` in develop mode. From then on, only changes to the setup files
+(such as adding new entry points) will require rerunning the `make develop`
+command.
+
 
 Pull Request Guidelines
 -----------------------

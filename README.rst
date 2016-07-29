@@ -2,9 +2,9 @@
 scriptabit
 ===============================
 
-Python scripting for Habitica via the API
+Python scripting and scenarios for Habitica.
 
-* Free software: Apache v2
+* Free software: Apache 2.0
 * Homepage: https://github.com/DC23/scriptabit
 * Documentation: https://scriptabit.readthedocs.org
 * Version: 0.1.0

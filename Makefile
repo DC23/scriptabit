@@ -13,7 +13,6 @@ help:
 	echo 'Targets supported are:'
 	echo
 	echo '  * clean: removes the build and directories, as well as __pycache__ and *.pyc files. Note that a clean also removes the generated documentation (as this is placed into build/docs).'
-	echo '  * sitepkg-develop: Use this only when you are using a virtual environment created with the --system-site-packages flag. It forcibly installs some packages into the virtual environment to work around issues where a package and its plugins are installed to different locations'
 	echo '  * install-deps: installs development and test dependencies into your virtual environment.'
 	echo '  * develop: installs scriptabit in development mode.'
 	echo '  * uninstall: removes the development package from pip.'
@@ -55,19 +54,6 @@ develop: install-deps
 uninstall:
 	pip uninstall --yes $(PACKAGE_NAME)
 	rm -rf *.egg-info/
-
-#--system-site-packages plugin issue workaround
-# To work correctly with virtual environments, sphinx, pytest, and all their
-# plugins must be installed into the virtual environment even if they are
-# already available in the site packages.
-# If additional plugins to sphinx and pytest are added to setup.py, they must
-# also be added here.
-.PHONY: sitepkg-develop
-sitepkg-develop: develop
-	pip install --ignore-installed \
-	sphinx \
-	pytest pytest-cov pytest-sugar \
-	ipython ipdb
 
 .PHONY: lint
 lint:
