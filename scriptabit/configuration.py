@@ -110,6 +110,13 @@ def __get_configuration():
         help='''Name of the authentication file section containing the Habitica
         credentials''')
 
+    parser.add(
+        '-url',
+        '--habitica-base-url',
+        required=False,
+        default='https://habitica.com/api/v3/',
+        help='''The base Habitica API URL''')
+
     # Scenarios
     parser.add(
         '-s',
