@@ -13,7 +13,9 @@ from builtins import *
 import logging
 import logging.config
 
+from .authentication import load_authentication_credentials
 from .configuration import __get_configuration
+from .habitica_service import *
 from .metadata import __version__
 
 
@@ -23,7 +25,7 @@ def __init_logging(logging_config_file):
 
     Args:
         logging_config_file (str): The logging configuration file.
-    """
+        """
 
     logging.config.fileConfig(logging_config_file)
     logging.getLogger(__name__).debug('Logging online')
@@ -44,16 +46,39 @@ def start_cli():
     # pylint: disable=broad-except
     try:
         if config.list_scenarios:
-            logging.getLogger(__name__).info('Listing available scenarios')
+            logging.getLogger(__name__).debug('Listing available scenarios')
+
         elif config.scenario:
+
+            # Test for server availability
+            server_up = is_server_up(config.habitica_api_url)
+
+            if not server_up:
+                raise ServerUnreachableError(
+                    "Habitica API at '%s' is unreachable or down" %
+                    config.habitica_api_url)
+
             logging.getLogger(__name__).info(
+                "Habitica API at '%s' is up" %
+                config.habitica_api_url)
+
+            # OK, server is reachable, get user's credentials
+            logging.getLogger(__name__).debug('Loading credentials')
+            auth_tokens = load_authentication_credentials(
+                config.auth_file, config.auth_section)
+
+            # Time to run the selected scenario
+            logging.getLogger(__name__).debug(
                 "Running '%s' scenario", config.scenario)
+
             # TODO: scenario factory and execution
         else:
             print_help()
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)
-    # pylint: enable=broad-except
+        # pylint: enable=broad-except
+
+    logging.getLogger(__name__).info("Exiting")
 
 
 if __name__ == 'main':
