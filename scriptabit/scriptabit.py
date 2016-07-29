@@ -14,10 +14,5 @@ def poisoner():
     print('scriptabit placeholder CLI entry point')
 
 
-def start_gui():
-    """ GUI entry point for scriptabit """
-    print('scriptabit placeholder GUI entry point')
-
-
 if __name__ == 'main':
     poisoner()

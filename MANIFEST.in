@@ -5,7 +5,6 @@ graft examples
 prune docs
 
 # Files to include
-include .coveragerc
 include pylintrc
 include AUTHORS.rst
 include CHANGELOG.rst

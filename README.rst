@@ -15,21 +15,23 @@ Installation
 
     pip install scriptabit
 
-Development
------------
+You also require an authentication credentials file containing your 
+`Habitica API Key and User ID <https://habitica.com/#/options/settings/api>`_.
+The default is to look for this information in `~/.auth.cfg`, but a different 
+path can be specified on the command line (or in the ini file).
+The file should have a typical ini file structure, with the following section::
 
-There is a makefile in the project root with targets for the most common
-development operations such as lint checks, running unit tests, building the
-documentation, and building installer packages. `tox` does not have a target,
-as `make tox` is more typing than `tox`.
+    [habitica]
+    userid = ; Paste your User ID here
+    apikey = ; Paste your API key here
 
-Run make with no target to see the list of targets::
+Additional sections can be added, and the section name to use can be supplied as
+a command-line argument.
 
-    $ make
+**Note that your API key is effectively a password to your Habitica account.**
+You should make sure the `.auth.cfg` file is protected, and never share 
+the key with others.
 
-`Bumpversion <https://pypi.python.org/pypi/bumpversion>`_ is used to manage the
-package version numbers. This ensures that the version number is correctly
-incremented in all required files. Please see the bumpversion documentation for
-usage instructions, and do not edit the version strings directly.
-
-Version numbers follow the `Semantic versioning guidelines <semver.org>`_.
+Usage
+-----
+To do.

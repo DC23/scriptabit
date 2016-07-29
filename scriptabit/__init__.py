@@ -4,11 +4,9 @@
     Python scripting for Habitica via the API
 """
 
-# import the CLI entry point
+# import the CLI entry points
 from .scriptabit import poisoner
 
-# import the GUI entry point
-from .scriptabit import start_gui
 
 
 __author__ = 'JugglinDan'
