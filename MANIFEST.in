@@ -1,0 +1,17 @@
+# Directories to include
+graft examples
+
+# Directories to exclude
+prune docs
+
+# Files to include
+include .coveragerc
+include pylintrc
+include AUTHORS.rst
+include CHANGELOG.rst
+include CONTRIBUTING.rst
+include LICENSE
+include README.rst
+
+# File patterns to exclude wherever they are found
+global-exclude *.py[co] __pycache__ *.so *.pyd
