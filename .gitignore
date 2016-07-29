@@ -16,3 +16,5 @@ __pycache__/
 
 # Scriptabit-specific files
 scriptabit.log
+.cache/
+.tox

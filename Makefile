@@ -19,6 +19,7 @@ help:
 	echo '  * test: runs py.test.'
 	echo '  * test-slow: runs py.test, including slow tests.'
 	echo '  * lint: runs pylint.'
+	echo '  * lintr: runs pylint with a full report.'
 	echo '  * html: builds the HTML documentation.'
 	echo '  * pdf: builds the documentation in PDF format.'
 	echo '  * latex: builds LaTeX source, used to generate other formats.'
@@ -57,7 +58,11 @@ uninstall:
 
 .PHONY: lint
 lint:
-	pylint ./$(PACKAGE_NAME)/
+	pylint -rn ./$(PACKAGE_NAME)/
+
+.PHONY: lintr
+lintr:
+	pylint -ry ./$(PACKAGE_NAME)/
 
 .PHONY: sdist
 sdist:

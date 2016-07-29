@@ -43,8 +43,8 @@ def load_authentication_credentials(
 
         try:
             credentials = {
-                'x-api-user': config.get(section, 'login'),
-                'x-api-key': config.get(section, 'password')
+                'x-api-user': config.get(section, 'userid'),
+                'x-api-key': config.get(section, 'apikey')
             }
         except NoSectionError:
             raise ConfigError("No '{0}' section in '{1}'".format(
