@@ -69,7 +69,12 @@ def __add_min_max_value(
 
 
 def __get_configuration():
-    """Parses and returns the program configuration."""
+    """Parses and returns the program configuration options.
+
+    Returns:
+        The options object, and a function that can be called to print the help
+        text.
+    """
 
     parser = configargparse.ArgParser(default_config_files=['./scriptabit.cfg'])
 
@@ -110,4 +115,18 @@ def __get_configuration():
         help='''Name of the authentication file section containing the Habitica
         credentials''')
 
-    return parser.parse_args()
+    # Scenarios
+    parser.add(
+        '-s',
+        '--scenario',
+        required=False,
+        help='''Select the scenario to run''')
+
+    parser.add(
+        '-ls',
+        '--list-scenarios',
+        required=False,
+        action='store_true',
+        help='''List available scenarios''')
+
+    return parser.parse_args(), parser.print_help

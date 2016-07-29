@@ -13,3 +13,6 @@ __pycache__/
 .project
 .idea/
 *.dat
+
+# Scriptabit-specific files
+scriptabit.log

@@ -5,7 +5,7 @@
 """
 
 # import the CLI entry points
-from .scriptabit import poisoner
+from .scriptabit import start_cli
 
 
 __author__ = 'JugglinDan'

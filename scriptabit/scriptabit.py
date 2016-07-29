@@ -29,11 +29,12 @@ def __init_logging(logging_config_file):
     logging.getLogger(__name__).debug('Logging online')
 
 
-def poisoner():
-    """ Command-line entry point for scriptabit Poisoner scenario """
+def start_cli():
+    """ Command-line entry point for scriptabit """
 
-    # TODO: I can wrap this entry-point boiler plate in a class
-    config = __get_configuration()
+    # TODO: build a list of available scenarios
+    # TODO: give all scenarios a chance to add new configuration options
+    config, print_help = __get_configuration()
     __init_logging(config.logging_config)
 
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
@@ -42,13 +43,18 @@ def poisoner():
     # everything is *exactly* the intent here.
     # pylint: disable=broad-except
     try:
-        pass
-        # TODO: call into the scenario execution class
+        if config.list_scenarios:
+            logging.getLogger(__name__).info('Listing available scenarios')
+        elif config.scenario:
+            logging.getLogger(__name__).info(
+                "Running '%s' scenario", config.scenario)
+            # TODO: scenario factory and execution
+        else:
+            print_help()
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)
     # pylint: enable=broad-except
 
 
 if __name__ == 'main':
-    config = __get_configuration()
-    config.help()
+    start_cli()
