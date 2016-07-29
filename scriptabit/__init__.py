@@ -8,7 +8,6 @@
 from .scriptabit import poisoner
 
 
-
 __author__ = 'JugglinDan'
 __email__ = 'jugglindan@gmail.com'
 __version__ = '0.1.0'
