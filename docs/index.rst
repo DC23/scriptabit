@@ -1,11 +1,18 @@
-Welcome to scriptabit's documentation!
-===========================================================
+scriptabit
+==========
+
+Python scripting and scenarios for Habitica.
+
+* Free software: Apache 2.0
+* Homepage: https://github.com/DC23/scriptabit
+* Documentation: https://scriptabit.readthedocs.org
+* Version: 0.1.0
 
 Contents
 --------
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     readme
     contributing

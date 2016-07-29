@@ -1,13 +1,8 @@
-===============================
-scriptabit
-===============================
+======
+Readme
+======
 
 Python scripting and scenarios for Habitica.
-
-* Free software: Apache 2.0
-* Homepage: https://github.com/DC23/scriptabit
-* Documentation: https://scriptabit.readthedocs.org
-* Version: 0.1.0
 
 Installation
 ------------
@@ -30,7 +25,10 @@ a command-line argument.
 
 **Note that your API key is effectively a password to your Habitica account.**
 You should make sure the `.auth.cfg` file is protected, and never share 
-the key with others.
+the key with others. On Linux and related systems, you can set the permissions
+as follows::
+
+    chmod 600 .auth.cfg
 
 Usage
 -----
