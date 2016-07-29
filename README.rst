@@ -4,6 +4,14 @@ Readme
 
 Python scripting and scenarios for Habitica.
 
+Roadmap
+-------
+The first version will be hard-coded with a single scenario - poisoning.
+For a later version I plan to use `Yapsy <http://yapsy.sourceforge.net/>`_ to 
+implement a plugin framework. This will allow scenarios to be defined as Python
+scripts in a configurable directory. These plugins will be able to leverage the
+common framework. How much value this will be is unclear.
+
 Installation
 ------------
 ::
