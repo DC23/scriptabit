@@ -33,16 +33,12 @@ setup(
     version='0.1.0',
     description='Python scripting for Habitica via the API',
     long_description=long_description,
-
-    # The project's main homepage.
     url='https://github.com/DC23/scriptabit',
+    license='Apache 2.0',
 
     # Author details
     author='JugglinDan',
     author_email='jugglindan@gmail.com',
-
-    # Choose your license
-    license='Apache v2',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -55,25 +51,24 @@ setup(
         #   6 - Mature
         'Development Status :: 2 - Pre-Alpha',
 
-        # Indicate who your project is intended for
-        'Intended Audience :: ',
-        'Topic :: Todo :: Todo',
-
-        # Pick your license as you wish (should match "license" above)
-        'License :: OSI Approved :: Apache v2',
-
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+
+        'Environment :: Console',
+        'Intended Audience :: End Users/Desktop',
+        'License :: OSI Approved :: Apache Software License',
+        'Operating System :: OS Independent',
+        'Topic :: Games/Entertainment :: Role-Playing',
+        'Topic :: Utilities',
     ],
 
     # What does your project relate to?
-    keywords='',
+    keywords='Habitica, HabitRPG',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -93,6 +88,7 @@ setup(
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
     install_requires=[
         'future',
+        'requests',
     ],
 
     # List additional groups of dependencies here (e.g. development
@@ -111,10 +107,8 @@ setup(
             'wheel',
         ],
         'test': [
-            'coverage',
             'pylint',
             'pytest',
-            'pytest-cov',
             'pytest-sugar',
             'tox',
         ],
@@ -137,12 +131,10 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     # Delete either or both of these if not required (and remove the corresponding imports in the package __init__.py
     entry_points={
-        
+
         'console_scripts': ['poisoner = scriptabit:poisoner',],
-        'gui_scripts': ['gui_entry_point = scriptabit:start_gui',],
-        
     },
 
     # Is your project zip safe?
-    # zip_safe=True,
+    zip_safe=True,
 )
