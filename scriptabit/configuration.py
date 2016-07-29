@@ -112,7 +112,7 @@ def __get_configuration():
 
     parser.add(
         '-url',
-        '--habitica-base-url',
+        '--habitica-api-url',
         required=False,
         default='https://habitica.com/api/v3/',
         help='''The base Habitica API URL''')
