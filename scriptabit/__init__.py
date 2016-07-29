@@ -7,6 +7,8 @@
 # import the CLI entry points
 from .scriptabit import start_cli
 
+from .habitica_service import *
+
 
 __author__ = 'JugglinDan'
 __email__ = 'jugglindan@gmail.com'
