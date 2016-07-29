@@ -35,22 +35,24 @@ def load_authentication_credentials(
             """
 
     credentials = {}
-    config_file_path = os.path.expanduser(config_file_path)
+    config_file_path = os.path.expandvars(os.path.expanduser(config_file_path))
 
-    with open(config_file_path) as config_file:
-        config = ConfigParser()
-        config.read_file(config_file)
+    if not os.path.exists(config_file_path):
+        raise ConfigError("File '{0}' not found".format(config_file_path))
 
-        try:
-            credentials = {
-                'x-api-user': config.get(section, 'userid'),
-                'x-api-key': config.get(section, 'apikey')
-            }
-        except NoSectionError:
-            raise ConfigError("No '{0}' section in '{1}'".format(
-                section, config_file_path))
-        except NoOptionError as error:
-            raise ConfigError("Missing option in auth file '{0}': {1}".format(
-                config_file_path, error.message))
+    config = ConfigParser()
+    config.read(config_file_path)
+
+    try:
+        credentials = {
+            'x-api-user': config.get(section, 'userid'),
+            'x-api-key': config.get(section, 'apikey')
+        }
+    except NoSectionError:
+        raise ConfigError("No '{0}' section in '{1}'".format(
+            section, config_file_path))
+    except NoOptionError as error:
+        raise ConfigError("Missing option in auth file '{0}': {1}".format(
+            config_file_path, error.message))
 
     return credentials
