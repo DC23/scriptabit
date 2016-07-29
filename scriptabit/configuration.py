@@ -3,6 +3,7 @@
 """
 
 # Disable some pylint warnings caused by future
+# TODO: these pylint pragmas are being ignored. Added to pylintrc for now
 # pylint: disable=unused-wildcard-import
 # pylint: disable=redefined-builtin
 # pylint: disable=wildcard-import

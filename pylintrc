@@ -9,7 +9,7 @@
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
-ignore=CVS,tests
+ignore=CVS,tests,.git
 
 # Pickle collected data for later comparisons.
 persistent=yes
@@ -35,7 +35,7 @@ load-plugins=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=locally-disabled
+disable=locally-disabled,locally-enabled,redefined-builtin,wildcard-import,unused-wildcard-import
 
 
 [REPORTS]
@@ -244,7 +244,7 @@ logging-modules=logging
 [DESIGN]
 
 # Maximum number of arguments for function / method
-max-args=5
+max-args=7
 
 # Argument names that match this expression will be ignored. Default to name
 # with leading underscore
