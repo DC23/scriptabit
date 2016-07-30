@@ -12,11 +12,12 @@ from builtins import *
 
 import logging
 import logging.config
+import requests
 
 from .authentication import load_authentication_credentials
 from .errors import ServerUnreachableError
 from .configuration import __get_configuration
-from .habitica_service import *
+from .habitica_service import HabiticaService
 from .metadata import __version__
 
 
@@ -51,21 +52,30 @@ def start_cli():
 
         elif config.scenario:
 
-            # Test for server availability
-            server_up = is_server_up(config.habitica_api_url)
+            #--------------------------------------------------
+            # Running a scenario. Get everything warmed up and online
+            #--------------------------------------------------
 
-            if not server_up:
+            # user credentials
+            logging.getLogger(__name__).debug('Loading credentials')
+            auth_tokens = load_authentication_credentials(
+                config.auth_file,
+                config.auth_section)
+
+            # Habitica Service
+            habitica_service = HabiticaService(
+                requests,
+                auth_tokens,
+                config.habitica_api_url)
+
+            # Test for server availability
+            if not habitica_service.is_server_up():
                 raise ServerUnreachableError(
-                    "Habitica API at '%s' is unreachable or down" %
-                    config.habitica_api_url)
+                    "Habitica API at '{0}' is unreachable or down".format(
+                        config.habitica_api_url))
 
             logging.getLogger(__name__).info("Habitica API at '%s' is up",
                                              config.habitica_api_url)
-
-            # OK, server is reachable, get user's credentials
-            logging.getLogger(__name__).debug('Loading credentials')
-            auth_tokens = load_authentication_credentials(
-                config.auth_file, config.auth_section)
 
             # Time to run the selected scenario
             logging.getLogger(__name__).debug(

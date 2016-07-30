@@ -71,7 +71,9 @@ def __get_configuration():
         text.
     """
 
-    parser = configargparse.ArgParser(default_config_files=['./scriptabit.cfg'])
+    parser = configargparse.ArgParser(
+        formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
+        default_config_files=['./scriptabit.cfg'])
 
     # General options
     parser.add(

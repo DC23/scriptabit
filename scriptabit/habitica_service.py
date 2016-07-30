@@ -11,23 +11,41 @@ from __future__ import (
 from builtins import *
 
 import logging
-import requests
 
-# Disable some pylint errors caused by perfectly correct use of requests
-# pylint: disable=invalid-name
-# pylint: disable=no-member
 
-def __get(base_url, command, headers):
-    """Utility wrapper around a get"""
+class HabiticaService(object):
+    """ Thin and minimal Habitica API service interface.  """
 
-    return requests.get(base_url+command, headers=headers)
+    __http_service = None
+    __headers = {}
+    __base_url = ''
 
-def is_server_up(base_url='https://habitica.com/api/v3/'):
-    """Check that the Habitica API is reachable and up"""
+    def __init__(self, http_service, headers, base_url):
+        """
+        Args:
+            http_service: A HTTP service with a requests-like interface.
+            headers: HTTP headers.
+            base_url: The base URL for requests.
+        """
 
-    url = base_url + '/status'
-    logging.getLogger(__name__).debug(url)
-    r = requests.get(base_url+'/status')
-    if r.status_code == requests.codes.ok:
-        return r.json()['data']['status'] == 'up'
-    return False
+        self.__http_service = http_service
+        self.__headers = headers
+        self.__base_url = base_url
+        logging.getLogger(__name__).debug('HabiticaService online')
+
+    def __get(self, command):
+        """Utility wrapper around a HTTP get"""
+
+        return self.__http_service.get(
+            self.__base_url + command,
+            headers=self.__headers)
+
+    def is_server_up(self):
+        """Check that the Habitica API is reachable and up"""
+
+        url = self.__base_url + 'status'
+        logging.getLogger(__name__).debug('GET %s', url)
+        response = self.__http_service.get(url)
+        if response.status_code == self.__http_service.codes.ok:
+            return response.json()['data']['status'] == 'up'
+        return False

@@ -7,14 +7,21 @@ from __future__ import (
 )
 from builtins import *
 import pytest
+import requests
 from pkg_resources import resource_filename
-# from .common import expect_fail, slow
 
-from scriptabit import habitica_service as hs
+from scriptabit.habitica_service import HabiticaService
 
 
-# TODO: pytest is not currently detecting the conftest.py file,
-# so the slow annotation won't work
-# @slow
-def test_server_status():
-    assert hs.is_server_up() == True
+class TestHabiticaService(object):
+
+    hs = None
+
+    def setup_class(cls):
+        cls.hs = HabiticaService(
+            requests,
+            {},
+            'https://habitica.com/api/v3/')
+
+    def test_server_status(self):
+        assert self.hs.is_server_up() == True
