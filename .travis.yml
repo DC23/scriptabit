@@ -4,6 +4,9 @@ python:
   - "3.4"
   - "3.5"
 # command to install dependencies
-install: "pip install -e.[dev,test]"
+install: 
+  - python setup.py
+  - pip install -e.[dev,test]
+
 # command to run tests
-py.test
+script: py.test
