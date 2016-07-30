@@ -22,6 +22,9 @@ planning. Task and feature planning is carried out in a private
 
 Installation
 ------------
+Note that the code is not yet in `PyPI <https://pypi.python.org/pypi>`_, 
+so until then cloning this repo and using setuptools to install is your 
+best option.
 
 ::
 
