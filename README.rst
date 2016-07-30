@@ -3,6 +3,9 @@ Readme
 
 Python scripting and scenarios for Habitica.
 
+.. image:: https://travis-ci.org/DC23/scriptabit.svg?branch=master
+    :target: https://travis-ci.org/DC23/scriptabit
+
 Roadmap
 -------
 
