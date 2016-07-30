@@ -90,6 +90,7 @@ setup(
         'configargparse',
         'configparser',
         'future',
+        'iso8601',
         'requests',
     ],
 

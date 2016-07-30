@@ -13,6 +13,8 @@ from builtins import *
 import logging
 import pprint
 
+import iso8601
+
 
 class UtilityFunctions(object):
     """Runs the user-selected scriptabit utility functions"""
@@ -44,7 +46,10 @@ class UtilityFunctions(object):
         print()
 
         print(data['profile']['name'])
-        print("Last Cron: {0}".format(data['lastCron']))
+
+        print("Last Cron: {0}".format(
+            iso8601.parse_date(data['lastCron']).astimezone()))
+
         pprint.pprint(data['stats'])
 
         print("--------------------")
