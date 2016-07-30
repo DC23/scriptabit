@@ -5,6 +5,10 @@ Python scripting and scenarios for Habitica.
 
 .. image:: https://travis-ci.org/DC23/scriptabit.svg?branch=master
     :target: https://travis-ci.org/DC23/scriptabit
+    
+.. image:: https://readthedocs.org/projects/scriptabit/badge/?version=latest
+    :target: http://scriptabit.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 Roadmap
 -------
