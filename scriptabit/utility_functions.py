@@ -22,6 +22,7 @@ class UtilityFunctions(object):
     __config = None
     __hs = None
 
+    # TODO: can I move the definition of the utility CLI args to this class?
     def __init__(self, config, habitica_service):
 
         logging.getLogger(__name__).info('UtilityFunctions online')
