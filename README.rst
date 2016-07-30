@@ -16,9 +16,9 @@ After that, the plan is for:
    -  Detect task activity
    -  Detect skill and reward use (health potions, skills)
 
-**Note** that apart from bugs, I don't use the GitHub issue board for
-planning. Task and feature planning is carried out in a private Trello
-board. Access can be provided on request.
+**Note** that apart from bugs, I don't use the GitHub issue list for
+planning. Task and feature planning is carried out in a private 
+`Trello <https://trello.com>`_ board. Access can be provided on request.
 
 Installation
 ------------
