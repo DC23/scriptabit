@@ -14,6 +14,7 @@ import logging
 import logging.config
 
 from .authentication import load_authentication_credentials
+from .errors import ServerUnreachableError
 from .configuration import __get_configuration
 from .habitica_service import *
 from .metadata import __version__
@@ -58,9 +59,8 @@ def start_cli():
                     "Habitica API at '%s' is unreachable or down" %
                     config.habitica_api_url)
 
-            logging.getLogger(__name__).info(
-                "Habitica API at '%s' is up" %
-                config.habitica_api_url)
+            logging.getLogger(__name__).info("Habitica API at '%s' is up",
+                                             config.habitica_api_url)
 
             # OK, server is reachable, get user's credentials
             logging.getLogger(__name__).debug('Loading credentials')
