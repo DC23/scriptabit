@@ -119,6 +119,14 @@ def __get_configuration():
         default='https://habitica.com/api/v3/',
         help='''The base Habitica API URL''')
 
+    # Utility functions
+    parser.add(
+        '-sud',
+        '--show-user-data',
+        required=False,
+        action='store_true',
+        help='''Print the user data''')
+
     # Scenarios
     parser.add(
         '-s',

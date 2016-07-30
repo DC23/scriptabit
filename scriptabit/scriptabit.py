@@ -15,10 +15,11 @@ import logging.config
 import requests
 
 from .authentication import load_authentication_credentials
-from .errors import ServerUnreachableError
 from .configuration import __get_configuration
+from .errors import ServerUnreachableError
 from .habitica_service import HabiticaService
 from .metadata import __version__
+from .utility_functions import UtilityFunctions
 
 
 def __init_logging(logging_config_file):
@@ -38,7 +39,7 @@ def start_cli():
 
     # TODO: build a list of available scenarios
     # TODO: give all scenarios a chance to add new configuration options
-    config, print_help = __get_configuration()
+    config, _ = __get_configuration()
     __init_logging(config.logging_config)
 
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
@@ -49,11 +50,10 @@ def start_cli():
     try:
         if config.list_scenarios:
             logging.getLogger(__name__).debug('Listing available scenarios')
-
-        elif config.scenario:
-
+        else:
             #--------------------------------------------------
-            # Running a scenario. Get everything warmed up and online
+            # Running against Habitica.
+            # Get everything warmed up and online.
             #--------------------------------------------------
 
             # user credentials
@@ -77,13 +77,16 @@ def start_cli():
             logging.getLogger(__name__).info("Habitica API at '%s' is up",
                                              config.habitica_api_url)
 
-            # Time to run the selected scenario
-            logging.getLogger(__name__).debug(
-                "Running '%s' scenario", config.scenario)
+            # Utility functions
+            utility = UtilityFunctions(config, habitica_service)
+            utility.run()
 
-            # TODO: scenario factory and execution
-        else:
-            print_help()
+            if config.scenario:
+                # Time to run the selected scenario
+                logging.getLogger(__name__).debug(
+                    "Running '%s' scenario", config.scenario)
+
+                # TODO: scenario factory and execution
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)
         # pylint: enable=broad-except

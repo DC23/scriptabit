@@ -36,16 +36,22 @@ class HabiticaService(object):
     def __get(self, command):
         """Utility wrapper around a HTTP get"""
 
-        return self.__http_service.get(
-            self.__base_url + command,
-            headers=self.__headers)
+        url = self.__base_url + command
+        logging.getLogger(__name__).debug('GET %s', url)
+        return self.__http_service.get(url, headers=self.__headers)
 
     def is_server_up(self):
         """Check that the Habitica API is reachable and up"""
 
-        url = self.__base_url + 'status'
-        logging.getLogger(__name__).debug('GET %s', url)
-        response = self.__http_service.get(url)
+        response = self.__get('status')
         if response.status_code == self.__http_service.codes.ok:
             return response.json()['data']['status'] == 'up'
         return False
+
+    def get_user(self):
+        """Get authenticated user data"""
+
+        response = self.__get('user')
+        if response.status_code == self.__http_service.codes.ok:
+            return response.json()['data']
+        return None
