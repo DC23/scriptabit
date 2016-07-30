@@ -37,4 +37,15 @@ class UtilityFunctions(object):
 
         logging.getLogger(__name__).debug('Getting user data')
         data = self.__hs.get_user()
-        pprint.pprint(data)
+
+        print()
+        print("Summarised User Data")
+        print("--------------------")
+        print()
+
+        print(data['profile']['name'])
+        print("Last Cron: {0}".format(data['lastCron']))
+        pprint.pprint(data['stats'])
+
+        print("--------------------")
+        print()
