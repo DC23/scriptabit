@@ -4,9 +4,11 @@
     Python scripting for Habitica via the API
 """
 
-from .scriptabit import start_cli
 from .authentication import load_authentication_credentials
-from .habitica_service import *
+from .configuration import get_configuration
+from .habitica_service import HabiticaService
+from .scriptabit import start_cli
+from .utility_functions import UtilityFunctions
 
 
 from .metadata import __author__, __email__, __version__

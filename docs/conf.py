@@ -27,7 +27,7 @@ if os.getenv('SPELLCHECK'):
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'scriptabit'
-copyright = '2016, Your organisation here'
+copyright = '2016, DC23'
 version = release = '0.1.0'
 pygments_style = 'perldoc'
 templates_path = ['.']
@@ -38,6 +38,3 @@ html_sidebars = {
    '**': ['searchbox.html', 'globaltoc.html', 'sourcelink.html'],
 }
 html_short_title = '%s-%s' % (project, version)
-html_theme_options = {
-    #'githuburl': 'https://github.com/dc23/sambuca/'
-}

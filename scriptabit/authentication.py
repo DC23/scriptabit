@@ -28,11 +28,11 @@ def load_authentication_credentials(
 
     Returns:
         A dictionary containing the selected credentials:
-            {
+        {
             'x-api-user': 'the user name',
             'x-api-key':  'the user API key',
-            }
-            """
+        }
+    """
 
     credentials = {}
     config_file_path = os.path.expandvars(os.path.expanduser(config_file_path))

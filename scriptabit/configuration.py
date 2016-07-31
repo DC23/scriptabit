@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" pytrellabit configuration definition and loading.
+""" Configuration and command-line arguments
 """
 
 # Ensure backwards compatibility with Python 2
@@ -63,8 +63,10 @@ def __add_min_max_value(
         help=help_template.substitute(mmi='initial', name=basename))
 
 
-def __get_configuration():
-    """Parses and returns the program configuration options.
+def get_configuration():
+    """Parses and returns the program configuration options,
+    taken from a combination of ini-style config file, and
+    command line arguments.
 
     Returns:
         The options object, and a function that can be called to print the help

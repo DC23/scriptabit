@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" scriptabit error classes """
+""" Error classes """
 
 # Ensure backwards compatibility with Python 2
 from __future__ import (
@@ -11,6 +11,7 @@ from builtins import *
 
 
 # pylint: disable=super-init-not-called
+
 class ConfigError(Exception):
     """Configuration file error"""
 

@@ -17,7 +17,7 @@ import iso8601
 
 
 class UtilityFunctions(object):
-    """Runs the user-selected scriptabit utility functions"""
+    """Runs the CLI-selected scriptabit utility functions"""
 
     __config = None
     __hs = None

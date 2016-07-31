@@ -15,7 +15,7 @@ import logging.config
 import requests
 
 from .authentication import load_authentication_credentials
-from .configuration import __get_configuration
+from .configuration import get_configuration
 from .errors import ServerUnreachableError
 from .habitica_service import HabiticaService
 from .metadata import __version__

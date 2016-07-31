@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Thin and minimal Habitica API service interface.
+""" Habitica API service interface.
 """
 
 # Ensure backwards compatibility with Python 2
@@ -14,7 +14,7 @@ import logging
 
 
 class HabiticaService(object):
-    """ Thin and minimal Habitica API service interface.  """
+    """ Habitica API service interface.  """
 
     __http_service = None
     __headers = {}
