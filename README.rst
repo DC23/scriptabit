@@ -10,6 +10,11 @@ Python scripting and scenarios for Habitica.
     :target: http://scriptabit.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+* Free software: Apache 2.0
+* Homepage: https://github.com/DC23/scriptabit
+* Documentation: https://scriptabit.readthedocs.org
+* Version: 0.1.0
+
 Roadmap
 -------
 
