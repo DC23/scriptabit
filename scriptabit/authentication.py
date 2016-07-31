@@ -9,13 +9,9 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-
 import os
-
 from configparser import ConfigParser, NoSectionError, NoOptionError
-
 from .errors import ConfigError
-
 
 def load_authentication_credentials(
         config_file_path='~/.auth.cfg',
@@ -26,12 +22,15 @@ def load_authentication_credentials(
         config_file_path (str): Path to the configuration file.
         section (str): Configuration file section name.
 
-    Returns:
-        A dictionary containing the selected credentials:
+    Returns: dict: the selected credentials::
+
         {
             'x-api-user': 'the user name',
             'x-api-key':  'the user API key',
         }
+
+    Raises:
+        ConfigError: specified file section or options are missing
     """
 
     credentials = {}

@@ -41,7 +41,10 @@ class HabiticaService(object):
         return self.__http_service.get(url, headers=self.__headers)
 
     def is_server_up(self):
-        """Check that the Habitica API is reachable and up"""
+        """Check that the Habitica API is reachable and up
+
+        Returns: bool: `True` if the server is reachable, otherwise `False`.
+        """
 
         response = self.__get('status')
         if response.status_code == self.__http_service.codes.ok:
@@ -49,7 +52,11 @@ class HabiticaService(object):
         return False
 
     def get_user(self):
-        """Get authenticated user data"""
+        """Gets the authenticated user data.
+
+        Returns: dictionary: a raw dictionary mapped directly from the JSON API
+        response.
+        """
 
         response = self.__get('user')
         if response.status_code == self.__http_service.codes.ok:

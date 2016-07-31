@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Entry points for scriptabit
+"""
 """
 
 # Ensure backwards compatibility with Python 2

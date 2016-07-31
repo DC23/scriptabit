@@ -1,7 +1,3 @@
-==========
-scriptabit
-==========
-
 scriptabit
 ----------
 .. automodule:: scriptabit.scriptabit

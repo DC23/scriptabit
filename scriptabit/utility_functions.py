@@ -17,7 +17,10 @@ import iso8601
 
 
 class UtilityFunctions(object):
-    """Runs the CLI-selected scriptabit utility functions"""
+    """Runs the CLI-selected scriptabit utility functions.
+    These are a collection of single-shot functions that get executed outside
+    the primary scenario scripting framework.
+    """
 
     __config = None
     __hs = None
