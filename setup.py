@@ -113,6 +113,7 @@ setup(
             'pylint',
             'pytest',
             'pytest-sugar',
+            'requests-mock',
             'tox',
         ],
     },
