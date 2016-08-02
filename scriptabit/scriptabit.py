@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+""" Scriptabit: Python scripting for Habitica.
 """
 
 # Ensure backwards compatibility with Python 2
@@ -39,7 +39,7 @@ def start_cli():
 
     # TODO: build a list of available scenarios
     # TODO: give all scenarios a chance to add new configuration options
-    config, _ = __get_configuration()
+    config, _ = get_configuration()
     __init_logging(config.logging_config)
 
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
