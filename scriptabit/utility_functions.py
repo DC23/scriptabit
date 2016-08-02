@@ -38,15 +38,44 @@ class UtilityFunctions(object):
         if self.__config.show_user_data:
             self.show_user_data()
 
-        if self.__config.set_health >= 0:
-            self.set_health(self.__config.set_health)
+        if self.__config.set_hp >= 0:
+            self.set_health(self.__config.set_hp)
+
+        if self.__config.set_mp >= 0:
+            self.set_mana(self.__config.set_mp)
+
+        if self.__config.set_xp >= 0:
+            self.set_xp(self.__config.set_xp)
 
     def set_health(self, hp):
         """Sets the user health to the specified value"""
 
         old_hp = self.__hs.get_user_stats()['hp']
         new_hp = self.__hs.set_hp(hp)
-        logging.getLogger(__name__).info('HP changed from %f to %f', old_hp, new_hp)
+        logging.getLogger(__name__).info(
+            'HP changed from %f to %f',
+            old_hp,
+            new_hp)
+
+    def set_xp(self, xp):
+        """Sets the user experience points to the specified value"""
+
+        old_xp = self.__hs.get_user_stats()['exp']
+        new_xp = self.__hs.set_exp(xp)
+        logging.getLogger(__name__).info(
+            'XP changed from %f to %f',
+            old_xp,
+            new_xp)
+
+    def set_mana(self, mp):
+        """Sets the user mana to the specified value"""
+
+        old_mp = self.__hs.get_user_stats()['mp']
+        new_mp = self.__hs.set_mp(mp)
+        logging.getLogger(__name__).info(
+            'MP changed from %f to %f',
+            old_mp,
+            new_mp)
 
     def show_user_data(self):
         """Shows the user data"""

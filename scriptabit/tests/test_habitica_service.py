@@ -30,7 +30,9 @@ class TestHabiticaService(object):
                         hp=47.21,
                         lvl=4,
                         exp=34,
-                        toNextLevel=180):
+                        toNextLevel=180,
+                        mp=42,
+                        maxMP=55):
         return json.dumps({'data':
                            {'id':_id,
                             'stats': {
@@ -43,6 +45,8 @@ class TestHabiticaService(object):
                                 'lvl':lvl,
                                 'exp':exp,
                                 'toNextLevel':toNextLevel,
+                                'mp':mp,
+                                'maxMP':maxMP,
                             }}})
 
     def setup_class(cls):
@@ -92,3 +96,38 @@ class TestHabiticaService(object):
     def test_set_hp_too_low(self):
         with (pytest.raises(ArgumentOutOfRangeError)):
             self.hs.set_hp(-1)
+
+    def test_set_mp(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user',
+                  text=self._get_stats_json(mp=30))
+            m.put('https://habitica.com/api/v3/user',
+                  text=self._get_stats_json(mp=16.5))
+            new_mp = self.hs.set_mp(16.5)
+
+            assert new_mp == 16.5
+
+    def test_set_hp_too_high(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user',
+                  text=self._get_stats_json(maxMP=60))
+            with (pytest.raises(ArgumentOutOfRangeError)):
+                self.hs.set_mp(60.1)
+
+    def test_set_hp_too_low(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user',
+                  text=self._get_stats_json(maxMP=60))
+            with (pytest.raises(ArgumentOutOfRangeError)):
+                self.hs.set_mp(-1)
+
+    def test_set_xp(self):
+        with requests_mock.mock() as m:
+            m.put('https://habitica.com/api/v3/user',
+                  text=self._get_stats_json(exp=168, toNextLevel=180))
+            new_exp = self.hs.set_exp(168)
+
+    def test_set_xp_too_low(self):
+        with (pytest.raises(ArgumentOutOfRangeError)):
+            self.hs.set_exp(-1)
+

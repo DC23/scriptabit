@@ -137,6 +137,22 @@ def get_configuration():
         required=False,
         help='''Set the user's current HP''')
 
+    parser.add(
+        '-mp',
+        '--set-mp',
+        type=float,
+        default=-1,
+        required=False,
+        help='''Set the user's current MP (mana points)''')
+
+    parser.add(
+        '-xp',
+        '--set-xp',
+        type=float,
+        default=-1,
+        required=False,
+        help='''Set the user's current XP (experience points)''')
+
     # Scenarios
     parser.add(
         '-s',

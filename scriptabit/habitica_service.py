@@ -82,8 +82,10 @@ class HabiticaService(object):
     def set_hp(self, hp):
         """ Sets the user's HP.
 
-        Returns: dictionary: a raw dictionary mapped directly from the JSON API
-        response.
+        Args:
+            hp (float): The new HP value.
+
+        Returns: float: The new HP value, extracted from the JSON response data.
         """
 
         if hp > 50:
@@ -94,4 +96,41 @@ class HabiticaService(object):
         response = self.__put('user', {'stats.hp': hp})
         if response.status_code == requests.codes.ok:
             return response.json()['data']['stats']['hp']
+        return None
+
+    def set_mp(self, mp):
+        """ Sets the user's MP (mana points).
+
+        Args:
+            mp (float): The new MP value.
+
+        Returns: float: The new MP value, extracted from the JSON response data.
+        """
+
+        max_mp = self.get_user()['stats']['mp']
+        if mp > max_mp:
+            raise ArgumentOutOfRangeError("mp > {0}".format(max_mp))
+        if mp < 0:
+            raise ArgumentOutOfRangeError("mp < 0")
+
+        response = self.__put('user', {'stats.mp': mp})
+        if response.status_code == requests.codes.ok:
+            return response.json()['data']['stats']['mp']
+        return None
+
+    def set_exp(self, exp):
+        """ Sets the user's XP (experience points).
+
+        Args:
+            exp (float): The new XP value.
+
+        Returns: float: The new XP value, extracted from the JSON response data.
+        """
+
+        if exp < 0:
+            raise ArgumentOutOfRangeError("exp < 0")
+
+        response = self.__put('user', {'stats.exp': exp})
+        if response.status_code == requests.codes.ok:
+            return response.json()['data']['stats']['exp']
         return None
