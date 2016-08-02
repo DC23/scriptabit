@@ -130,8 +130,8 @@ def get_configuration():
         help='''Print the user data''')
 
     parser.add(
-        '-shp',
-        '--set-health',
+        '-hp',
+        '--set-hp',
         type=float,
         default=-1,
         required=False,
