@@ -15,7 +15,7 @@ import requests
 
 
 class HabiticaService(object):
-    """ Habitica API service interface.  """
+    """ Habitica API service interface. """
 
     __headers = {}
     __base_url = ''
@@ -69,3 +69,4 @@ class HabiticaService(object):
         """
 
         return self.get_user()['stats']
+

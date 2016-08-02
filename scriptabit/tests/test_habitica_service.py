@@ -75,3 +75,5 @@ class TestHabiticaService(object):
             assert stats['lvl'] == 4
             assert stats['exp'] == 34
             assert stats['toNextLevel'] == 180
+
+    
