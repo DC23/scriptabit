@@ -12,6 +12,7 @@ import requests
 import requests_mock
 from pkg_resources import resource_filename
 
+from scriptabit.errors import ArgumentOutOfRangeError
 from scriptabit.habitica_service import HabiticaService
 
 
@@ -76,4 +77,18 @@ class TestHabiticaService(object):
             assert stats['exp'] == 34
             assert stats['toNextLevel'] == 180
 
-    
+    def test_set_hp(self):
+        with requests_mock.mock() as m:
+            m.put('https://habitica.com/api/v3/user',
+                  text=self._get_stats_json(hp=10))
+            new_hp = self.hs.set_hp(10)
+
+            assert new_hp == 10
+
+    def test_set_hp_too_high(self):
+        with (pytest.raises(ArgumentOutOfRangeError)):
+            self.hs.set_hp(51)
+
+    def test_set_hp_too_low(self):
+        with (pytest.raises(ArgumentOutOfRangeError)):
+            self.hs.set_hp(-1)

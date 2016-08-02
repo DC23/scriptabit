@@ -13,6 +13,8 @@ from builtins import *
 import logging
 import requests
 
+from .errors import ArgumentOutOfRangeError
+
 
 class HabiticaService(object):
     """ Habitica API service interface. """
@@ -32,11 +34,18 @@ class HabiticaService(object):
         logging.getLogger(__name__).debug('HabiticaService online')
 
     def __get(self, command):
-        """Utility wrapper around a HTTP get"""
+        """Utility wrapper around a HTTP GET"""
 
         url = self.__base_url + command
         logging.getLogger(__name__).debug('GET %s', url)
         return requests.get(url, headers=self.__headers)
+
+    def __put(self, command, data):
+        """Utility wrapper around a HTTP PUT"""
+
+        url = self.__base_url + command
+        logging.getLogger(__name__).debug('PUT %s', url)
+        return requests.put(url, headers=self.__headers, data=data)
 
     def is_server_up(self):
         """Check that the Habitica API is reachable and up
@@ -70,3 +79,19 @@ class HabiticaService(object):
 
         return self.get_user()['stats']
 
+    def set_hp(self, hp):
+        """ Sets the user's HP.
+
+        Returns: dictionary: a raw dictionary mapped directly from the JSON API
+        response.
+        """
+
+        if hp > 50:
+            raise ArgumentOutOfRangeError("hp > 50")
+        if hp < 0:
+            raise ArgumentOutOfRangeError("hp < 0")
+
+        response = self.__put('user', {'stats.hp': hp})
+        if response.status_code == requests.codes.ok:
+            return response.json()['data']['stats']['hp']
+        return None
