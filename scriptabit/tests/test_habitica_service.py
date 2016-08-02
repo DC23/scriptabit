@@ -20,7 +20,6 @@ class TestHabiticaService(object):
 
     def setup_class(cls):
         cls.hs = HabiticaService(
-            requests,
             {},
             'https://habitica.com/api/v3/')
 

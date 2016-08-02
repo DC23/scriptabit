@@ -12,7 +12,6 @@ from builtins import *
 
 import logging
 import logging.config
-import requests
 
 from .authentication import load_authentication_credentials
 from .configuration import get_configuration
@@ -64,7 +63,6 @@ def start_cli():
 
             # Habitica Service
             habitica_service = HabiticaService(
-                requests,
                 auth_tokens,
                 config.habitica_api_url)
 
