@@ -38,6 +38,16 @@ class UtilityFunctions(object):
         if self.__config.show_user_data:
             self.show_user_data()
 
+        if self.__config.set_health >= 0:
+            self.set_health(self.__config.set_health)
+
+    def set_health(self, hp):
+        """Sets the user health to the specified value"""
+
+        old_hp = self.__hs.get_user_stats()['hp']
+        new_hp = self.__hs.set_hp(hp)
+        logging.getLogger(__name__).info('HP changed from %f to %f', old_hp, new_hp)
+
     def show_user_data(self):
         """Shows the user data"""
 

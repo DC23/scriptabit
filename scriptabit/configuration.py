@@ -129,6 +129,14 @@ def get_configuration():
         action='store_true',
         help='''Print the user data''')
 
+    parser.add(
+        '-shp',
+        '--set-health',
+        type=float,
+        default=-1,
+        required=False,
+        help='''Set the user's current HP''')
+
     # Scenarios
     parser.add(
         '-s',
