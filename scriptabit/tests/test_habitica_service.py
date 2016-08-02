@@ -6,6 +6,7 @@ from __future__ import (
     unicode_literals,
 )
 from builtins import *
+import json
 import pytest
 import requests
 import requests_mock
@@ -19,6 +20,7 @@ class TestHabiticaService(object):
     hs = None
 
     def _get_stats_json(self,
+                        _id='this is not a common guid',
                         con=10,
                         _int=11,
                         per=12,
@@ -28,42 +30,19 @@ class TestHabiticaService(object):
                         lvl=4,
                         exp=34,
                         toNextLevel=180):
-        return '''{"data": {
-        "stats": {"buffs": {"con": 2,
-        "int": 2,
-        "per": 2,
-        "seafoam": False,
-        "shinySeed": False,
-        "snowball": False,
-        "spookySparkles": False,
-        "stealth": 0,
-        "str": 2,
-        "streaks": False},
-        "class": "warrior",
-        "con": {0},
-        "exp": {7},
-        "gp": {4},
-        "hp": {5},
-        "int": {1},
-        "lvl": {6},
-        "maxHealth": 50,
-        "maxMP": 38,
-        "mp": 38,
-        "per": {2},
-        "points": 4,
-        "str": {3},
-        "toNextLevel": {8},
-        "training": {"con": 0, "int": 0, "per": 0, "str": 0}},
-        }}'''.format(
-            con,
-            _int,
-            per,
-            _str,
-            gp,
-            hp,
-            lvl,
-            exp,
-            toNextLevel)
+        return json.dumps({'data':
+                           {'id':_id,
+                            'stats': {
+                                'con':con,
+                                'int':_int,
+                                'per':per,
+                                'str':_str,
+                                'gp':gp,
+                                'hp':hp,
+                                'lvl':lvl,
+                                'exp':exp,
+                                'toNextLevel':toNextLevel,
+                            }}})
 
     def setup_class(cls):
         cls.hs = HabiticaService(
@@ -73,28 +52,19 @@ class TestHabiticaService(object):
     def test_server_status_up(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/status',
-                  text='''{"data": {"status": "up"}}''')
+                  text='{"data": {"status": "up"}}')
             assert self.hs.is_server_up() == True
 
     def test_server_status_down(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/status',
-                  text='''{"data": {"status": "down"}}''')
+                  text='{"data": {"status": "down"}}')
             assert self.hs.is_server_up() == False
 
     def test_get_user_stats(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
-                  text=self._get_stats_json(
-                        con=10,
-                        _int=11,
-                        per=12,
-                        _str=13,
-                        gp=194.4,
-                        hp=47.21,
-                        lvl=4,
-                        exp=34,
-                        toNextLevel=180))
+                  text=self._get_stats_json())
             stats = self.hs.get_user_stats()
 
             assert stats['con'] == 10
