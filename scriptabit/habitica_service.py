@@ -60,3 +60,12 @@ class HabiticaService(object):
         if response.status_code == requests.codes.ok:
             return response.json()['data']
         return None
+
+    def get_user_stats(self):
+        """Gets the authenticated user stats.
+
+        Returns: dictionary: a raw dictionary mapped directly from the JSON API
+        response.
+        """
+
+        return self.get_user()['stats']
