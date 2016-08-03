@@ -108,10 +108,7 @@ class HabiticaService(object):
         if hp < 0:
             raise ArgumentOutOfRangeError("hp < 0")
 
-        response = self.__put('user', {'stats.hp': hp})
-        if response.status_code == requests.codes.ok:
-            return response.json()['data']['stats']['hp']
-        return None
+        return self.set_stats({'hp':hp})['hp']
 
     def set_mp(self, mp):
         """ Sets the user's MP (mana points).
@@ -128,10 +125,7 @@ class HabiticaService(object):
         if mp < 0:
             raise ArgumentOutOfRangeError("mp < 0")
 
-        response = self.__put('user', {'stats.mp': mp})
-        if response.status_code == requests.codes.ok:
-            return response.json()['data']['stats']['mp']
-        return None
+        return self.set_stats({'mp':mp})['mp']
 
     def set_exp(self, exp):
         """ Sets the user's XP (experience points).
@@ -145,7 +139,5 @@ class HabiticaService(object):
         if exp < 0:
             raise ArgumentOutOfRangeError("exp < 0")
 
-        response = self.__put('user', {'stats.exp': exp})
-        if response.status_code == requests.codes.ok:
-            return response.json()['data']['stats']['exp']
-        return None
+        return self.set_stats({'exp':exp})['exp']
+
