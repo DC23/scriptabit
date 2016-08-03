@@ -131,3 +131,5 @@ class TestHabiticaService(object):
         with (pytest.raises(ArgumentOutOfRangeError)):
             self.hs.set_exp(-1)
 
+    def test_set_user_stats_hp_mp(self):
+        assert False, "Implement me!"
