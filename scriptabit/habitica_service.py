@@ -79,6 +79,8 @@ class HabiticaService(object):
 
     def set_stats(self, stats):
         """Sets the authenticated user stats.
+        Note that unlike the fine-grained set_[hp|mp|xp] methods,
+        this method performs no sanity checking of values.
 
         Args:
             stats (dict): The stats to set. This can be a
