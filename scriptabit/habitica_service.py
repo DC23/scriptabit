@@ -77,6 +77,10 @@ class HabiticaService(object):
 
         return self.get_user()['stats']
 
+    # TODO: I don't think the API lets me set partial user objects in this way.
+    # So I could get the entire user structure, swap the stats for the argument
+    # version, and then PUT that back. Or I can wait to see if I even need this
+    # method at all.
     def set_stats(self, stats):
         """Sets the authenticated user stats.
         Note that unlike the fine-grained set_[hp|mp|xp] methods,
@@ -89,10 +93,11 @@ class HabiticaService(object):
         Returns: dictionary: The new stats, as returned by the server.
         """
 
-        response = self.__put('user', {'stats': stats})
-        if response.status_code == requests.codes.ok:
-            return response.json()['data']['stats']
-        return None
+        raise NotImplementedError
+        # response = self.__put('user', {'stats': stats})
+        # if response.status_code == requests.codes.ok:
+            # return response.json()['data']['stats']
+        # return None
 
     def set_hp(self, hp):
         """ Sets the user's HP.
@@ -108,7 +113,10 @@ class HabiticaService(object):
         if hp < 0:
             raise ArgumentOutOfRangeError("hp < 0")
 
-        return self.set_stats({'hp':hp})['hp']
+        response = self.__put('user', {'stats.hp': hp})
+        if response.status_code == requests.codes.ok:
+            return response.json()['data']['stats']['hp']
+        return None
 
     def set_mp(self, mp):
         """ Sets the user's MP (mana points).
@@ -125,7 +133,10 @@ class HabiticaService(object):
         if mp < 0:
             raise ArgumentOutOfRangeError("mp < 0")
 
-        return self.set_stats({'mp':mp})['mp']
+        response = self.__put('user', {'stats.mp': mp})
+        if response.status_code == requests.codes.ok:
+            return response.json()['data']['stats']['mp']
+        return None
 
     def set_exp(self, exp):
         """ Sets the user's XP (experience points).
@@ -139,5 +150,7 @@ class HabiticaService(object):
         if exp < 0:
             raise ArgumentOutOfRangeError("exp < 0")
 
-        return self.set_stats({'exp':exp})['exp']
-
+        response = self.__put('user', {'stats.exp': exp})
+        if response.status_code == requests.codes.ok:
+            return response.json()['data']['stats']['exp']
+        return None

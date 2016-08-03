@@ -103,6 +103,7 @@ class TestHabiticaService(object):
         with (pytest.raises(ArgumentOutOfRangeError)):
             self.hs.set_exp(-1)
 
+    @pytest.skip
     def test_set_stats_hp_mp(self):
         expected, jsn = get_fake_stats(hp=16, mp=18)
         with requests_mock.mock() as m:
