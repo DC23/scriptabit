@@ -16,8 +16,8 @@ help:
 	echo '  * install-deps: installs development and test dependencies into your virtual environment.'
 	echo '  * develop: installs scriptabit in development mode.'
 	echo '  * uninstall: removes the development package from pip.'
-	echo '  * test: runs py.test.'
-	echo '  * test-slow: runs py.test, including slow tests.'
+	echo '  * tests: runs py.test.'
+	echo '  * tests-slow: runs py.test, including slow tests.'
 	echo '  * lint: runs pylint.'
 	echo '  * lintr: runs pylint with a full report.'
 	echo '  * html: builds the HTML documentation.'
@@ -27,12 +27,12 @@ help:
 	echo '  * sdist: builds a source distribution.'
 	echo '  * bdist_wheel: builds a universal wheel distribution.'
 
-.PHONY: test
-test:
+.PHONY: tests
+tests:
 	py.test
 
-.PHONY: test-slow
-test-slow:
+.PHONY: tests-slow
+tests-slow:
 	py.test --runslow
 
 .PHONY: clean
