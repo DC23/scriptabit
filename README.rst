@@ -18,15 +18,26 @@ Python scripting and scenarios for Habitica.
 Roadmap
 -------
 
-The first version will be hard-coded with a single scenario - poisoning.
-After that, the plan is for:
+The next utility function planned is the ability to feed all food in the
+inventory to an appropriate pet (by default only the main pets, but optionally
+feeding quest pets as well or instead). While this won't let you control the
+specific pet that gets fed, it will be useful when a lot of food has
+accumulated.
 
--  Plugin framework with `Yapsy <http://yapsy.sourceforge.net/>`__
--  Ability to chain scenarios together into a composite operation.
--  Build toolkit of useful scenario building blocks:
+The first planned scenario will implement a poisoning, and health regen script.
+As part of the development of the poisoning scenario, the following features
+will be added to the code:
 
-   -  Detect task activity
-   -  Detect skill and reward use (health potions, skills)
+* Plugin framework using `Yapsy <http://yapsy.sourceforge.net/>`__
+
+    * This will give the ability to load and run user-defined scenarios.
+
+* Ability to chain scenarios together into a composite operation.
+* Build toolkit of useful scenario building blocks:
+
+    * Detect task activity
+    * Detect skill and reward use (health potions, skills)
+    * Detect "perfect day" buff status
 
 **Note** that apart from bugs, I don't use the GitHub issue list for
 planning. Task and feature planning is carried out in a private 
@@ -70,4 +81,20 @@ set the permissions as follows:
 Usage
 -----
 
-To do.
+`scriptabit` is a command-line application. Help on the available commands can
+be obtained by running::
+
+    $ scriptabit --help
+
+Functionality is of two major types: single operations (utility functions)
+that complete quickly, and scenarios that will cause scriptabit to run until
+killed. Currently only a few operations are available, and no scenarios.
+Operations include:
+
+- `-sud`: Show user data.
+- `-hp n`: Set the user health to n
+- `-mp n`: Set the user's mana points to n
+- `-xp n`: Set experience points to n
+
+There are commands to list available scenarios, and to run a scenario, but they
+have no effect in this version.

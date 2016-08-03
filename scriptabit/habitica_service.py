@@ -81,19 +81,22 @@ class HabiticaService(object):
     # So I could get the entire user structure, swap the stats for the argument
     # version, and then PUT that back. Or I can wait to see if I even need this
     # method at all.
-    def set_stats(self, stats):
-        """Sets the authenticated user stats.
-        Note that unlike the fine-grained set_[hp|mp|xp] methods,
-        this method performs no sanity checking of values.
+    # def set_stats(self, stats):
+        # """Sets the authenticated user stats.
+        # ** Not implemented **
+        # Note that unlike the fine-grained set_[hp|mp|xp] methods,
+        # this method performs no sanity checking of values.
 
-        Args:
-            stats (dict): The stats to set. This can be a
-            partial set of values.
+        # Args:
+            # stats (dict): The stats to set. This can be a
+            # partial set of values.
 
-        Returns: dictionary: The new stats, as returned by the server.
-        """
+        # Returns: dictionary: The new stats, as returned by the server.
 
-        raise NotImplementedError
+        # Raises: NotImplementedError
+        # """
+
+        # raise NotImplementedError
         # response = self.__put('user', {'stats': stats})
         # if response.status_code == requests.codes.ok:
             # return response.json()['data']['stats']
