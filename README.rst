@@ -24,6 +24,9 @@ feeding quest pets as well or instead). While this won't let you control the
 specific pet that gets fed, it will be useful when a lot of food has
 accumulated.
 
+I also plan a banking function that will automate moving gold into and out of
+a gold-bank (implemented with a custom reward).
+
 The first planned scenario will implement a poisoning, and health regen script.
 As part of the development of the poisoning scenario, the following features
 will be added to the code:
