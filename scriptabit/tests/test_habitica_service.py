@@ -102,17 +102,3 @@ class TestHabiticaService(object):
     def test_set_xp_too_low(self):
         with (pytest.raises(ArgumentOutOfRangeError)):
             self.hs.set_exp(-1)
-
-    @pytest.skip
-    def test_set_stats_hp_mp(self):
-        expected, jsn = get_fake_stats(hp=16, mp=18)
-        with requests_mock.mock() as m:
-            m.put('https://habitica.com/api/v3/user', text=jsn)
-            actual = self.hs.set_stats(
-                {
-                    'hp': 16,
-                    'mp': 18,
-                })
-
-            assert actual['hp'] == expected['hp']
-            assert actual['mp'] == expected['mp']
