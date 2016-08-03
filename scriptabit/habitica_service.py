@@ -27,7 +27,7 @@ class HabiticaService(object):
         Args:
             headers: HTTP headers.
             base_url: The base URL for requests.
-        """
+            """
 
         self.__headers = headers
         self.__base_url = base_url
@@ -61,8 +61,7 @@ class HabiticaService(object):
     def get_user(self):
         """Gets the authenticated user data.
 
-        Returns: dictionary: a raw dictionary mapped directly from the JSON API
-        response.
+        Returns: dictionary: The user data.
         """
 
         response = self.__get('user')
@@ -73,11 +72,25 @@ class HabiticaService(object):
     def get_user_stats(self):
         """Gets the authenticated user stats.
 
-        Returns: dictionary: a raw dictionary mapped directly from the JSON API
-        response.
+        Returns: dictionary: The user stats.
         """
 
         return self.get_user()['stats']
+
+    def set_user_stats(self, stats):
+        """Sets the authenticated user stats.
+
+        Args:
+            stats (dict): The user stats to set. This can be a
+            partial set of values.
+
+        Returns: dictionary: The new user stats, as returned by the server.
+        """
+
+        response = self.__put('user', {'stats': stats})
+        if response.status_code == requests.codes.ok:
+            return response.json()['data']['stats']
+        return None
 
     def set_hp(self, hp):
         """ Sets the user's HP.
