@@ -66,11 +66,11 @@ class TestHabiticaService(object):
                   text='{"data": {"status": "down"}}')
             assert self.hs.is_server_up() == False
 
-    def test_get_user_stats(self):
+    def test_get_stats(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=self._get_stats_json())
-            stats = self.hs.get_user_stats()
+            stats = self.hs.get_stats()
 
             assert stats['con'] == 10
             assert stats['int'] == 11
@@ -131,5 +131,6 @@ class TestHabiticaService(object):
         with (pytest.raises(ArgumentOutOfRangeError)):
             self.hs.set_exp(-1)
 
-    def test_set_user_stats_hp_mp(self):
+    @pytest.skip
+    def test_set_stats_hp_mp(self):
         assert False, "Implement me!"

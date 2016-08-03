@@ -69,22 +69,22 @@ class HabiticaService(object):
             return response.json()['data']
         return None
 
-    def get_user_stats(self):
+    def get_stats(self):
         """Gets the authenticated user stats.
 
-        Returns: dictionary: The user stats.
+        Returns: dictionary: The stats.
         """
 
         return self.get_user()['stats']
 
-    def set_user_stats(self, stats):
+    def set_stats(self, stats):
         """Sets the authenticated user stats.
 
         Args:
-            stats (dict): The user stats to set. This can be a
+            stats (dict): The stats to set. This can be a
             partial set of values.
 
-        Returns: dictionary: The new user stats, as returned by the server.
+        Returns: dictionary: The new stats, as returned by the server.
         """
 
         response = self.__put('user', {'stats': stats})
