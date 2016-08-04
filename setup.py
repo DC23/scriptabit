@@ -115,6 +115,7 @@ setup(
             'pytest-sugar',
             'requests-mock',
             'tox',
+            'virtualenv',
         ],
     },
 
