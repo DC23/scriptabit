@@ -50,10 +50,10 @@ def start_cli():
         if config.list_scenarios:
             logging.getLogger(__name__).debug('Listing available scenarios')
         else:
-            #--------------------------------------------------
+            # --------------------------------------------------
             # Running against Habitica.
             # Get everything warmed up and online.
-            #--------------------------------------------------
+            # --------------------------------------------------
 
             # user credentials
             logging.getLogger(__name__).debug('Loading credentials')

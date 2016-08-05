@@ -13,6 +13,7 @@ import os
 from configparser import ConfigParser, NoSectionError, NoOptionError
 from .errors import ConfigError
 
+
 def load_authentication_credentials(
         config_file_path='~/.auth.cfg',
         section='Habitica'):
@@ -33,7 +34,6 @@ def load_authentication_credentials(
         ConfigError: specified file section or options are missing
     """
 
-    credentials = {}
     config_file_path = os.path.expandvars(os.path.expanduser(config_file_path))
 
     if not os.path.exists(config_file_path):
@@ -43,7 +43,7 @@ def load_authentication_credentials(
     config.read(config_file_path)
 
     try:
-        credentials = {
+        return {
             'x-api-user': config.get(section, 'userid'),
             'x-api-key': config.get(section, 'apikey')
         }
@@ -53,5 +53,3 @@ def load_authentication_credentials(
     except NoOptionError as error:
         raise ConfigError("Missing option in auth file '{0}': {1}".format(
             config_file_path, error.message))
-
-    return credentials

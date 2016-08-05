@@ -6,13 +6,12 @@ from __future__ import (
     unicode_literals,
 )
 from builtins import *
-import json
 import pytest
 import requests
 import requests_mock
 from pkg_resources import resource_filename
 
-from scriptabit.errors import ArgumentOutOfRangeError
+from scriptabit.errors import *
 from scriptabit.habitica_service import HabiticaService
 
 from .fake_data import get_fake_stats
@@ -22,6 +21,7 @@ class TestHabiticaService(object):
 
     hs = None
 
+    @classmethod
     def setup_class(cls):
         cls.hs = HabiticaService(
             {},
@@ -31,27 +31,27 @@ class TestHabiticaService(object):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/status',
                   text='{"data": {"status": "up"}}')
-            assert self.hs.is_server_up() == True
+            assert self.hs.is_server_up() is True
 
     def test_server_status_down(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/status',
                   text='{"data": {"status": "down"}}')
-            assert self.hs.is_server_up() == False
+            assert self.hs.is_server_up() is False
 
     def test_server_status_request_fails(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/status',
                   text='Failure',
-                  status_code=500)
-            assert self.hs.is_server_up() == False
+                  status_code=requests.codes.no_response)
+            assert self.hs.is_server_up() is False
 
     def test_get_stats_request_fails(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text='Not OK',
-                  status_code=requests.codes.fail)
-            with pytest.raises(RequestError):
+                  status_code=requests.codes.server_error)
+            with pytest.raises(requests.HTTPError):
                 self.hs.get_stats()
 
     def test_get_stats(self):
@@ -113,6 +113,7 @@ class TestHabiticaService(object):
             m.put('https://habitica.com/api/v3/user',
                   text=get_fake_stats(exp=168, toNextLevel=180)[1])
             new_exp = self.hs.set_exp(168)
+            assert new_exp == 168
 
     def test_set_xp_too_low(self):
         with (pytest.raises(ArgumentOutOfRangeError)):

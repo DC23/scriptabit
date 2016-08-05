@@ -22,20 +22,24 @@ def test_load_valid():
     assert credentials['x-api-key'] == 'default_key'
     assert credentials['x-api-user'] == 'default_user'
 
+
 def test_load_missing_section():
     cfg = resource_filename(sb.__name__, 'tests/data/auth.cfg')
     with pytest.raises(ConfigError):
         load_authentication_credentials(cfg, section='Missing')
+
 
 def test_load_missing_user():
     cfg = resource_filename(sb.__name__, 'tests/data/auth.cfg')
     with pytest.raises(ConfigError):
         load_authentication_credentials(cfg, section='missing_user')
 
+
 def test_load_missing_key():
     cfg = resource_filename(sb.__name__, 'tests/data/auth.cfg')
     with pytest.raises(ConfigError):
         load_authentication_credentials(cfg, section='missing_key')
+
 
 def test_load_missing_file():
     with pytest.raises(ConfigError):

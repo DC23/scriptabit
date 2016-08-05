@@ -13,7 +13,7 @@ from builtins import *
 import logging
 import requests
 
-from .errors import ArgumentOutOfRangeError
+from .errors import *
 
 
 class HabiticaService(object):
@@ -65,9 +65,8 @@ class HabiticaService(object):
         """
 
         response = self.__get('user')
-        if response.status_code == requests.codes.ok:
-            return response.json()['data']
-        return None
+        response.raise_for_status()
+        return response.json()['data']
 
     def get_stats(self):
         """Gets the authenticated user stats.
@@ -82,14 +81,14 @@ class HabiticaService(object):
     # version, and then PUT that back. Or I can wait to see if I even need this
     # method at all.
     # def set_stats(self, stats):
-        # """Sets the authenticated user stats.
-        # ** Not implemented **
-        # Note that unlike the fine-grained set_[hp|mp|xp] methods,
-        # this method performs no sanity checking of values.
+    # """Sets the authenticated user stats.
+    # ** Not implemented **
+    # Note that unlike the fine-grained set_[hp|mp|xp] methods,
+    # this method performs no sanity checking of values.
 
         # Args:
-            # stats (dict): The stats to set. This can be a
-            # partial set of values.
+        # stats (dict): The stats to set. This can be a
+        # partial set of values.
 
         # Returns: dictionary: The new stats, as returned by the server.
 
@@ -99,7 +98,7 @@ class HabiticaService(object):
         # raise NotImplementedError
         # response = self.__put('user', {'stats': stats})
         # if response.status_code == requests.codes.ok:
-            # return response.json()['data']['stats']
+        # return response.json()['data']['stats']
         # return None
 
     def set_hp(self, hp):
@@ -117,9 +116,8 @@ class HabiticaService(object):
             raise ArgumentOutOfRangeError("hp < 0")
 
         response = self.__put('user', {'stats.hp': hp})
-        if response.status_code == requests.codes.ok:
-            return response.json()['data']['stats']['hp']
-        return None
+        response.raise_for_status()
+        return response.json()['data']['stats']['hp']
 
     def set_mp(self, mp):
         """ Sets the user's MP (mana points).
@@ -137,9 +135,8 @@ class HabiticaService(object):
             raise ArgumentOutOfRangeError("mp < 0")
 
         response = self.__put('user', {'stats.mp': mp})
-        if response.status_code == requests.codes.ok:
-            return response.json()['data']['stats']['mp']
-        return None
+        response.raise_for_status()
+        return response.json()['data']['stats']['mp']
 
     def set_exp(self, exp):
         """ Sets the user's XP (experience points).
@@ -154,6 +151,5 @@ class HabiticaService(object):
             raise ArgumentOutOfRangeError("exp < 0")
 
         response = self.__put('user', {'stats.exp': exp})
-        if response.status_code == requests.codes.ok:
-            return response.json()['data']['stats']['exp']
-        return None
+        response.raise_for_status()
+        return response.json()['data']['stats']['exp']
