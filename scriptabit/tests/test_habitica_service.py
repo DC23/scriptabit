@@ -39,6 +39,21 @@ class TestHabiticaService(object):
                   text='{"data": {"status": "down"}}')
             assert self.hs.is_server_up() == False
 
+    def test_server_status_request_fails(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/status',
+                  text='Failure',
+                  status_code=500)
+            assert self.hs.is_server_up() == False
+
+    def test_get_stats_request_fails(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user',
+                  text='Not OK',
+                  status_code=requests.codes.fail)
+            with pytest.raises(RequestError):
+                self.hs.get_stats()
+
     def test_get_stats(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user', text=get_fake_stats()[1])
