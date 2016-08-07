@@ -5,7 +5,11 @@
 """
 
 from .authentication import load_authentication_credentials
-from .configuration import get_configuration
+from .configuration import (
+    get_configuration,
+    get_config_file,
+    copy_default_config_to_user_config_dir,
+)
 from .habitica_service import HabiticaService
 from .scriptabit import start_cli
 from .utility_functions import UtilityFunctions

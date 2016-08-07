@@ -11,6 +11,8 @@ from __future__ import (
 )
 from builtins import *
 
+import os
+from pkg_resources import Requirement, resource_filename
 from string import Template
 
 import configargparse
@@ -63,10 +65,50 @@ def __add_min_max_value(
         help=help_template.substitute(mmi='initial', name=basename))
 
 
-def get_configuration():
+def get_config_file(basename):
+    """ Looks for a configuration file in 3 locations:
+
+        - the current directory
+        - the user config directory (~/.config/scriptabit)
+        - the version installed with the package (using setuptools resource API)
+
+    Args:
+        basename (str): The base filename.
+
+    Returns: str: The full path to the configuration file.
+    """
+
+    config= None
+    locations = [
+        os.path.join(os.curdir, basename),
+        os.path.join(os.path.expanduser("~"), ".config", basename),
+        resource_filename(
+            Requirement.parse("scriptabit"),
+            os.path.join('scriptabit', basename))
+    ]
+
+    for location in locations:
+        if os.path.isfile(location):
+            return location
+
+def copy_default_config_to_user_config_dir(basename, clobber=False):
+    """ Copies the default configuration file into the user config directory.
+
+    Args:
+        basename (str): The base filename.
+        clobber (bool): If True, the default will be written even if a user
+    config already exists.
+    """
+
+    pass
+
+def get_configuration(basename='scriptabit.cfg'):
     """Parses and returns the program configuration options,
     taken from a combination of ini-style config file, and
     command line arguments.
+
+    Args:
+        basename (str): The base filename.
 
     Returns:
         The options object, and a function that can be called to print the help
@@ -75,7 +117,12 @@ def get_configuration():
 
     parser = configargparse.ArgParser(
         formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
-        default_config_files=['./scriptabit.cfg'])
+        default_config_files=[
+            os.path.join(os.curdir, basename),
+            os.path.join(os.path.expanduser("~"), ".config", basename),
+            resource_filename(
+                Requirement.parse("scriptabit"),
+                os.path.join('scriptabit', basename))])
 
     # General options
     parser.add(

@@ -14,7 +14,11 @@ import logging
 import logging.config
 
 from .authentication import load_authentication_credentials
-from .configuration import get_configuration
+from .configuration import (
+    get_configuration,
+    get_config_file,
+    copy_default_config_to_user_config_dir
+)
 from .errors import ServerUnreachableError
 from .habitica_service import HabiticaService
 from .metadata import __version__
@@ -29,7 +33,11 @@ def __init_logging(logging_config_file):
         logging_config_file (str): The logging configuration file.
         """
 
-    logging.config.fileConfig(logging_config_file)
+    # Make sure the user copy of the logging config file exists
+    copy_default_config_to_user_config_dir(logging_config_file, clobber=False)
+
+    # Load the config
+    logging.config.fileConfig(get_config_file(logging_config_file))
     logging.getLogger(__name__).debug('Logging online')
 
 
