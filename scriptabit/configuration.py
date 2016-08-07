@@ -139,16 +139,6 @@ def get_configuration(basename='scriptabit.cfg'):
                 Requirement.parse("scriptabit"),
                 os.path.join('scriptabit', basename))])
 
-    # General options
-    parser.add(
-        '-c',
-        '--config',
-        required=False,
-        is_config_file=True,
-        default='scriptabit.cfg',
-        metavar='FILE',
-        help='scriptabit configuration file')
-
     # logging config file
     parser.add(
         '-lc',
