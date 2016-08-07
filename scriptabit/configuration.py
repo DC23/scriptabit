@@ -11,6 +11,7 @@ from __future__ import (
 )
 from builtins import *
 import os
+import shutil
 from string import Template
 
 import configargparse
@@ -79,7 +80,11 @@ def get_config_file(basename):
 
     locations = [
         os.path.join(os.curdir, basename),
-        os.path.join(os.path.expanduser("~"), ".config", basename),
+        os.path.join(
+            os.path.expanduser("~"),
+            ".config",
+            "scriptabit",
+            basename),
         resource_filename(
             Requirement.parse("scriptabit"),
             os.path.join('scriptabit', basename))
@@ -98,7 +103,17 @@ def copy_default_config_to_user_config_dir(basename, clobber=False):
     config already exists.
     """
 
-    pass
+    dst_dir = os.path.join(os.path.expanduser("~"), ".config", "scriptabit")
+    dst = os.path.join(dst_dir, basename)
+    src = resource_filename(
+        Requirement.parse("scriptabit"),
+        os.path.join('scriptabit', basename))
+
+    if not os.path.exists(dst_dir):
+        os.mkdir(dst_dir)
+
+    if clobber or not os.path.isfile(dst):
+        shutil.copy(src, dst)
 
 def get_configuration(basename='scriptabit.cfg'):
     """Parses and returns the program configuration options,
@@ -112,6 +127,8 @@ def get_configuration(basename='scriptabit.cfg'):
         The options object, and a function that can be called to print the help
         text.
     """
+
+    copy_default_config_to_user_config_dir(basename)
 
     parser = configargparse.ArgParser(
         formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
@@ -155,7 +172,7 @@ def get_configuration(basename='scriptabit.cfg'):
         '-as',
         '--auth-section',
         required=False,
-        default='Habitica',
+        default='habitica',
         help='''Name of the authentication file section containing the Habitica
         credentials''')
 
