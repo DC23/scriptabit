@@ -21,3 +21,10 @@ Changelog
 * Command-line interface established
 * Unit tests with pytest and requests_mock
 * Utility functions to set HP, MP, and XP.
+
+0.2.2 (2016-08-07)
+-----------------------------------------
+
+* Fixes issue #2 by adding a multipath search for configuration files.
+
+

@@ -18,12 +18,6 @@ Python scripting and scenarios for Habitica.
 Roadmap
 -------
 
-The next utility function planned is the ability to feed all food in the
-inventory to an appropriate pet (by default only the main pets, but optionally
-feeding quest pets as well or instead). While this won't let you control the
-specific pet that gets fed, it will be useful when a lot of food has
-accumulated.
-
 I also plan a banking function that will automate moving gold into and out of
 a gold-bank (implemented with a custom reward).
 
@@ -101,3 +95,8 @@ Operations include:
 
 There are commands to list available scenarios, and to run a scenario, but they
 have no effect in this version.
+
+After running `scriptabit` at least once, configuration files will be created in
+`~/.config/scriptabit/`. These can be edited to change the default options. You
+can revert to the installation defaults by deleting the files (they will be
+recreated on the next run).
