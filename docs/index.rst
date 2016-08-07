@@ -6,7 +6,7 @@ Python scripting and scenarios for Habitica.
 * Free software: Apache 2.0
 * Homepage: https://github.com/DC23/scriptabit
 * Documentation: https://scriptabit.readthedocs.org
-* Version: 0.2.1
+* Version: 0.2.2
 
 Contents
 --------
