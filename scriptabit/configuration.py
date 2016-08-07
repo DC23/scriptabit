@@ -10,12 +10,11 @@ from __future__ import (
     unicode_literals,
 )
 from builtins import *
-
 import os
-from pkg_resources import Requirement, resource_filename
 from string import Template
 
 import configargparse
+from pkg_resources import Requirement, resource_filename
 
 
 def __add_min_max_value(
@@ -78,7 +77,6 @@ def get_config_file(basename):
     Returns: str: The full path to the configuration file.
     """
 
-    config= None
     locations = [
         os.path.join(os.curdir, basename),
         os.path.join(os.path.expanduser("~"), ".config", basename),
