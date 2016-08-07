@@ -119,9 +119,9 @@ setup(
         ],
     },
 
-    # If there are data files included in your packages that need to be
-    # installed, specify them here using relative paths:
+    # If there are data files included in your packages that need to be installed
     package_data={
+        '': ['*.cfg'],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
