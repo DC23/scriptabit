@@ -1,4 +1,7 @@
 # Always prefer setuptools over distutils
+import ez_setup
+ez_setup.use_setuptools()
+
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 from codecs import open  # To use a consistent encoding
