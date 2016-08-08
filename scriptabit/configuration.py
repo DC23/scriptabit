@@ -94,9 +94,9 @@ def get_config_file(basename):
             return location
 
 def copy_default_config_to_user_directory(
-    basename,
-    clobber=False,
-    dst_dir='~/.config/scriptabit'):
+        basename,
+        clobber=False,
+        dst_dir='~/.config/scriptabit'):
     """ Copies the default configuration file into the user config directory.
 
     Args:
@@ -118,13 +118,15 @@ def copy_default_config_to_user_directory(
     if clobber or not os.path.isfile(dst):
         shutil.copy(src, dst)
 
-def get_configuration(basename='scriptabit.cfg'):
+def get_configuration(basename='scriptabit.cfg', parents=[]):
     """Parses and returns the program configuration options,
     taken from a combination of ini-style config file, and
     command line arguments.
 
     Args:
         basename (str): The base filename.
+        parents (list): A list of ArgumentParser objects whose arguments
+            should also be included in the configuration parsing.
 
     Returns:
         The options object, and a function that can be called to print the help
@@ -135,6 +137,7 @@ def get_configuration(basename='scriptabit.cfg'):
 
     parser = configargparse.ArgParser(
         formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
+        parents=parents,
         default_config_files=[
             os.path.join(os.curdir, basename),
             os.path.join(os.path.expanduser("~"), ".config", basename),
@@ -166,38 +169,6 @@ def get_configuration(basename='scriptabit.cfg'):
         required=False,
         default='https://habitica.com/api/v3/',
         help='''The base Habitica API URL''')
-
-    # Utility functions
-    parser.add(
-        '-sud',
-        '--show-user-data',
-        required=False,
-        action='store_true',
-        help='''Print the user data''')
-
-    parser.add(
-        '-hp',
-        '--set-hp',
-        type=float,
-        default=-1,
-        required=False,
-        help='''Set the user's current HP''')
-
-    parser.add(
-        '-mp',
-        '--set-mp',
-        type=float,
-        default=-1,
-        required=False,
-        help='''Set the user's current MP (mana points)''')
-
-    parser.add(
-        '-xp',
-        '--set-xp',
-        type=float,
-        default=-1,
-        required=False,
-        help='''Set the user's current XP (experience points)''')
 
     # Scenarios
     parser.add(

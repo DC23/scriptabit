@@ -17,8 +17,7 @@ from .authentication import load_authentication_credentials
 from .configuration import (
     get_configuration,
     get_config_file,
-    copy_default_config_to_user_directory,
-)
+    copy_default_config_to_user_directory)
 from .errors import ServerUnreachableError
 from .habitica_service import HabiticaService
 from .metadata import __version__
@@ -40,13 +39,25 @@ def __init_logging(logging_config_file):
     logging.config.fileConfig(get_config_file(logging_config_file))
     logging.getLogger(__name__).debug('Logging online')
 
+def __get_configuration():
+    """ Builds and parses the hierarchical configuration from environment
+variables, configuration files, command-line arguments, and argument defaults.
+
+    Returns: The argparse compatible configuration object.
+    """
+
+    extra_args = [UtilityFunctions.get_arg_parser()]
+    # TODO: Give all plugins a chance to extend the command line args.
+    config, _ = get_configuration(parents=extra_args)
+
+    return config
 
 def start_cli():
     """ Command-line entry point for scriptabit """
 
+    config = __get_configuration()
+
     # TODO: build a list of available scenarios
-    # TODO: give all scenarios a chance to add new configuration options
-    config, _ = get_configuration()
     __init_logging(config.logging_config)
 
     logging.getLogger(__name__).info('scriptabit version %s', __version__)

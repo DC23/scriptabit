@@ -13,6 +13,7 @@ from builtins import *
 import logging
 import pprint
 
+import configargparse
 import iso8601
 
 
@@ -31,6 +32,46 @@ class UtilityFunctions(object):
         logging.getLogger(__name__).info('UtilityFunctions online')
         self.__config = config
         self.__hs = habitica_service
+
+    @classmethod
+    def get_arg_parser(cls):
+        """Gets the argument parser containing Utility function CLI arguments.
+        """
+
+        parser = configargparse.ArgParser(add_help=False)
+
+        parser.add(
+            '-sud',
+            '--show-user-data',
+            required=False,
+            action='store_true',
+            help='''Print the user data''')
+
+        parser.add(
+            '-hp',
+            '--set-hp',
+            type=float,
+            default=-1,
+            required=False,
+            help='''Set the user's current HP''')
+
+        parser.add(
+            '-mp',
+            '--set-mp',
+            type=float,
+            default=-1,
+            required=False,
+            help='''Set the user's current MP (mana points)''')
+
+        parser.add(
+            '-xp',
+            '--set-xp',
+            type=float,
+            default=-1,
+            required=False,
+            help='''Set the user's current XP (experience points)''')
+
+        return parser
 
     def run(self):
         """Runs the user-selected scriptabit utility functions"""
