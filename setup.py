@@ -1,6 +1,10 @@
-# Always prefer setuptools over distutils
-import ez_setup
-ez_setup.use_setuptools()
+# Bootstrap setuptools with ez_setup. Wrapped in try as Tox and Travis CI don't
+# like the bootstrapping code very much.
+try:
+    import ez_setup
+    ez_setup.use_setuptools()
+except Exception as exception:
+    pass
 
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand

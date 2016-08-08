@@ -45,8 +45,7 @@ clean:
 
 .PHONY: install-deps
 install-deps:
-	pip install --upgrade pip
-	pip install --upgrade setuptools
+	pip install --upgrade pip setuptools
 	pip install -e.[dev,test]
 
 .PHONY: develop
