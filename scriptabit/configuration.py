@@ -64,7 +64,6 @@ def __add_min_max_value(
         required=False,
         help=help_template.substitute(mmi='initial', name=basename))
 
-
 def get_config_file(basename):
     """ Looks for a configuration file in 3 locations:
 
@@ -94,16 +93,20 @@ def get_config_file(basename):
         if os.path.isfile(location):
             return location
 
-def copy_default_config_to_user_config_dir(basename, clobber=False):
+def copy_default_config_to_user_directory(
+    basename,
+    clobber=False,
+    dst_dir='~/.config/scriptabit'):
     """ Copies the default configuration file into the user config directory.
 
     Args:
         basename (str): The base filename.
         clobber (bool): If True, the default will be written even if a user
-    config already exists.
+            config already exists.
+        dst_dir (str): The destination directory.
     """
 
-    dst_dir = os.path.join(os.path.expanduser("~"), ".config", "scriptabit")
+    dst_dir = os.path.expanduser(dst_dir)
     dst = os.path.join(dst_dir, basename)
     src = resource_filename(
         Requirement.parse("scriptabit"),
@@ -128,7 +131,7 @@ def get_configuration(basename='scriptabit.cfg'):
         text.
     """
 
-    copy_default_config_to_user_config_dir(basename)
+    copy_default_config_to_user_directory(basename)
 
     parser = configargparse.ArgParser(
         formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
@@ -147,15 +150,6 @@ def get_configuration(basename='scriptabit.cfg'):
         default='scriptabit_logging.cfg',
         metavar='FILE',
         help='Logging configuration file')
-
-    # authentication file location
-    parser.add(
-        '-af',
-        '--auth-file',
-        required=False,
-        default='~/.auth.cfg',
-        metavar='FILE',
-        help='''Authentication file location''')
 
     # Authentication file section
     parser.add(

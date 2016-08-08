@@ -17,7 +17,7 @@ from .authentication import load_authentication_credentials
 from .configuration import (
     get_configuration,
     get_config_file,
-    copy_default_config_to_user_config_dir
+    copy_default_config_to_user_directory,
 )
 from .errors import ServerUnreachableError
 from .habitica_service import HabiticaService
@@ -34,7 +34,7 @@ def __init_logging(logging_config_file):
         """
 
     # Make sure the user copy of the logging config file exists
-    copy_default_config_to_user_config_dir(logging_config_file, clobber=False)
+    copy_default_config_to_user_directory(logging_config_file, clobber=False)
 
     # Load the config
     logging.config.fileConfig(get_config_file(logging_config_file))
@@ -64,10 +64,8 @@ def start_cli():
             # --------------------------------------------------
 
             # user credentials
-            logging.getLogger(__name__).debug('Loading credentials')
             auth_tokens = load_authentication_credentials(
-                config.auth_file,
-                config.auth_section)
+                section=config.auth_section)
 
             # Habitica Service
             habitica_service = HabiticaService(

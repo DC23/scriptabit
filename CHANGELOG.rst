@@ -27,4 +27,11 @@ Changelog
 
 * Fixes issue #2 by adding a multipath search for configuration files.
 
+0.2.3 (2016-08-07)
+-----------------------------------------
+
+* Fixed issue #3 (broken Travis builds) by making setuptools bootstrap more
+  robust.
+* Cleaned up authentication file handling - generate default, more error checks.
+
 

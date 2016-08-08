@@ -50,12 +50,10 @@ best option.
 
     pip install scriptabit
 
-You also require an authentication credentials file containing your
-`Habitica API Key and User
-ID <https://habitica.com/#/options/settings/api>`__. The default is to
-look for this information in ~/.auth.cfg, but a different path can be
-specified on the command line (or in the ini file). The file should have
-a typical ini file structure, with the following section:
+You also require an authentication credentials file in your home directory
+containing your
+`Habitica API Key and User ID <https://habitica.com/#/options/settings/api>`__. 
+The file should have a typical ini file structure, with the following section:
 
 ::
 
@@ -65,6 +63,9 @@ a typical ini file structure, with the following section:
 
 Additional sections can be added, and the section name to use can be
 supplied as a command-line argument.
+
+If you do not already have a `.auth.cfg` file, a default will be created when
+you first run scriptabit. You can then fill in your account values.
 
 **Note that your API key is effectively a password to your Habitica
 account.** You should make sure the .auth.cfg file is protected, and
