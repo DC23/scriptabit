@@ -12,6 +12,8 @@ from builtins import *
 
 import logging
 import logging.config
+import os
+from pkg_resources import Requirement, resource_filename
 from yapsy.PluginManager import PluginManager
 
 from .authentication import load_authentication_credentials
@@ -79,22 +81,27 @@ def __get_plugin_manager():
     # Activate all loaded plugins
     # TODO: do I need to do this?
     for plugin_info in plugin_manager.getAllPlugins():
-        logging.getLogger(__name__).debug(
-            'Discovered plugin %s',
-            plugin_info.name)
         plugin_manager.activatePluginByName(plugin_info.name)
 
     return plugin_manager
 
+def __list_plugins(plugin_manager):
+    """ Lists the available plugins.
+
+    Args:
+        plugin_manager (yapsy.PluginManager): the plugin manager containing
+            the plugins.
+    """
+
+    for plugin_info in plugin_manager.getAllPlugins():
+        logging.getLogger(__name__).info('\tPlugin: %s', plugin_info.name)
+
 def start_cli():
     """ Command-line entry point for scriptabit """
 
-    plugin_manager = __get_plugins()
+    plugin_manager = __get_plugin_manager()
     config = __get_configuration()
-
-    # TODO: build a list of available scenarios
     __init_logging(config.logging_config)
-
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
 
     # Disabling the broad exception warning as catching
@@ -103,6 +110,7 @@ def start_cli():
     try:
         if config.list_scenarios:
             logging.getLogger(__name__).debug('Listing available scenarios')
+            __list_plugins(plugin_manager)
         else:
             # --------------------------------------------------
             # Running against Habitica.
