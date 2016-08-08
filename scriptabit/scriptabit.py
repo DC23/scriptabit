@@ -40,7 +40,6 @@ def __init_logging(logging_config_file):
 
     # Load the config
     logging.config.fileConfig(get_config_file(logging_config_file))
-    logging.getLogger(__name__).debug('Logging online')
 
 def __get_configuration():
     """ Builds and parses the hierarchical configuration from environment
@@ -68,9 +67,6 @@ def __get_plugin_manager():
     package_plugin_path = resource_filename(
         Requirement.parse("scriptabit"),
         os.path.join('scriptabit', 'plugins'))
-    logging.getLogger(__name__).debug(
-        'Loading package plugins from %s',
-        package_plugin_path)
 
     # TODO: define and scan a user plugin directory
     plugin_manager.setPluginPlaces([package_plugin_path])
