@@ -126,7 +126,11 @@ def get_configuration(basename='scriptabit.cfg', parents=[]):
     Args:
         basename (str): The base filename.
         parents (list): A list of ArgumentParser objects whose arguments
-            should also be included in the configuration parsing.
+            should also be included in the configuration parsing. These
+            ArgumentParser instances **must** be instantiated with the
+            `add_help` argument set to `False`, otherwise the main
+            ArgumentParser instance will raise an exception due to duplicate
+            help arguments.
 
     Returns:
         The options object, and a function that can be called to print the help

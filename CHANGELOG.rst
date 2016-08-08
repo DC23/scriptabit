@@ -33,5 +33,5 @@ Changelog
 * Fixed issue #3 (broken Travis builds) by making setuptools bootstrap more
   robust.
 * Cleaned up authentication file handling - generate default, more error checks.
-
+* Moved utility function CLI arg definitions into the utility functions class.
 
