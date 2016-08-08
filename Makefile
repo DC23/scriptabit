@@ -38,8 +38,7 @@ tests-slow:
 .PHONY: clean
 clean:
 	echo Cleaning ...
-	rm -rf build/
-	rm -rf .tox/
+	rm -rf build/ .tox/ ./setuptools-*
 	find ./$(PACKAGE_NAME)/ -name "__pycache__" -exec rm -rf {} \;
 	find ./$(PACKAGE_NAME)/ -name "*.pyc" -exec rm -rf {} \;
 	echo ... done
