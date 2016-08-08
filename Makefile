@@ -39,6 +39,7 @@ tests-slow:
 clean:
 	echo Cleaning ...
 	rm -rf build/
+	rm -rf .tox/
 	find ./$(PACKAGE_NAME)/ -name "__pycache__" -exec rm -rf {} \;
 	find ./$(PACKAGE_NAME)/ -name "*.pyc" -exec rm -rf {} \;
 	echo ... done
