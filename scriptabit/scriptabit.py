@@ -76,8 +76,6 @@ def __get_plugin_manager():
 
     # Activate all loaded plugins
     # TODO: do I need to do this?
-    for plugin_info in plugin_manager.getAllPlugins():
-        plugin_manager.activatePluginByName(plugin_info.name)
 
     return plugin_manager
 
@@ -89,8 +87,9 @@ def __list_plugins(plugin_manager):
             the plugins.
     """
 
+     # TODO: list the scenario CLI arg name as well as the text
     for plugin_info in plugin_manager.getAllPlugins():
-        logging.getLogger(__name__).info('\tPlugin: %s', plugin_info.name)
+        logging.getLogger(__name__).info('\t%s', plugin_info.name)
 
 def start_cli():
     """ Command-line entry point for scriptabit """

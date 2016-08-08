@@ -1,0 +1,9 @@
+[Core]
+Name = Poisoning and Health Regeneration
+Module = scriptabit.poisoned
+   
+[Documentation]
+Description = Implements poisoning and health regeneration effects.
+Author = DC23
+Version = 0.2.2
+Website = https://github.com/DC23/scriptabit
