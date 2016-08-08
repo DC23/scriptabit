@@ -12,6 +12,7 @@ from builtins import *
 
 import logging
 import logging.config
+from yapsy.PluginManager import PluginManager
 
 from .authentication import load_authentication_credentials
 from .configuration import (
@@ -52,9 +53,43 @@ variables, configuration files, command-line arguments, and argument defaults.
 
     return config
 
+def __get_plugin_manager():
+    """ Discovers and instantiates all plugins, returning a management object.
+
+    Returns: yapsy.PluginManager: The plugin manager with the loaded plugins.
+    """
+
+    # Build the manager
+    plugin_manager = PluginManager()
+
+    # Build the location of the plugins that ship with scriptabit
+    package_plugin_path = resource_filename(
+        Requirement.parse("scriptabit"),
+        os.path.join('scriptabit', 'plugins'))
+    logging.getLogger(__name__).debug(
+        'Loading package plugins from %s',
+        package_plugin_path)
+
+    # TODO: define and scan a user plugin directory
+    plugin_manager.setPluginPlaces([package_plugin_path])
+
+    # Load all plugins
+    plugin_manager.collectPlugins()
+
+    # Activate all loaded plugins
+    # TODO: do I need to do this?
+    for plugin_info in plugin_manager.getAllPlugins():
+        logging.getLogger(__name__).debug(
+            'Discovered plugin %s',
+            plugin_info.name)
+        plugin_manager.activatePluginByName(plugin_info.name)
+
+    return plugin_manager
+
 def start_cli():
     """ Command-line entry point for scriptabit """
 
+    plugin_manager = __get_plugins()
     config = __get_configuration()
 
     # TODO: build a list of available scenarios

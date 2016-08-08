@@ -99,6 +99,7 @@ setup(
         'future',
         'iso8601',
         'requests',
+        'yapsy',
     ],
 
     # List additional groups of dependencies here (e.g. development
