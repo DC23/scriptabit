@@ -82,9 +82,6 @@ def __get_plugin_manager():
     # Load all plugins
     plugin_manager.collectPlugins()
 
-    # Activate all loaded plugins
-    # TODO: do I need to do this?
-
     return plugin_manager
 
 def __list_plugins(plugin_manager):
@@ -128,8 +125,8 @@ def start_cli():
     # everything is *exactly* the intent here.
     # pylint: disable=broad-except
     try:
-        if config.list_scenarios:
-            logging.getLogger(__name__).debug('Listing available scenarios')
+        if config.list_plugins:
+            logging.getLogger(__name__).debug('Listing available plugins')
             __list_plugins(plugin_manager)
         else:
             # --------------------------------------------------
@@ -159,12 +156,13 @@ def start_cli():
             utility = UtilityFunctions(config, habitica_service)
             utility.run()
 
-            if config.scenario:
-                # Time to run the selected scenario
+            if config.plugin:
+                # Time to run the selected plugin
                 logging.getLogger(__name__).debug(
-                    "Running '%s' scenario", config.scenario)
+                    "Running '%s' plugin", config.plugin)
 
-                # TODO: scenario factory and execution
+                # TODO: plugin factory and execution
+
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)
         # pylint: enable=broad-except

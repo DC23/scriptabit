@@ -174,18 +174,18 @@ def get_configuration(basename='scriptabit.cfg', parents=None):
         default='https://habitica.com/api/v3/',
         help='''The base Habitica API URL''')
 
-    # Scenarios
+    # plugins
     parser.add(
-        '-s',
-        '--scenario',
+        '-p',
+        '--plugin',
         required=False,
-        help='''Select the scenario to run''')
+        help='''Select the plugin to run''')
 
     parser.add(
         '-ls',
-        '--list-scenarios',
+        '--list-plugins',
         required=False,
         action='store_true',
-        help='''List available scenarios''')
+        help='''List available plugins''')
 
     return parser.parse_args(), parser.print_help
