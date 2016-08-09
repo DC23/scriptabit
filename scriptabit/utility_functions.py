@@ -152,8 +152,14 @@ class UtilityFunctions(object):
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""
         print()
+        logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        user = self.__hs.get_tasks()
-        pprint(user)
+        tasks = self.__hs.get_tasks()
+        # pprint(tasks)
+        # pprint([t for t in tasks if t['type'] == 'daily'])
+        print("--------------------")
+        user = self.__hs.get_user()
+        pprint(user.keys())
+        pprint(user['lastCron'])
         print("--------------------")
         print()
