@@ -59,6 +59,12 @@ class IOfficialPlugin(IPlugin):
 
         return False
 
+    def update_interval_seconds(self):
+        """ Indicates the required update interval in integer seconds.
+        """
+
+        return self.update_interval_minutes() * 60
+
     def update_interval_minutes(self):
         """ Indicates the required update interval in integer minutes.
 
@@ -89,12 +95,4 @@ class IUserPlugin(IOfficialPlugin):
     but it allows filtering the plugins into official/user categories.
     """
 
-    def __init__(self):
-        """ Initialises the plugin. It is hard to any significant work here
-        as the yapsy framework instantiates plugins automatically. Thus extra
-        arguments cannot be passed easily.
-        """
-
-        super().__init__()
-
-# pylint: enable=abstract-method,no-self-use
+    pass

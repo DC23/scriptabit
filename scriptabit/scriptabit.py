@@ -13,6 +13,8 @@ from builtins import *
 import logging
 import logging.config
 import os
+from time import sleep
+
 from pkg_resources import Requirement, resource_filename
 from yapsy.PluginManager import PluginManager
 
@@ -21,7 +23,7 @@ from .configuration import (
     get_configuration,
     get_config_file,
     copy_default_config_to_user_directory)
-from .errors import ServerUnreachableError
+from .errors import ServerUnreachableError, PluginError
 from .habitica_service import HabiticaService
 from .metadata import __version__
 from .plugin_interfaces import IOfficialPlugin, IUserPlugin
@@ -112,6 +114,15 @@ def __list_plugins(plugin_manager):
     print('--------------------------')
     print()
 
+def __get_plugin_by_name(plugin_manager, name):
+    """ Gets a plugin by name, from any category.
+    """
+
+    for category in plugin_manager.getCategories():
+        pi = plugin_manager.getPluginByName(name, category)
+        if pi:
+            return pi
+
 def start_cli():
     """ Command-line entry point for scriptabit """
 
@@ -157,10 +168,32 @@ def start_cli():
 
             if config.plugin:
                 # Time to run the selected plugin
-                logging.getLogger(__name__).debug(
-                    "Running '%s' plugin", config.plugin)
+                logging.getLogger(__name__).info(
+                    "Running plugin %s", config.plugin)
 
-                # TODO: plugin factory and execution
+                # TODO: does this work regardless of category?
+                plugin_info = __get_plugin_by_name(
+                    plugin_manager,
+                    config.plugin)
+
+                if not plugin_info:
+                    raise PluginError('plugin %s not found' % config.plugin)
+
+                plugin_manager.activatePluginByName(config.plugin)
+                plugin = plugin_info.plugin_object
+                plugin.initialise(config, habitica_service)
+
+                if plugin.single_shot():
+                    plugin.update()
+                else:
+                    finished = False
+                    count = 0
+                    while not finished:
+                        logging.getLogger(__name__).debug(
+                            "Update #%d", count)
+                        finished = plugin.update()
+                        sleep(plugin.update_interval_seconds())
+                    logging.getLogger(__name__).info("%s done", config.plugin)
 
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)

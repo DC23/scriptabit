@@ -1,6 +1,13 @@
 """ Poisoning and health regeneration plugin.
 """
 
+# Ensure backwards compatibility with Python 2
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals)
+from builtins import *
 import logging
 
 from scriptabit.plugin_interfaces import IOfficialPlugin
@@ -18,6 +25,7 @@ class HealthEffects(IOfficialPlugin):
         """
 
         super().__init__()
+        self.__update_count = 0
 
     def initialise(self, configuration, habitica_service):
         """ Initialises the plugin.
@@ -27,7 +35,7 @@ class HealthEffects(IOfficialPlugin):
             habitica_service: the Habitica Service instance.
         """
 
-        super(IOfficialPlugin).initialise(configuration, habitica_service)
+        super().initialise(configuration, habitica_service)
 
     def single_shot(self):
         """ Indicates whether this plugin should be executed just once, or
@@ -59,7 +67,7 @@ class HealthEffects(IOfficialPlugin):
         is finished and the application should shut down.
         """
 
-        super(IOfficialPlugin).update()
+        super().update()
         self.__update_count += 1
         logging.getLogger(__name__).debug(
             'HealthEffects update %d',
