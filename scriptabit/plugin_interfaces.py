@@ -9,24 +9,77 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-import logging
 
 from yapsy.IPlugin import IPlugin
 
 
+# pylint: disable=abstract-method,no-self-use
 class IOfficialPlugin(IPlugin):
     """Internal class intended to allow identification of the builtin
     plugins.
     """
 
+    def __init__(self):
+        """ Initialises the plugin. It is hard to any significant work here
+        as the yapsy framework instantiates plugins automatically. Thus extra
+        arguments cannot be passed easily.
+        """
+
+        super().__init__()
+        self.config = None
+        self.hs = None
+
     def activate(self):
         """ Called by the plugin framework when a plugin is activated."""
 
-        logging.getLogger(__name__).debug('%s activated', self.id())
+        pass
 
     def deactivate(self):
         """ Called by the plugin framework when a plugin is deactivated."""
-        logging.getLogger(__name__).debug('%s deactivated', self.id())
+
+        pass
+
+    def initialise(self, configuration, habitica_service):
+        """ Initialises the plugin.
+
+        Args:
+            configuration (ArgParse.Namespace): The application configuration.
+            habitica_service: the Habitica Service instance.
+        """
+
+        self.config = configuration
+        self.hs = habitica_service
+
+    def single_shot(self):
+        """ Indicates whether this plugin should be executed just once, or
+        from the update loop.
+
+        Returns: bool: True if the plugin executes just once; otherwise False.
+        """
+
+        return False
+
+    def update_interval_minutes(self):
+        """ Indicates the required update interval in integer minutes.
+
+        This method will be ignored when single_shot returns True.
+        The default interval is 60 minutes.
+
+        Returns: int: The required update interval in minutes.
+        """
+
+        return 60
+
+    def update(self):
+        """ For updateable plugins (single_shot() == False), this update method
+        will be called once on every update cycle, with the frequency determined
+        by the value returned from update_interval_minutes().
+
+        Returns: bool: True if further updates are required; False if the plugin
+        is finished and the application should shut down.
+        """
+
+        return False
 
 
 class IUserPlugin(IOfficialPlugin):
@@ -36,4 +89,12 @@ class IUserPlugin(IOfficialPlugin):
     but it allows filtering the plugins into official/user categories.
     """
 
-    pass
+    def __init__(self):
+        """ Initialises the plugin. It is hard to any significant work here
+        as the yapsy framework instantiates plugins automatically. Thus extra
+        arguments cannot be passed easily.
+        """
+
+        super().__init__()
+
+# pylint: enable=abstract-method,no-self-use
