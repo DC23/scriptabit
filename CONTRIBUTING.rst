@@ -103,8 +103,18 @@ may be installed. Once you create and activate the virtual environment, the
 command `make develop` will install all the development dependencies and
 `scriptabit` in develop mode. From then on, only changes to the setup files
 (such as adding new entry points) will require rerunning the `make develop`
-command.
+command. My method for setting up on Linux is basically::
 
+    $ git clone https://github.com/DC23/scriptabit.git
+    $ cd scriptabit
+    $ mkvirtualenv -a . -p /usr/bin/python3 scriptabit
+    $ workon scriptabit
+    $ make develop
+    $ make tests
+    $ tox
+
+The last two lines run all the tests, both directly in the dev virtual
+environment and in tox against Python 2 and 3.
 
 Pull Request Guidelines
 -----------------------

@@ -18,8 +18,8 @@ Python scripting and scenarios for Habitica.
 Roadmap
 -------
 
-I also plan a banking function that will automate moving gold into and out of
-a gold-bank (implemented with a custom reward).
+Working on a banking function that will automate moving gold into and out of
+a gold-bank (implemented with a custom reward created by scriptabit).
 
 The first planned scenario will implement a poisoning, and health regen script.
 As part of the development of the poisoning scenario, the following features
