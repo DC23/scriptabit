@@ -13,13 +13,13 @@ Python scripting and scenarios for Habitica.
 * Free software: Apache 2.0
 * Homepage: https://github.com/DC23/scriptabit
 * Documentation: https://scriptabit.readthedocs.org
-* Version: 0.2.2
+* Version: 0.2.3
 
 Roadmap
 -------
 
-I also plan a banking function that will automate moving gold into and out of
-a gold-bank (implemented with a custom reward).
+Working on a banking function that will automate moving gold into and out of
+a gold-bank (implemented with a custom reward created by scriptabit).
 
 The first planned scenario will implement a poisoning, and health regen script.
 As part of the development of the poisoning scenario, the following features

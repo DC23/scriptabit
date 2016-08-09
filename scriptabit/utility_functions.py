@@ -11,7 +11,7 @@ from __future__ import (
 from builtins import *
 
 import logging
-import pprint
+from pprint import pprint
 
 import configargparse
 import iso8601
@@ -71,10 +71,20 @@ class UtilityFunctions(object):
             required=False,
             help='''Set the user's current XP (experience points)''')
 
+        parser.add(
+            '--test',
+            required=False,
+            action='store_true',
+            help='''Run the current test function''')
+
         return parser
 
     def run(self):
         """Runs the user-selected scriptabit utility functions"""
+
+        if self.__config.test:
+            self.__test()
+            return
 
         if self.__config.show_user_data:
             self.show_user_data()
@@ -134,7 +144,22 @@ class UtilityFunctions(object):
         print("Last Cron: {0}".format(
             iso8601.parse_date(data['lastCron']).astimezone()))
 
-        pprint.pprint(data['stats'])
+        pprint(data['stats'])
 
+        print("--------------------")
+        print()
+
+    def __test(self):
+        """A test function. Could do anything depending on what I am testing."""
+        print()
+        logging.getLogger(__name__).debug('Running test function')
+        print("--------------------")
+        tasks = self.__hs.get_tasks()
+        # pprint(tasks)
+        # pprint([t for t in tasks if t['type'] == 'daily'])
+        print("--------------------")
+        user = self.__hs.get_user()
+        pprint(user.keys())
+        pprint(user['lastCron'])
         print("--------------------")
         print()
