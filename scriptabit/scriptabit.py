@@ -24,6 +24,7 @@ from .configuration import (
 from .errors import ServerUnreachableError
 from .habitica_service import HabiticaService
 from .metadata import __version__
+from .plugin_interfaces import IOfficialPlugin, IUserPlugin
 from .utility_functions import UtilityFunctions
 
 
@@ -43,7 +44,8 @@ def __init_logging(logging_config_file):
 
 def __get_configuration():
     """ Builds and parses the hierarchical configuration from environment
-variables, configuration files, command-line arguments, and argument defaults.
+    variables, configuration files, command-line arguments,
+    and argument defaults.
 
     Returns: The argparse compatible configuration object.
     """
@@ -71,6 +73,12 @@ def __get_plugin_manager():
     # TODO: define and scan a user plugin directory
     plugin_manager.setPluginPlaces([package_plugin_path])
 
+    # Filter the plugins by official/builtin vs user
+    plugin_manager.setCategoriesFilter({
+        "Official": IOfficialPlugin,
+        "User": IUserPlugin,
+    })
+
     # Load all plugins
     plugin_manager.collectPlugins()
 
@@ -84,12 +92,29 @@ def __list_plugins(plugin_manager):
 
     Args:
         plugin_manager (yapsy.PluginManager): the plugin manager containing
-            the plugins.
-    """
+        the plugins.
+        """
 
-     # TODO: list the scenario CLI arg name as well as the text
-    for plugin_info in plugin_manager.getAllPlugins():
-        logging.getLogger(__name__).info('\t%s', plugin_info.name)
+    def print_plugin_metadata(plugin_info):
+        """Utility class to pretty-print plugin information."""
+
+        print('{_id}: {name}'.format(
+            _id=plugin_info.plugin_object.id(),
+            name=plugin_info.name))
+        print('{0}'.format(plugin_info.description))
+        print()
+
+    print()
+    print('---- Built-in Plugins ----')
+    for plugin_info in plugin_manager.getPluginsOfCategory('Official'):
+        print_plugin_metadata(plugin_info)
+    print('--------------------------')
+    print()
+    print('------ User Plugins ------')
+    for plugin_info in plugin_manager.getPluginsOfCategory('User'):
+        print_plugin_metadata(plugin_info)
+    print('--------------------------')
+    print()
 
 def start_cli():
     """ Command-line entry point for scriptabit """

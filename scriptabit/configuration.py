@@ -118,7 +118,7 @@ def copy_default_config_to_user_directory(
     if clobber or not os.path.isfile(dst):
         shutil.copy(src, dst)
 
-def get_configuration(basename='scriptabit.cfg', parents=[]):
+def get_configuration(basename='scriptabit.cfg', parents=None):
     """Parses and returns the program configuration options,
     taken from a combination of ini-style config file, and
     command line arguments.
@@ -141,7 +141,7 @@ def get_configuration(basename='scriptabit.cfg', parents=[]):
 
     parser = configargparse.ArgParser(
         formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
-        parents=parents,
+        parents=parents or [],
         default_config_files=[
             os.path.join(os.curdir, basename),
             os.path.join(os.path.expanduser("~"), ".config", basename),

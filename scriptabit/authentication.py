@@ -28,20 +28,20 @@ def load_authentication_credentials(
     Returns: dict: the selected credentials::
 
         {
-            'x-api-user': 'the user name',
-            'x-api-key':  'the user API key',
+        'x-api-user': 'the user name',
+        'x-api-key':  'the user API key',
         }
 
     Raises:
         ConfigError: specified file section or options are missing
-    """
+        """
 
     config_file_path = os.path.join(
         os.path.expanduser("~"),
         config_file_name)
 
-    logging.getLogger(__name__).info("Loading credentials from {0}".format(
-        config_file_path))
+    logging.getLogger(__name__).info("Loading credentials from %s",
+                                     config_file_path)
 
     if not os.path.exists(config_file_path):
         logging.getLogger(__name__).warning("%s not found. Creating default",

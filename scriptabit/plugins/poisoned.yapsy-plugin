@@ -1,0 +1,9 @@
+[Core]
+Name = poisoned
+Module = poisoned
+   
+[Documentation]
+Description = Implements poisoning and health regeneration effects, based on your performance on dailies.
+Author = DC23
+Version = 0.2.3
+Website = https://github.com/DC23/scriptabit
