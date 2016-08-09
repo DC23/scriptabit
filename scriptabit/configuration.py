@@ -165,7 +165,7 @@ def get_configuration(basename='scriptabit.cfg', parents=None):
         required=False,
         default='habitica',
         help='''Name of the authentication file section containing the Habitica
-        credentials''')
+credentials''')
 
     parser.add(
         '-url',
@@ -179,7 +179,10 @@ def get_configuration(basename='scriptabit.cfg', parents=None):
         '-p',
         '--plugin',
         required=False,
-        help='''Select the plugin to run''')
+        help='''Select the plugin to run. Note you can only run a single
+plugin at a time. If you specify more than one, then only the
+last one will be executed. To chain plugins together, create a
+new plugin that combines the effects as required.''')
 
     parser.add(
         '-ls',
