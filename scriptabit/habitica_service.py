@@ -76,6 +76,16 @@ class HabiticaService(object):
 
         return self.get_user()['stats']
 
+    def get_tasks(self):
+        """Gets all tasks for the current user.
+
+        Returns: dictionary: The tasks.
+        """
+
+        response = self.__get('tasks/user')
+        response.raise_for_status()
+        return response.json()['data']
+
     # TODO: I don't think the API lets me set partial user objects in this way.
     # So I could get the entire user structure, swap the stats for the argument
     # version, and then PUT that back. Or I can wait to see if I even need this
