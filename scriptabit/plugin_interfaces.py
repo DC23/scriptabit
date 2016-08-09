@@ -20,7 +20,7 @@ class IOfficialPlugin(IPlugin):
     """
 
     def __init__(self):
-        """ Initialises the plugin. It is hard to any significant work here
+        """ Initialises the plugin. It is hard to do any significant work here
         as the yapsy framework instantiates plugins automatically. Thus extra
         arguments cannot be passed easily.
         """
