@@ -28,15 +28,6 @@ class IOfficialPlugin(IPlugin):
         """ Called by the plugin framework when a plugin is deactivated."""
         logging.getLogger(__name__).debug('%s deactivated', self.id())
 
-    def id(self):
-        """Returns the plugin ID.
-
-        The ID is used to select the plugin through the command line interface,
-        and therefore unambiguous strings without spaces are preferred.
-        """
-
-        raise NotImplementedError
-
 
 class IUserPlugin(IOfficialPlugin):
     """Base class/interface for user plugins.
@@ -45,11 +36,4 @@ class IUserPlugin(IOfficialPlugin):
     but it allows filtering the plugins into official/user categories.
     """
 
-    def id(self):
-        """Returns the plugin ID.
-
-        The ID is used to select the plugin through the command line interface,
-        and therefore unambiguous strings without spaces are preferred.
-        """
-
-        raise NotImplementedError
+    pass

@@ -95,13 +95,12 @@ def __list_plugins(plugin_manager):
     def print_plugin_metadata(plugin_info):
         """Utility class to pretty-print plugin information."""
 
-        print('{_id}: {name}'.format(
-            _id=plugin_info.plugin_object.id(),
-            name=plugin_info.name))
+        print('* {0}:'.format(plugin_info.name))
         print('{0}'.format(plugin_info.description))
         print()
 
     print()
+    print('To execute a plugin, use the plugin name with the -p argument.')
     print('---- Built-in Plugins ----')
     for plugin_info in plugin_manager.getPluginsOfCategory('Official'):
         print_plugin_metadata(plugin_info)

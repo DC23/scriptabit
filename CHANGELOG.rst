@@ -37,3 +37,9 @@ Changelog
 * Added test utility function. The functionality of this will change all the
   time, depending on my current test needs.
 
+0.2.4 (2016-08-??)
+-----------------------------------------
+
+* Implemented plugin framework.
+* Changed scenario text to reference plugins instead.
+
