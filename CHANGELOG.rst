@@ -35,7 +35,7 @@ Changelog
 * Cleaned up authentication file handling - generate default, more error checks.
 * Moved utility function CLI arg definitions into the utility functions class.
 
-0.3.0 (2016-08-09)
+0.3.0 (2016-08-10)
 -----------------------------------------
 
 * Implemented plugin framework.
