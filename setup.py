@@ -1,16 +1,23 @@
 # Bootstrap setuptools with ez_setup. Wrapped in try as Tox and Travis CI don't
 # like the bootstrapping code very much.
-try:
-    import ez_setup
-    ez_setup.use_setuptools()
-except Exception as exception:
-    pass
+# Neither does readthedocs!
+
+# on_rtd is whether we are on readthedocs.org,
+# this line of code grabbed from docs.readthedocs.org
+import os
+import sys
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+if not on_rtd:
+    try:
+        import ez_setup
+        ez_setup.use_setuptools()
+    except Exception as exception:
+        pass
 
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 from codecs import open  # To use a consistent encoding
 from os import path
-import sys
 
 here = path.abspath(path.dirname(__file__))
 
