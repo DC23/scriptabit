@@ -58,12 +58,13 @@ def __get_configuration(plugin_manager):
     extra_args = [UtilityFunctions.get_arg_parser()]
 
     # Plugins can define additional arguments
-    for plugin_info in plugin_manager.getPluginsOfCategory('Official'):
+    all_plugins = []
+    for category in plugin_manager.getCategories():
+        all_plugins.extend(plugin_manager.getPluginsOfCategory(category))
+
+    for plugin_info in all_plugins:
         plugin_arg_parser = plugin_info.plugin_object.get_arg_parser()
         extra_args.append(plugin_arg_parser)
-
-    for plugin_info in plugin_manager.getPluginsOfCategory('User'):
-        pass
 
     config, _ = get_configuration(parents=extra_args)
 

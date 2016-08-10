@@ -34,7 +34,7 @@ class HealthEffects(IOfficialPlugin):
         parser = super().get_arg_parser()
 
         parser.add(
-            '--sbhe-max-hp-loss-per-day',
+            '--he-max-hp-loss-per-day',
             required=False,
             default=20.0,
             type=float,
