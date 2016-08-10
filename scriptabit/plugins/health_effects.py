@@ -27,6 +27,16 @@ class HealthEffects(IOfficialPlugin):
         super().__init__()
         self.__update_count = 0
 
+    def get_arg_parser(self):
+        """Gets the argument parser containing any CLI arguments for the plugin.
+        """
+
+        parser = super().get_arg_parser()
+
+        # TODO: add args
+
+        return parser
+
     def initialise(self, configuration, habitica_service):
         """ Initialises the plugin.
 

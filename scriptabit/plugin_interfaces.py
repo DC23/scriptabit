@@ -9,6 +9,7 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+import configargparse
 
 from yapsy.IPlugin import IPlugin
 
@@ -28,6 +29,20 @@ class IOfficialPlugin(IPlugin):
         super().__init__()
         self.config = None
         self.hs = None
+
+    def get_arg_parser(self):
+        """Gets the argument parser containing any CLI arguments for the plugin.
+
+        Note that to avoid argument name conflicts, only long argument names
+        should be used, and they should be prefixed with the plugin-name.
+
+        To get their `ArgParser`, subclasses should call this method via super and
+        capture the returned `ArgParser` instance.
+
+        Returns: argparse.ArgParser:  The `ArgParser` containing the argument definitions.
+        """
+
+        return configargparse.ArgParser(add_help=False)
 
     def activate(self):
         """ Called by the plugin framework when a plugin is activated."""
