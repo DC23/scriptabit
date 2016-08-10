@@ -191,4 +191,13 @@ new plugin that combines the effects as required.''')
         action='store_true',
         help='''List available plugins''')
 
+    parser.add(
+        '-mup',
+        '--max-updates',
+        required=False,
+        type=int,
+        default=0,
+        help='''If > 0, this sets a limit on the number of plugin updates.
+Note that plugins can still exit before the limit is reached.''')
+
     return parser.parse_args(), parser.print_help
