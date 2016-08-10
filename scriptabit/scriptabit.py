@@ -199,7 +199,9 @@ def start_cli():
                 updating = True
                 count = 0
                 while updating:
-                    # logging.getLogger(__name__).debug("Update #%d", count)
+                    logging.getLogger(__name__).debug("%s update %d",
+                                                      config.plugin,
+                                                      count)
                     updating = plugin.update()
                     count += 1
                     sleep(plugin.update_interval_seconds())

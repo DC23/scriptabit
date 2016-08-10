@@ -28,6 +28,7 @@ class IOfficialPlugin(IPlugin):
 
         super().__init__()
         self.config = None
+        self.update_count = 0
         self.hs = None
 
     def get_arg_parser(self):
@@ -97,6 +98,7 @@ class IOfficialPlugin(IPlugin):
         is finished and the application should shut down.
         """
 
+        self.update_count += 1
         return False
 
 

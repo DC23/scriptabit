@@ -25,7 +25,6 @@ class HealthEffects(IOfficialPlugin):
         """
 
         super().__init__()
-        self.__update_count = 0
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -74,8 +73,4 @@ class HealthEffects(IOfficialPlugin):
         """
 
         super().update()
-        logging.getLogger(__name__).debug(
-            'HealthEffects update %d',
-            self.__update_count)
-        self.__update_count += 1
-        return self.__update_count < 3
+        return self.update_count < 3
