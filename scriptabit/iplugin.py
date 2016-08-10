@@ -15,10 +15,8 @@ from yapsy.IPlugin import IPlugin
 
 
 # pylint: disable=abstract-method,no-self-use
-class IOfficialPlugin(IPlugin):
-    """Internal class intended to allow identification of the builtin
-    plugins.
-    """
+class IPlugin(IPlugin):
+    """ Scriptabit plugin base class. """
 
     def __init__(self):
         """ Initialises the plugin. It is hard to do any significant work here
@@ -100,13 +98,3 @@ class IOfficialPlugin(IPlugin):
 
         self.update_count += 1
         return False
-
-
-class IUserPlugin(IOfficialPlugin):
-    """Base class/interface for user plugins.
-
-    Does not add any extra functionality to the superclass `IOfficialPlugin`,
-    but it allows filtering the plugins into official/user categories.
-    """
-
-    pass

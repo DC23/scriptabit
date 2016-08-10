@@ -26,7 +26,6 @@ from .configuration import (
 from .errors import ServerUnreachableError, PluginError
 from .habitica_service import HabiticaService
 from .metadata import __version__
-from .plugin_interfaces import IOfficialPlugin, IUserPlugin
 from .utility_functions import UtilityFunctions
 
 
@@ -58,11 +57,7 @@ def __get_configuration(plugin_manager):
     extra_args = [UtilityFunctions.get_arg_parser()]
 
     # Plugins can define additional arguments
-    all_plugins = []
-    all_plugins.extend(plugin_manager.getPluginsOfCategory('Official'))
-    all_plugins.extend(plugin_manager.getPluginsOfCategory('User'))
-
-    for plugin_info in all_plugins:
+    for plugin_info in plugin_manager.getAllPlugins():
         print(plugin_info.name)
         plugin_arg_parser = plugin_info.plugin_object.get_arg_parser()
         extra_args.append(plugin_arg_parser)
@@ -102,13 +97,8 @@ def __get_plugin_manager():
     # user plugin location
     user_plugin_path = init_user_plugin_directory()
 
+    # Set plugin locations
     plugin_manager.setPluginPlaces([package_plugin_path, user_plugin_path])
-
-    # Filter the plugins by official/builtin vs user
-    plugin_manager.setCategoriesFilter({
-        "Official": IOfficialPlugin,
-        "User": IUserPlugin,
-    })
 
     # Load all plugins
     plugin_manager.collectPlugins()
@@ -132,25 +122,11 @@ def __list_plugins(plugin_manager):
 
     print()
     print('To execute a plugin, use the plugin name with the -p argument.')
-    print('---- Built-in Plugins ----')
-    for plugin_info in plugin_manager.getPluginsOfCategory('Official'):
+    print('---- Plugins ----')
+    for plugin_info in plugin_manager.getAllPlugins():
         print_plugin_metadata(plugin_info)
-    print('--------------------------')
+    print('-----------------')
     print()
-    print('------ User Plugins ------')
-    for plugin_info in plugin_manager.getPluginsOfCategory('User'):
-        print_plugin_metadata(plugin_info)
-    print('--------------------------')
-    print()
-
-def __get_plugin_by_name(plugin_manager, name):
-    """ Gets a plugin by name, from any category.
-    """
-
-    for category in plugin_manager.getCategories():
-        pi = plugin_manager.getPluginByName(name, category)
-        if pi:
-            return pi
 
 def start_cli():
     """ Command-line entry point for scriptabit """
@@ -200,9 +176,7 @@ def start_cli():
                 # First, find it
                 logging.getLogger(__name__).info("** %s running", config.plugin)
 
-                plugin_info = __get_plugin_by_name(
-                    plugin_manager,
-                    config.plugin)
+                plugin_info = plugin_manager.getPluginByName(config.plugin)
 
                 if not plugin_info:
                     raise PluginError('plugin %s not found' % config.plugin)

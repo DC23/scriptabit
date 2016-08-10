@@ -11,7 +11,7 @@ from .configuration import (
     copy_default_config_to_user_directory,
 )
 from .habitica_service import HabiticaService
-from .plugin_interfaces import IUserPlugin
+from .iplugin import IPlugin
 from .scriptabit import start_cli
 from .utility_functions import UtilityFunctions
 

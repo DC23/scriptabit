@@ -10,10 +10,10 @@ from __future__ import (
 from builtins import *
 import logging
 
-from scriptabit.plugin_interfaces import IOfficialPlugin
+import scriptabit
 
 
-class HealthEffects(IOfficialPlugin):
+class HealthEffects(scriptabit.IPlugin):
     """Official scriptabit plugin that implements a poisoning/health
     regeneration scenario based on player performance on dailies.
     """
