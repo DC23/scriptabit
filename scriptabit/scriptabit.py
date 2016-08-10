@@ -59,10 +59,11 @@ def __get_configuration(plugin_manager):
 
     # Plugins can define additional arguments
     all_plugins = []
-    for category in plugin_manager.getCategories():
-        all_plugins.extend(plugin_manager.getPluginsOfCategory(category))
+    all_plugins.extend(plugin_manager.getPluginsOfCategory('Official'))
+    all_plugins.extend(plugin_manager.getPluginsOfCategory('User'))
 
     for plugin_info in all_plugins:
+        print(plugin_info.name)
         plugin_arg_parser = plugin_info.plugin_object.get_arg_parser()
         extra_args.append(plugin_arg_parser)
 

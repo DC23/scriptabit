@@ -64,9 +64,7 @@ class HealthEffects(IOfficialPlugin):
         return 0.02
 
     def update(self):
-        """ For updateable plugins (single_shot() == False), this update method
-        will be called once on every update cycle, with the frequency determined
-        by the value returned from update_interval_minutes().
+        """ Update the health effects plugin.
 
         Returns: bool: True if further updates are required; False if the plugin
         is finished and the application should shut down.
