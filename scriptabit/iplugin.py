@@ -11,11 +11,11 @@ from __future__ import (
 from builtins import *
 import configargparse
 
-from yapsy.IPlugin import IPlugin
+import yapsy
 
 
-# pylint: disable=abstract-method,no-self-use
-class IPlugin(IPlugin):
+# pylint: disable=no-self-use
+class IPlugin(yapsy.IPlugin.IPlugin):
     """ Scriptabit plugin base class.
 
     Attributes:
@@ -42,10 +42,11 @@ class IPlugin(IPlugin):
         should be used, and they should be prefixed with the plugin-name or
         unique abbreviation.
 
-        To get their `ArgParser`, subclasses should call this method via super and
-        capture the returned `ArgParser` instance.
+        To get their `ArgParser`, subclasses should call this method via super
+        and capture the returned `ArgParser` instance.
 
-        Returns: argparse.ArgParser:  The `ArgParser` containing the argument definitions.
+        Returns: argparse.ArgParser:  The `ArgParser` containing the argument
+        definitions.
         """
 
         return configargparse.ArgParser(add_help=False)
