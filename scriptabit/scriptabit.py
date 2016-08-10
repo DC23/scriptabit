@@ -190,7 +190,15 @@ def start_cli():
                 # Finally, run it
                 updating = True
                 count = 0
-                while updating:
+
+                def keep_updating():
+                    """ Test for whether another update is required """
+                    return (
+                        updating and not
+                        (config.max_updates > 0 and
+                         count >= config.max_updates))
+
+                while keep_updating():
                     logging.getLogger(__name__).debug("%s update %d",
                                                       config.plugin,
                                                       count)

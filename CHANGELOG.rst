@@ -42,4 +42,5 @@ Changelog
 * Added test utility function. The functionality of this will change all the
   time, depending on my current test needs.
 * Changed scenario text to reference plugins instead.
+* Added max-updates command line argument.
 
