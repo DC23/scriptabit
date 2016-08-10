@@ -83,9 +83,6 @@ Operations include:
 - `-mp n`: Set the user's mana points to n
 - `-xp n`: Set experience points to n
 
-There are commands to list available scenarios, and to run a scenario, but they
-have no effect in this version.
-
 After running `scriptabit` at least once, configuration files will be created in
 `~/.config/scriptabit/`. These can be edited to change the default options. You
 can revert to the installation defaults by deleting the files (they will be
