@@ -38,9 +38,9 @@ tests-slow:
 .PHONY: clean
 clean:
 	echo Cleaning ...
-	rm -rf build/ .tox/ ./setuptools-*
-	find ./$(PACKAGE_NAME)/ -name "__pycache__" -exec rm -rf {} \;
-	find ./$(PACKAGE_NAME)/ -name "*.pyc" -exec rm -rf {} \;
+	rm -rf build/ .tox/ ./setuptools-* .cache/
+	find . -name "__pycache__" -nowarn -exec rm -rf {} \;
+	find . -name "*.pyc" -nowarn -exec rm -rf {} \;
 	echo ... done
 
 .PHONY: install-deps
