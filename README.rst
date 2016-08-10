@@ -65,6 +65,7 @@ set the permissions as follows:
 
     chmod 600 .auth.cfg
 
+
 Usage
 -----
 
@@ -99,7 +100,7 @@ command line arguments so that plugins get a chance to add additional
 arguments). If the `SCRIPTABIT_USER_PLUGIN_DIR` environment variable is defined,
 then this location will be used instead of the default location.
 
-All plugins should subclass the `IUserPlugin` class. Refer to the API
+All plugins should subclass the `IPlugin` class. Refer to the API
 documentation for details of the available methods.
 
 Plugins use `Yapsy <http://yapsy.sourceforge.net/>`__, so all Yapsy
