@@ -11,11 +11,11 @@ from __future__ import (
 from builtins import *
 import configargparse
 
-import yapsy
+from yapsy.IPlugin import IPlugin as YapsyIPlugin
 
 
 # pylint: disable=no-self-use
-class IPlugin(yapsy.IPlugin.IPlugin):
+class IPlugin(YapsyIPlugin):
     """ Scriptabit plugin base class.
 
     Attributes:
