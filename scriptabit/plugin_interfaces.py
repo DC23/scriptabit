@@ -34,7 +34,8 @@ class IOfficialPlugin(IPlugin):
         """Gets the argument parser containing any CLI arguments for the plugin.
 
         Note that to avoid argument name conflicts, only long argument names
-        should be used, and they should be prefixed with the plugin-name.
+        should be used, and they should be prefixed with the plugin-name or
+        unique abbreviation.
 
         To get their `ArgParser`, subclasses should call this method via super and
         capture the returned `ArgParser` instance.
@@ -76,17 +77,19 @@ class IOfficialPlugin(IPlugin):
 
     def update_interval_seconds(self):
         """ Indicates the required update interval in integer seconds.
+
+        Returns: int: update interval in whole seconds
         """
 
-        return self.update_interval_minutes() * 60
+        return int(self.update_interval_minutes() * 60)
 
     def update_interval_minutes(self):
-        """ Indicates the required update interval in integer minutes.
+        """ Indicates the required update interval in minutes.
 
         This method will be ignored when single_shot returns True.
         The default interval is 60 minutes.
 
-        Returns: int: The required update interval in minutes.
+        Returns: float: The required update interval in minutes.
         """
 
         return 60

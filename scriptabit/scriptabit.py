@@ -44,16 +44,27 @@ def __init_logging(logging_config_file):
     # Load the config
     logging.config.fileConfig(get_config_file(logging_config_file))
 
-def __get_configuration():
+def __get_configuration(plugin_manager):
     """ Builds and parses the hierarchical configuration from environment
     variables, configuration files, command-line arguments,
     and argument defaults.
+
+    Args:
+        plugin_manager (yapsy.PluginManager): The plugin manager.
 
     Returns: The argparse compatible configuration object.
     """
 
     extra_args = [UtilityFunctions.get_arg_parser()]
-    # TODO: Give all plugins a chance to extend the command line args.
+
+    # Plugins can define additional arguments
+    for plugin_info in plugin_manager.getPluginsOfCategory('Official'):
+        plugin_arg_parser = plugin_info.plugin_object.get_arg_parser()
+        extra_args.append(plugin_arg_parser)
+
+    for plugin_info in plugin_manager.getPluginsOfCategory('User'):
+        pass
+
     config, _ = get_configuration(parents=extra_args)
 
     return config
@@ -127,7 +138,7 @@ def start_cli():
     """ Command-line entry point for scriptabit """
 
     plugin_manager = __get_plugin_manager()
-    config = __get_configuration()
+    config = __get_configuration(plugin_manager)
     __init_logging(config.logging_config)
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
 
@@ -171,7 +182,6 @@ def start_cli():
                 logging.getLogger(__name__).info(
                     "Running plugin %s", config.plugin)
 
-                # TODO: does this work regardless of category?
                 plugin_info = __get_plugin_by_name(
                     plugin_manager,
                     config.plugin)
@@ -186,12 +196,13 @@ def start_cli():
                 if plugin.single_shot():
                     plugin.update()
                 else:
-                    finished = False
+                    updating = True
                     count = 0
-                    while not finished:
+                    while updating:
                         logging.getLogger(__name__).debug(
                             "Update #%d", count)
-                        finished = plugin.update()
+                        updating = plugin.update()
+                        count += 1
                         sleep(plugin.update_interval_seconds())
                     logging.getLogger(__name__).info("%s done", config.plugin)
 

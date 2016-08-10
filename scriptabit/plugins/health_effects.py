@@ -33,7 +33,12 @@ class HealthEffects(IOfficialPlugin):
 
         parser = super().get_arg_parser()
 
-        # TODO: add args
+        parser.add(
+            '--sbhe-max-hp-loss-per-day',
+            required=False,
+            default=20.0,
+            type=float,
+            help='Health Effects: Max amount of health loss per day')
 
         return parser
 
@@ -57,16 +62,16 @@ class HealthEffects(IOfficialPlugin):
         return False
 
     def update_interval_minutes(self):
-        """ Indicates the required update interval in integer minutes.
+        """ Indicates the required update interval in minutes.
 
         This method will be ignored when single_shot returns True.
         The default interval is 60 minutes.
 
-        Returns: int: The required update interval in minutes.
+        Returns: float: The required update interval in minutes.
         """
 
         # For testing only. Actual use will be at 30 or 60 minutes
-        return 1
+        return 0.02
 
     def update(self):
         """ For updateable plugins (single_shot() == False), this update method
@@ -78,8 +83,8 @@ class HealthEffects(IOfficialPlugin):
         """
 
         super().update()
-        self.__update_count += 1
         logging.getLogger(__name__).debug(
             'HealthEffects update %d',
             self.__update_count)
-        return self.__update_count >= 5
+        self.__update_count += 1
+        return self.__update_count < 3

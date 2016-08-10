@@ -53,25 +53,25 @@ class UtilityFunctions(object):
             '-hp',
             '--set-hp',
             type=float,
-            default=-1,
+            default=-1.0,
             required=False,
-            help='''Set the user's current HP''')
+            help='''If > 0, set the user's current HP''')
 
         parser.add(
             '-mp',
             '--set-mp',
             type=float,
-            default=-1,
+            default=-1.0,
             required=False,
-            help='''Set the user's current MP (mana points)''')
+            help='''If > 0, set the user's current MP (mana points)''')
 
         parser.add(
             '-xp',
             '--set-xp',
-            type=float,
+            type=int,
             default=-1,
             required=False,
-            help='''Set the user's current XP (experience points)''')
+            help='''If > 0, set the user's current XP (experience points)''')
 
         parser.add(
             '--test',
