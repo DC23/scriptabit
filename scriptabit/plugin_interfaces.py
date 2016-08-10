@@ -66,15 +66,6 @@ class IOfficialPlugin(IPlugin):
         self.config = configuration
         self.hs = habitica_service
 
-    def single_shot(self):
-        """ Indicates whether this plugin should be executed just once, or
-        from the update loop.
-
-        Returns: bool: True if the plugin executes just once; otherwise False.
-        """
-
-        return False
-
     def update_interval_seconds(self):
         """ Indicates the required update interval in integer seconds.
 
@@ -95,9 +86,12 @@ class IOfficialPlugin(IPlugin):
         return 60
 
     def update(self):
-        """ For updateable plugins (single_shot() == False), this update method
-        will be called once on every update cycle, with the frequency determined
-        by the value returned from update_interval_minutes().
+        """ This update method will be called once on every update cycle,
+        with the frequency determined by the value returned from
+        `update_interval_minutes()`.
+
+        If a plugin implements a single-shot function, then update should
+        return `False`.
 
         Returns: bool: True if further updates are required; False if the plugin
         is finished and the application should shut down.

@@ -52,15 +52,6 @@ class HealthEffects(IOfficialPlugin):
 
         super().initialise(configuration, habitica_service)
 
-    def single_shot(self):
-        """ Indicates whether this plugin should be executed just once, or
-        from the update loop.
-
-        Returns: bool: True if the plugin executes just once; otherwise False.
-        """
-
-        return False
-
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
 
