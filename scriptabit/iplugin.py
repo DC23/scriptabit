@@ -16,7 +16,13 @@ from yapsy.IPlugin import IPlugin
 
 # pylint: disable=abstract-method,no-self-use
 class IPlugin(IPlugin):
-    """ Scriptabit plugin base class. """
+    """ Scriptabit plugin base class.
+
+    Attributes:
+        config (lookupdict): Configuration object returned from argparse.
+        update_count (int): Number of updates (zero-based).
+        hs (scriptabit.HabiticaService): The HabiticaService instance.
+    """
 
     def __init__(self):
         """ Initialises the plugin. It is hard to do any significant work here

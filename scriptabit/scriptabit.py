@@ -118,13 +118,14 @@ def __list_plugins(plugin_manager):
 
         print('* {0}:'.format(plugin_info.name))
         print('{0}'.format(plugin_info.description))
-        print()
 
     print()
-    print('To execute a plugin, use the plugin name with the -p argument.')
     print('---- Plugins ----')
+    print('To execute a plugin, use the plugin name with the -p argument.')
+    print()
     for plugin_info in plugin_manager.getAllPlugins():
         print_plugin_metadata(plugin_info)
+        print()
     print('-----------------')
     print()
 
