@@ -26,7 +26,6 @@ class UtilityFunctions(object):
     __config = None
     __hs = None
 
-    # TODO: can I move the definition of the utility CLI args to this class?
     def __init__(self, config, habitica_service):
 
         logging.getLogger(__name__).info('UtilityFunctions online')
@@ -36,6 +35,9 @@ class UtilityFunctions(object):
     @classmethod
     def get_arg_parser(cls):
         """Gets the argument parser containing Utility function CLI arguments.
+
+        Returns: argparse.ArgParser:  The ArgParser containing the argument
+            definitions.
         """
 
         parser = configargparse.ArgParser(add_help=False)
@@ -51,25 +53,25 @@ class UtilityFunctions(object):
             '-hp',
             '--set-hp',
             type=float,
-            default=-1,
+            default=-1.0,
             required=False,
-            help='''Set the user's current HP''')
+            help='''If > 0, set the user's current HP''')
 
         parser.add(
             '-mp',
             '--set-mp',
             type=float,
-            default=-1,
+            default=-1.0,
             required=False,
-            help='''Set the user's current MP (mana points)''')
+            help='''If > 0, set the user's current MP (mana points)''')
 
         parser.add(
             '-xp',
             '--set-xp',
-            type=float,
+            type=int,
             default=-1,
             required=False,
-            help='''Set the user's current XP (experience points)''')
+            help='''If > 0, set the user's current XP (experience points)''')
 
         parser.add(
             '--test',
@@ -154,12 +156,11 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        tasks = self.__hs.get_tasks()
+        # tasks = self.__hs.get_tasks()
         # pprint(tasks)
         # pprint([t for t in tasks if t['type'] == 'daily'])
         print("--------------------")
         user = self.__hs.get_user()
         pprint(user.keys())
-        pprint(user['lastCron'])
         print("--------------------")
         print()

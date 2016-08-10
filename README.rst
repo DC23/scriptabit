@@ -5,7 +5,7 @@ Python scripting and scenarios for Habitica.
 
 .. image:: https://travis-ci.org/DC23/scriptabit.svg?branch=master
     :target: https://travis-ci.org/DC23/scriptabit
-    
+
 .. image:: https://readthedocs.org/projects/scriptabit/badge/?version=latest
     :target: http://scriptabit.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
@@ -25,25 +25,14 @@ The first planned scenario will implement a poisoning, and health regen script.
 As part of the development of the poisoning scenario, the following features
 will be added to the code:
 
-* Plugin framework using `Yapsy <http://yapsy.sourceforge.net/>`__
-
-    * This will give the ability to load and run user-defined scenarios.
-
-* Ability to chain scenarios together into a composite operation.
-* Build toolkit of useful scenario building blocks:
-
-    * Detect task activity
-    * Detect skill and reward use (health potions, skills)
-    * Detect "perfect day" buff status
-
 **Note** that apart from bugs, I don't use the GitHub issue list for
-planning. Task and feature planning is carried out in a private 
+planning. Task and feature planning is carried out in a private
 `Trello <https://trello.com>`_ board. Access can be provided on request.
 
 Installation
 ------------
-Note that the code is not yet in `PyPI <https://pypi.python.org/pypi>`_, 
-so until then cloning this repo and using setuptools to install is your 
+Note that the code is not yet in `PyPI <https://pypi.python.org/pypi>`_,
+so until then cloning this repo and using setuptools to install is your
 best option.
 
 ::
@@ -52,7 +41,7 @@ best option.
 
 You also require an authentication credentials file in your home directory
 containing your
-`Habitica API Key and User ID <https://habitica.com/#/options/settings/api>`__. 
+`Habitica API Key and User ID <https://habitica.com/#/options/settings/api>`__.
 The file should have a typical ini file structure, with the following section:
 
 ::
@@ -94,10 +83,24 @@ Operations include:
 - `-mp n`: Set the user's mana points to n
 - `-xp n`: Set experience points to n
 
-There are commands to list available scenarios, and to run a scenario, but they
-have no effect in this version.
-
 After running `scriptabit` at least once, configuration files will be created in
 `~/.config/scriptabit/`. These can be edited to change the default options. You
 can revert to the installation defaults by deleting the files (they will be
 recreated on the next run).
+
+Writing Plugins
+---------------
+
+User plugins should be placed into the `scriptabit_plugins` directory. This
+will be created in your home directory the first time `scriptabit` runs. Due to
+an initialisation order issue, this directory location cannot be specified on
+the command line (the plugin directory needs to be located before processing
+command line arguments so that plugins get a chance to add additional
+arguments). If the `SCRIPTABIT_USER_PLUGIN_DIR` environment variable is defined,
+then this location will be used instead of the default location.
+
+All plugins should subclass the `IUserPlugin` class. Refer to the API
+documentation for details of the available methods.
+
+Plugins use `Yapsy <http://yapsy.sourceforge.net/>`__, so all Yapsy
+documentation is relevant to writing `scriptabit` plugins.

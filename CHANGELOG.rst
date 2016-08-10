@@ -34,6 +34,12 @@ Changelog
   robust.
 * Cleaned up authentication file handling - generate default, more error checks.
 * Moved utility function CLI arg definitions into the utility functions class.
+
+0.3.0 (2016-08-09)
+-----------------------------------------
+
+* Implemented plugin framework.
 * Added test utility function. The functionality of this will change all the
   time, depending on my current test needs.
+* Changed scenario text to reference plugins instead.
 

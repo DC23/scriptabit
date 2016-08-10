@@ -1,0 +1,10 @@
+[Core]
+Name = sb_health_effects
+Module = health_effects
+   
+[Documentation]
+Description = Implements poisoning and health regeneration effects,
+    based on your performance on dailies.
+Author = DC23
+Version = 0.2.3
+Website = https://github.com/DC23/scriptabit

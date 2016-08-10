@@ -118,7 +118,7 @@ def copy_default_config_to_user_directory(
     if clobber or not os.path.isfile(dst):
         shutil.copy(src, dst)
 
-def get_configuration(basename='scriptabit.cfg', parents=[]):
+def get_configuration(basename='scriptabit.cfg', parents=None):
     """Parses and returns the program configuration options,
     taken from a combination of ini-style config file, and
     command line arguments.
@@ -141,7 +141,7 @@ def get_configuration(basename='scriptabit.cfg', parents=[]):
 
     parser = configargparse.ArgParser(
         formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
-        parents=parents,
+        parents=parents or [],
         default_config_files=[
             os.path.join(os.curdir, basename),
             os.path.join(os.path.expanduser("~"), ".config", basename),
@@ -165,7 +165,7 @@ def get_configuration(basename='scriptabit.cfg', parents=[]):
         required=False,
         default='habitica',
         help='''Name of the authentication file section containing the Habitica
-        credentials''')
+credentials''')
 
     parser.add(
         '-url',
@@ -174,18 +174,21 @@ def get_configuration(basename='scriptabit.cfg', parents=[]):
         default='https://habitica.com/api/v3/',
         help='''The base Habitica API URL''')
 
-    # Scenarios
+    # plugins
     parser.add(
-        '-s',
-        '--scenario',
+        '-p',
+        '--plugin',
         required=False,
-        help='''Select the scenario to run''')
+        help='''Select the plugin to run. Note you can only run a single
+plugin at a time. If you specify more than one, then only the
+last one will be executed. To chain plugins together, create a
+new plugin that combines the effects as required.''')
 
     parser.add(
         '-ls',
-        '--list-scenarios',
+        '--list-plugins',
         required=False,
         action='store_true',
-        help='''List available scenarios''')
+        help='''List available plugins''')
 
     return parser.parse_args(), parser.print_help
