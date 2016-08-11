@@ -1,4 +1,12 @@
-""" Banking plugin.
+"""Scriptabit plugin that implements a banking feature. Allows deposits and
+withdrawals from a custom bank.
+
+If neither a deposit or withdrawal is specified, then the balance is
+reported but not changed.
+
+Deposits and withdrawals are capped to the amount available, so a simple
+way to deposit or withdraw all the gold is to specify an amount larger than
+the balance.
 """
 
 # Ensure backwards compatibility with Python 2
@@ -16,15 +24,7 @@ import scriptabit
 
 
 class Banking(scriptabit.IPlugin):
-    """scriptabit plugin that implements a banking feature. Allows deposits and
-    withdrawals from a custom bank.
-
-    If neither a deposit or withdrawal is specified, then the balance is
-    reported but not changed.
-
-    Deposits and withdrawals are capped to the amount available, so a simple
-    way to deposit or withdraw all the gold is to specify an amount larger than
-    the balance.
+    """ Implements the banking plugin.
     """
 
     def initialise(self, configuration, habitica_service):

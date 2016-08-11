@@ -1,4 +1,7 @@
-""" Poisoning and health regeneration plugin.
+"""Scriptabit plugin that implements a poisoning/health
+regeneration scenario based on player performance on dailies.
+
+**Not implemented yet**
 """
 
 # Ensure backwards compatibility with Python 2
@@ -14,16 +17,8 @@ import scriptabit
 
 
 class HealthEffects(scriptabit.IPlugin):
-    """Official scriptabit plugin that implements a poisoning/health
-    regeneration scenario based on player performance on dailies.
+    """ Implements the health effects plugin.
     """
-
-    def __init__(self):
-        """ Initialises the plugin. It is hard to do any significant work here
-        as the yapsy framework instantiates plugins automatically. Thus extra
-        arguments cannot be passed easily.
-        """
-        super().__init__()
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.

@@ -5,3 +5,4 @@ API Reference
     :glob:
 
     scriptabit*
+    bundled_plugins.rst
