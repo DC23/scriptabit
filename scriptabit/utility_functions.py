@@ -151,36 +151,11 @@ class UtilityFunctions(object):
 
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""
-        """
-{'_id': '10c83bff-84c2-469a-b531-eb289e2880dc',
-  'attribute': 'str',
-  'challenge': {},
-  'createdAt': '2016-07-26T13:20:36.129Z',
-  'id': '10c83bff-84c2-469a-b531-eb289e2880dc',
-  'notes': '20 gold is here',
-  'priority': 1,
-  'reminders': [],
-  'tags': ['31a73ce4-06ac-4102-9ffa-e60aa3dfd7c3'],
-  'text': 'reward 20g',
-  'type': 'reward',
-  'updatedAt': '2016-08-11T03:29:03.895Z',
-  'userId': '90707bd8-7dd8-4da6-880c-d57eb7814d3c',
-  'value': 20}]
-        """
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        reward = {
-            'alias': 'scriptabit_banking',
-            'attribute': 'per',
-            'notes': 'Balance: 100',
-            'priority': 1,
-            'text': ':moneybag: Gringots',
-            'type': 'reward',
-            'value': 0}
-        result = self.__hs.upsert_task(reward)
-        pprint(result)
-        print("--------------------")
+        self.__hs.set_gp(1000.43)
+        pprint(self.__hs.get_stats())
         # tasks = self.__hs.get_tasks()
         # pprint(tasks)
         # pprint([t for t in tasks if t['type'] == 'reward'])
