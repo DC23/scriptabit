@@ -28,31 +28,33 @@ class HabiticaService(object):
             headers: HTTP headers.
             base_url: The base URL for requests.
             """
-
         self.__headers = headers
         self.__base_url = base_url
         logging.getLogger(__name__).debug('HabiticaService online')
 
     def __get(self, command):
         """Utility wrapper around a HTTP GET"""
-
         url = self.__base_url + command
         logging.getLogger(__name__).debug('GET %s', url)
         return requests.get(url, headers=self.__headers)
 
     def __put(self, command, data):
         """Utility wrapper around a HTTP PUT"""
-
         url = self.__base_url + command
         logging.getLogger(__name__).debug('PUT %s', url)
         return requests.put(url, headers=self.__headers, data=data)
+
+    def __post(self, command, data):
+        """Utility wrapper around a HTTP POST"""
+        url = self.__base_url + command
+        logging.getLogger(__name__).debug('PUT %s', url)
+        return requests.post(url, headers=self.__headers, data=data)
 
     def is_server_up(self):
         """Check that the Habitica API is reachable and up
 
         Returns: bool: `True` if the server is reachable, otherwise `False`.
         """
-
         response = self.__get('status')
         if response.status_code == requests.codes.ok:
             return response.json()['data']['status'] == 'up'
@@ -63,7 +65,6 @@ class HabiticaService(object):
 
         Returns: dictionary: The user data.
         """
-
         response = self.__get('user')
         response.raise_for_status()
         return response.json()['data']
@@ -73,7 +74,6 @@ class HabiticaService(object):
 
         Returns: dictionary: The stats.
         """
-
         return self.get_user()['stats']
 
     def get_tasks(self):
@@ -81,8 +81,19 @@ class HabiticaService(object):
 
         Returns: dictionary: The tasks.
         """
-
         response = self.__get('tasks/user')
+        response.raise_for_status()
+        return response.json()['data']
+
+    def create_task(self, task):
+        """Create a new task.
+
+        Args:
+            task (dict): The new task.
+
+        Returns: dict: The new task as returned from the server.
+        """
+        response = self.__post('tasks/user', task)
         response.raise_for_status()
         return response.json()['data']
 
@@ -104,7 +115,6 @@ class HabiticaService(object):
 
         # Raises: NotImplementedError
         # """
-
         # raise NotImplementedError
         # response = self.__put('user', {'stats': stats})
         # if response.status_code == requests.codes.ok:
@@ -119,7 +129,6 @@ class HabiticaService(object):
 
         Returns: float: The new HP value, extracted from the JSON response data.
         """
-
         if hp > 50:
             raise ArgumentOutOfRangeError("hp > 50")
         if hp < 0:
@@ -137,7 +146,6 @@ class HabiticaService(object):
 
         Returns: float: The new MP value, extracted from the JSON response data.
         """
-
         max_mp = self.get_user()['stats']['mp']
         if mp > max_mp:
             raise ArgumentOutOfRangeError("mp > {0}".format(max_mp))
@@ -156,7 +164,6 @@ class HabiticaService(object):
 
         Returns: float: The new XP value, extracted from the JSON response data.
         """
-
         if exp < 0:
             raise ArgumentOutOfRangeError("exp < 0")
 

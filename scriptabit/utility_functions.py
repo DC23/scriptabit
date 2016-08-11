@@ -76,6 +76,7 @@ class UtilityFunctions(object):
             help='''If > 0, set the user's current XP (experience points)''')
 
         parser.add(
+            '-t',
             '--test',
             required=False,
             action='store_true',
