@@ -44,3 +44,10 @@ Changelog
 * Changed scenario text to reference plugins instead.
 * Added max-updates command line argument.
 
+0.4.0 (2016-08-11)
+-----------------------------------------
+
+* Implemented banking plugin.
+* Fixed issue where the app would sleep after updating a plugin even when no
+  more updates were required.
+
