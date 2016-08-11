@@ -75,3 +75,9 @@ Changelog
 * Fixed bug with bank task name being overwritten.
 * Refactored HabiticaService upsert method
 * Added create_task and get_task methods to HabiticaService
+
+0.4.5 (2016-08-11)
+-----------------------------------------
+
+* Added to PyPI
+
