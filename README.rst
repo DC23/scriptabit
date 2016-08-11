@@ -6,8 +6,8 @@ Python scripting and scenarios for Habitica.
 .. image:: https://travis-ci.org/DC23/scriptabit.svg?branch=master
     :target: https://travis-ci.org/DC23/scriptabit
 
-.. image:: https://readthedocs.org/projects/scriptabit/badge/?version=master
-    :target: http://scriptabit.readthedocs.io/en/master/?badge=master
+.. image:: https://readthedocs.org/projects/scriptabit/badge/?version=latest
+    :target: http://scriptabit.readthedocs.io/en/master/?badge=latest
     :alt: Documentation Status
 
 * Free software: Apache 2.0
