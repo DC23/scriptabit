@@ -58,7 +58,6 @@ def __get_configuration(plugin_manager):
 
     # Plugins can define additional arguments
     for plugin_info in plugin_manager.getAllPlugins():
-        print(plugin_info.name)
         plugin_arg_parser = plugin_info.plugin_object.get_arg_parser()
         extra_args.append(plugin_arg_parser)
 

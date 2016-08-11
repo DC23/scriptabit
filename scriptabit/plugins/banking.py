@@ -44,15 +44,6 @@ class Banking(scriptabit.IPlugin):
 
         return parser
 
-    def initialise(self, configuration, habitica_service):
-        """ Initialises the plugin.
-
-        Args:
-            configuration (ArgParse.Namespace): The application configuration.
-            habitica_service: the Habitica Service instance.
-        """
-        super().initialise(configuration, habitica_service)
-
     def update(self):
         """ Update the banking plugin.
 
@@ -61,14 +52,14 @@ class Banking(scriptabit.IPlugin):
         super().update()
 
         # Do the banking thing
-        if self.config.bank_deposit > 0:
+        if self._config.bank_deposit > 0:
             logging.getLogger(__name__).info(
                 'Deposit %d',
-                self.config.bank_deposit)
+                self._config.bank_deposit)
 
-        if self.config.bank_withdraw > 0:
+        if self._config.bank_withdraw > 0:
             logging.getLogger(__name__).info(
                 'Withdraw %d',
-                self.config.bank_withdraw)
+                self._config.bank_withdraw)
 
         return False

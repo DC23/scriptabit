@@ -23,13 +23,11 @@ class HealthEffects(scriptabit.IPlugin):
         as the yapsy framework instantiates plugins automatically. Thus extra
         arguments cannot be passed easily.
         """
-
         super().__init__()
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
         """
-
         parser = super().get_arg_parser()
 
         parser.add(
@@ -48,7 +46,6 @@ class HealthEffects(scriptabit.IPlugin):
             configuration (ArgParse.Namespace): The application configuration.
             habitica_service: the Habitica Service instance.
         """
-
         super().initialise(configuration, habitica_service)
 
     def update_interval_minutes(self):
@@ -59,7 +56,6 @@ class HealthEffects(scriptabit.IPlugin):
 
         Returns: float: The required update interval in minutes.
         """
-
         # For testing only. Actual use will be at 30 or 60 minutes
         return 0.02
 
@@ -69,6 +65,5 @@ class HealthEffects(scriptabit.IPlugin):
         Returns: bool: True if further updates are required; False if the plugin
         is finished and the application should shut down.
         """
-
         super().update()
-        return self.update_count < 3
+        return self._update_count < 3

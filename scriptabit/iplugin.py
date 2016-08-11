@@ -19,9 +19,9 @@ class IPlugin(YapsyIPlugin):
     """ Scriptabit plugin base class.
 
     Attributes:
-        config (lookupdict): Configuration object returned from argparse.
-        update_count (int): Number of updates (zero-based).
-        hs (scriptabit.HabiticaService): The HabiticaService instance.
+        _config (lookupdict): Configuration object returned from argparse.
+        _update_count (int): Number of updates (zero-based).
+        _hs (scriptabit.HabiticaService): The HabiticaService instance.
     """
 
     def __init__(self):
@@ -29,11 +29,10 @@ class IPlugin(YapsyIPlugin):
         as the yapsy framework instantiates plugins automatically. Thus extra
         arguments cannot be passed easily.
         """
-
         super().__init__()
-        self.config = None
-        self.update_count = 0
-        self.hs = None
+        self._config = None
+        self._update_count = 0
+        self._hs = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -48,17 +47,14 @@ class IPlugin(YapsyIPlugin):
         Returns: argparse.ArgParser:  The `ArgParser` containing the argument
         definitions.
         """
-
         return configargparse.ArgParser(add_help=False)
 
     def activate(self):
         """ Called by the plugin framework when a plugin is activated."""
-
         pass
 
     def deactivate(self):
         """ Called by the plugin framework when a plugin is deactivated."""
-
         pass
 
     def initialise(self, configuration, habitica_service):
@@ -68,16 +64,14 @@ class IPlugin(YapsyIPlugin):
             configuration (ArgParse.Namespace): The application configuration.
             habitica_service: the Habitica Service instance.
         """
-
-        self.config = configuration
-        self.hs = habitica_service
+        self._config = configuration
+        self._hs = habitica_service
 
     def update_interval_seconds(self):
         """ Indicates the required update interval in integer seconds.
 
         Returns: int: update interval in whole seconds
         """
-
         return int(self.update_interval_minutes() * 60)
 
     def update_interval_minutes(self):
@@ -88,7 +82,6 @@ class IPlugin(YapsyIPlugin):
 
         Returns: float: The required update interval in minutes.
         """
-
         return 60
 
     def update(self):
@@ -102,6 +95,5 @@ class IPlugin(YapsyIPlugin):
         Returns: bool: True if further updates are required; False if the plugin
         is finished and the application should shut down.
         """
-
-        self.update_count += 1
+        self._update_count += 1
         return False
