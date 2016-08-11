@@ -26,6 +26,8 @@ help:
 	echo '  * alldocs: builds all documentation formats.'
 	echo '  * sdist: builds a source distribution.'
 	echo '  * bdist_wheel: builds a universal wheel distribution.'
+	echo '  * register: register package with PiPY.'
+	echo '  * upload: uploads a package to PiPY.'
 
 .PHONY: tests
 tests:
@@ -81,10 +83,20 @@ html:
 latex:
 	sphinx-build -b latex docs build/docs/latex
 
+.PHONY: pdf
 pdf: latex
 	$(MAKE) -C build/docs/latex all-pdf
 	mkdir -p ./build/docs/pdf/
 	mv build/docs/latex/*.pdf build/docs/pdf/
 
+.PHONY: alldocs
 alldocs: html latex pdf
 
+.PHONY: register
+register: 
+	python setup.py register
+
+.PHONY: upload
+upload: clean
+	python setup.py bdist_egg upload --identity="DC23"
+	python setup.py sdist upload --identity="DC23"

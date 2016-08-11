@@ -85,13 +85,46 @@ class HabiticaService(object):
         response.raise_for_status()
         return response.json()['data']
 
+    def create_task(self, task):
+        """ Creates a task.
+
+        Args:
+            task (dict): The task.
+
+        Returns: dict: The new task as returned from the server.
+        """
+        response = self.__post('tasks/user', task)
+        response.raise_for_status()
+        return response.json()['data']
+
+    def get_task(self, _id='', alias=''):
+        """ Gets a task.
+
+        If both task ID and alias are specified, then the ID is used.
+
+        Args:
+            _id (str): The task ID.
+            alias (str): The task alias.
+
+        Returns: dict: The task, or None if the task is not found.
+
+        Raises:
+            ValueError
+        """
+        key = _id if _id else alias
+        if not key:
+            raise ValueError('Neither ID or alias specified')
+
+        response = self.__get('tasks/{key}'.format(key=key))
+        if response.status_code == requests.codes.ok:
+            return response.json()['data']
+        else:
+            return None
+
     def upsert_task(self, task):
         """Upserts a task.
 
         Existing tasks will be updated, otherwise a new task will be created.
-        If the task has an alias it will be used for the search, otherwise the
-        id will be used. If neither an id or an alias is provided, then an
-        error is raised.
 
         Args:
             task (dict): The task.
@@ -99,29 +132,23 @@ class HabiticaService(object):
         Returns: dict: The new task as returned from the server.
 
         Raises:
-            InvalidHabiticaDataError
+            ValueError
         """
-        # do we use the task ID or alias?
-        key = task['alias'] if 'alias' in task else task.get('_id', None)
+        key = task['_id'] if '_id' in task else task.get('alias', None)
         if not key:
-            raise InvalidHabiticaDataError(
+            raise ValueError(
                 'The task must specify an id or alias')
 
         # Does the task already exist?
-        response = self.__get('tasks/{key}'.format(key=key))
-        if response.status_code == requests.codes.ok:
-            # update
+        if self.get_task(key):
             logging.getLogger(__name__).debug('task %s exists, updating', key)
             response = self.__put('tasks/{0}'.format(key), task)
             response.raise_for_status()
             return response.json()['data']
         else:
-            # create
             logging.getLogger(__name__).debug(
                 'task %s not found, creating', key)
-            response = self.__post('tasks/user', task)
-            response.raise_for_status()
-            return response.json()['data']
+            self.create_task(task)
 
     # TODO: I don't think the API lets me set partial user objects in this way.
     # So I could get the entire user structure, swap the stats for the argument

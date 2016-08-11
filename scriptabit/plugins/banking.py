@@ -84,15 +84,17 @@ class Banking(scriptabit.IPlugin):
         """
         super().update()
 
-        # Get the banking task
-        default_bank = {
-            'alias': 'scriptabit_banking',
-            'attribute': 'per',
-            'priority': 1,
-            'text': self._config.bank_name,
-            'type': 'reward',
-            'value': 0}
-        bank = self._hs.upsert_task(default_bank)
+        # Get or create the banking task
+        bank = self._hs.get_task(alias='scriptabit_banking')
+        if not bank:
+            logging.getLogger(__name__).info('Creating new bank task')
+            bank = self._hs.create_task({
+                'alias': 'scriptabit_banking',
+                'attribute': 'per',
+                'priority': 1,
+                'text': self._config.bank_name,
+                'type': 'reward',
+                'value': 0})
 
         # Get the user and bank balances
         bank_balance = Banking.get_balance_from_string(bank['notes'])

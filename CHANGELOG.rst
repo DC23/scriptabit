@@ -68,3 +68,10 @@ Changelog
 * Restructured the documentation layout. I think this has better organisation
   of the indices and TOCs.
 
+0.4.4 (2016-08-11)
+-----------------------------------------
+
+* Updated status to alpha
+* Fixed bug with bank task name being overwritten.
+* Refactored HabiticaService upsert method
+* Added create_task and get_task methods to HabiticaService

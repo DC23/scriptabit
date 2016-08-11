@@ -63,7 +63,7 @@ setup(
         #   4 - Beta
         #   5 - Production/Stable
         #   6 - Mature
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
 
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',

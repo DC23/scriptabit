@@ -138,7 +138,7 @@ class TestHabiticaService(object):
             assert new_gp == 0
 
     def test_upsert_without_id_or_alias(self):
-        with (pytest.raises(InvalidHabiticaDataError)):
+        with (pytest.raises(ValueError)):
             self.hs.upsert_task({})
 
     def test_upsert_new_task_created_alias(self):
