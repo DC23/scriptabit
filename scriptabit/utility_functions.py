@@ -31,8 +31,7 @@ class UtilityFunctions(object):
     __hs = None
 
     def __init__(self, config, habitica_service):
-
-        logging.getLogger(__name__).info('UtilityFunctions online')
+        """Initialises the utility functions"""
         self.__config = config
         self.__hs = habitica_service
 
@@ -43,7 +42,6 @@ class UtilityFunctions(object):
         Returns: argparse.ArgParser:  The ArgParser containing the argument
             definitions.
         """
-
         parser = configargparse.ArgParser(add_help=False)
 
         parser.add(
@@ -87,7 +85,6 @@ class UtilityFunctions(object):
 
     def run(self):
         """Runs the user-selected scriptabit utility functions"""
-
         if self.__config.test:
             self.__test()
             return
@@ -106,7 +103,6 @@ class UtilityFunctions(object):
 
     def set_health(self, hp):
         """Sets the user health to the specified value"""
-
         old_hp = self.__hs.get_stats()['hp']
         new_hp = self.__hs.set_hp(hp)
         logging.getLogger(__name__).info(
@@ -116,7 +112,6 @@ class UtilityFunctions(object):
 
     def set_xp(self, xp):
         """Sets the user experience points to the specified value"""
-
         old_xp = self.__hs.get_stats()['exp']
         new_xp = self.__hs.set_exp(xp)
         logging.getLogger(__name__).info(
@@ -126,7 +121,6 @@ class UtilityFunctions(object):
 
     def set_mana(self, mp):
         """Sets the user mana to the specified value"""
-
         old_mp = self.__hs.get_stats()['mp']
         new_mp = self.__hs.set_mp(mp)
         logging.getLogger(__name__).info(
@@ -136,7 +130,6 @@ class UtilityFunctions(object):
 
     def show_user_data(self):
         """Shows the user data"""
-
         logging.getLogger(__name__).debug('Getting user data')
         data = self.__hs.get_user()
 
@@ -160,11 +153,7 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        # tasks = self.__hs.get_tasks()
-        # pprint(tasks)
-        # pprint([t for t in tasks if t['type'] == 'daily'])
-        print("--------------------")
-        user = self.__hs.get_user()
-        pprint(user.keys())
+        tasks = self.__hs.get_tasks()
+        pprint([t for t in tasks if t['type'] == 'reward'])
         print("--------------------")
         print()

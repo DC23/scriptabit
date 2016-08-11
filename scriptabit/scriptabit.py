@@ -171,18 +171,18 @@ def start_cli():
             utility = UtilityFunctions(config, habitica_service)
             utility.run()
 
-            if config.plugin:
+            if config.run:
                 # Time to run the selected plugin
                 # First, find it
-                logging.getLogger(__name__).info("** %s running", config.plugin)
+                logging.getLogger(__name__).info("** %s running", config.run)
 
-                plugin_info = plugin_manager.getPluginByName(config.plugin)
+                plugin_info = plugin_manager.getPluginByName(config.run)
 
                 if not plugin_info:
-                    raise PluginError('plugin %s not found' % config.plugin)
+                    raise PluginError('plugin %s not found' % config.run)
 
                 # Second, activate it
-                plugin_manager.activatePluginByName(config.plugin)
+                plugin_manager.activatePluginByName(config.run)
                 plugin = plugin_info.plugin_object
                 plugin.initialise(config, habitica_service)
 
@@ -199,7 +199,7 @@ def start_cli():
 
                 while keep_updating():
                     logging.getLogger(__name__).debug("%s update %d",
-                                                      config.plugin,
+                                                      config.run,
                                                       count)
                     updating = plugin.update()
                     count += 1
@@ -208,7 +208,7 @@ def start_cli():
                     if keep_updating():
                         sleep(plugin.update_interval_seconds())
 
-                logging.getLogger(__name__).info("** %s done", config.plugin)
+                logging.getLogger(__name__).info("** %s done", config.run)
 
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)

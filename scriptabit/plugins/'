@@ -18,6 +18,11 @@ class Banking(scriptabit.IPlugin):
     withdrawals from a custom bank.
     """
 
+    def __init__(self):
+        """ Initialises the bank.
+        """
+        super().__init__()
+
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
         """

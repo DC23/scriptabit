@@ -40,7 +40,6 @@ def __add_min_max_value(
             $mmi will be replaced with min, max, or initial.
             $name will be replaced with basename.
     """
-
     help_template = Template(help_template)
 
     parser.add(
@@ -76,7 +75,6 @@ def get_config_file(basename):
 
     Returns: str: The full path to the configuration file.
     """
-
     locations = [
         os.path.join(os.curdir, basename),
         os.path.join(
@@ -105,7 +103,6 @@ def copy_default_config_to_user_directory(
             config already exists.
         dst_dir (str): The destination directory.
     """
-
     dst_dir = os.path.expanduser(dst_dir)
     dst = os.path.join(dst_dir, basename)
     src = resource_filename(
@@ -136,7 +133,6 @@ def get_configuration(basename='scriptabit.cfg', parents=None):
         The options object, and a function that can be called to print the help
         text.
     """
-
     copy_default_config_to_user_directory(basename)
 
     parser = configargparse.ArgParser(
@@ -176,8 +172,8 @@ credentials''')
 
     # plugins
     parser.add(
-        '-p',
-        '--plugin',
+        '-r',
+        '--run',
         required=False,
         help='''Select the plugin to run. Note you can only run a single
 plugin at a time. If you specify more than one, then only the
