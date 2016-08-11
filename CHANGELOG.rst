@@ -52,3 +52,8 @@ Changelog
   more updates were required.
 * Added task upsert method to HabiticaService.
 
+0.4.1 (2016-08-11)
+-----------------------------------------
+
+* Updated documentation to include the built-in plugins.
+
