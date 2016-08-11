@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+""" Unit tests for the banking plugin """
 from __future__ import (
     absolute_import,
     division,
@@ -6,7 +7,6 @@ from __future__ import (
     unicode_literals,
 )
 from builtins import *
-import pytest
 
 from .banking import Banking
 
@@ -25,9 +25,8 @@ def test_get_balance_string():
 
 def test_get_zero_balance_from_empty_string():
     """an empty string should equate to a zero balance"""
-    assert 0 == Banking.get_balance_from_string('')
+    assert Banking.get_balance_from_string('') == 0
 
 def test_get_zero_balance_from_string_without_numbers():
     """a string without numbers should equate to a zero balance"""
-    assert 0 == Banking.get_balance_from_string('blah blah blah')
-
+    assert Banking.get_balance_from_string('blah blah blah') == 0

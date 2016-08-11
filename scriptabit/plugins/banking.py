@@ -35,7 +35,6 @@ class Banking(scriptabit.IPlugin):
             habitica_service: the Habitica Service instance.
         """
         super().initialise(configuration, habitica_service)
-        # self.__uf = scriptabit.UtilityFunctions(configuration, habitica_service)
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -73,7 +72,7 @@ class Banking(scriptabit.IPlugin):
     @staticmethod
     def get_balance_from_string(s):
         """Gets the bank balance from the formatted string"""
-        matches = re.findall('\d+', s)
+        matches = re.findall(r'\d+', s)
         if matches:
             return int(matches[0])
         return 0
@@ -101,10 +100,8 @@ class Banking(scriptabit.IPlugin):
         bank_balance = Banking.get_balance_from_string(bank['notes'])
         user_balance = self._hs.get_stats()['gp'] # note this is a float!
 
-        logging.getLogger(__name__).info(
-            'Bank balance: {0}'.format(bank_balance))
-        logging.getLogger(__name__).info(
-            'User balance: {0}'.format(user_balance))
+        logging.getLogger(__name__).info('Bank balance: %f', bank_balance)
+        logging.getLogger(__name__).info('User balance: %f', user_balance)
 
         # Do the banking thing
         if self._config.bank_deposit > 0:
