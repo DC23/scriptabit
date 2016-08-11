@@ -50,3 +50,13 @@ class PluginError(Exception):
 
     def __str__(self):
         return repr(self.value)
+
+
+class InvalidHabiticaDataError(Exception):
+    """The specified Habitica data is invalid error"""
+
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)

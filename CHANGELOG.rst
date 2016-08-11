@@ -50,4 +50,5 @@ Changelog
 * Implemented banking plugin.
 * Fixed issue where the app would sleep after updating a plugin even when no
   more updates were required.
+* Added task upsert method to HabiticaService.
 

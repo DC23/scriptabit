@@ -128,7 +128,7 @@ class TestHabiticaService(object):
         task = get_fake_task(alias='alias')
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/tasks/alias',
-                  status_code=requests.codes.not_found)
+                  status_code=404)
             m.post('https://habitica.com/api/v3/tasks/user',
                   text=task[1])
             self.hs.upsert_task(task[0])
@@ -157,34 +157,32 @@ class TestHabiticaService(object):
 
     def test_upsert_new_task_created_id(self):
         # Don't test the data, just that the expected API functions are called
-        _id = '0934b3fa'
-        task = get_fake_task(_id=_id)
+        task = get_fake_task(_id='0934b3fa')
         with requests_mock.mock() as m:
-            m.get('https://habitica.com/api/v3/tasks/'+_id,
-                  status_code=requests.codes.not_found)
+            m.get('https://habitica.com/api/v3/tasks/alias',
+                  status_code=404)
             m.post('https://habitica.com/api/v3/tasks/user',
                   text=task[1])
             self.hs.upsert_task(task[0])
 
             history = m.request_history
             assert history[0].method == 'GET'
-            assert history[0].url == 'https://habitica.com/api/v3/tasks/'+_id
+            assert history[0].url == 'https://habitica.com/api/v3/tasks/alias'
             assert history[1].method == 'POST'
             assert history[1].url == 'https://habitica.com/api/v3/tasks/user'
 
-    def test_upsert_existing_task_updated_id(self):
+    def test_upsert_existing_task_updated_alias(self):
         # Don't test the data, just that the expected API functions are called
-        _id = '0934b3fa'
-        task = get_fake_task(_id=_id)
+        task = get_fake_task(alias='alias')
         with requests_mock.mock() as m:
-            m.get('https://habitica.com/api/v3/tasks/'+_id,
+            m.get('https://habitica.com/api/v3/tasks/alias',
                   text=task[1])
-            m.put('https://habitica.com/api/v3/tasks/'+_id,
+            m.put('https://habitica.com/api/v3/tasks/alias',
                   text=task[1])
             self.hs.upsert_task(task[0])
 
             history = m.request_history
             assert history[0].method == 'GET'
-            assert history[0].url == 'https://habitica.com/api/v3/tasks/'+_id
+            assert history[0].url == 'https://habitica.com/api/v3/tasks/alias'
             assert history[1].method == 'PUT'
-            assert history[1].url == 'https://habitica.com/api/v3/tasks/'+_id
+            assert history[1].url == 'https://habitica.com/api/v3/tasks/alias'

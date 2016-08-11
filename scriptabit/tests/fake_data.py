@@ -52,3 +52,33 @@ def get_fake_stats(
         })
 
     return (stats, _json)
+
+def get_fake_task(
+    _id='',
+    alias='',
+    attribute='str',
+    notes='notes',
+    text='text',
+    _type='habit',
+    value=0):
+    """Generates test task data as both a dictionary and json"""
+
+    task = \
+    {
+        'attribute': attribute,
+        'notes': notes,
+        'priority': 1,
+        'text': text,
+        'type': _type,
+        'value': value
+    }
+
+    if _id:
+        task['_id'] = _id
+
+    if alias:
+        task['alias'] = alias
+
+    _json = json.dumps({'data': task})
+
+    return (task, _json)
