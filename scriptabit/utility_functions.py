@@ -18,9 +18,13 @@ import iso8601
 
 
 class UtilityFunctions(object):
-    """Runs the CLI-selected scriptabit utility functions.
-    These are a collection of single-shot functions that get executed outside
-    the primary scenario scripting framework.
+    """scriptabit utility functions.
+    These are a collection of higher-level functions, implemented over the
+    `HabiticaService` class.
+
+    Attributes:
+        __config (lookupdict): Configuration object returned from argparse.
+        __hs (scriptabit.HabiticaService): The HabiticaService instance.
     """
 
     __config = None
