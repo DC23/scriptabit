@@ -15,16 +15,6 @@ Python scripting and scenarios for Habitica.
 * Documentation: https://scriptabit.readthedocs.org
 * Version: 0.4.1
 
-Roadmap
--------
-
-Working on a banking function that will automate moving gold into and out of
-a gold-bank (implemented with a custom reward created by scriptabit).
-
-The first planned scenario will implement a poisoning, and health regen script.
-As part of the development of the poisoning scenario, the following features
-will be added to the code:
-
 **Note** that apart from bugs, I don't use the GitHub issue list for
 planning. Task and feature planning is carried out in a private
 `Trello <https://trello.com>`_ board. Access can be provided on request.
