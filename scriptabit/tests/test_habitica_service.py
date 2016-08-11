@@ -119,6 +119,24 @@ class TestHabiticaService(object):
         with (pytest.raises(ArgumentOutOfRangeError)):
             self.hs.set_exp(-1)
 
+    def test_set_gp(self):
+        with requests_mock.mock() as m:
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(gp=997.7)[1])
+            new_gp = self.hs.set_gp(997.7)
+            assert new_gp == 997.7
+
+    def test_set_gp_less_than_zero(self):
+        with (pytest.raises(ArgumentOutOfRangeError)):
+            self.hs.set_gp(-1)
+
+    def test_set_gp_to_zero(self):
+        with requests_mock.mock() as m:
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(gp=0)[1])
+            new_gp = self.hs.set_gp(0)
+            assert new_gp == 0
+
     def test_upsert_without_id_or_alias(self):
         with (pytest.raises(InvalidHabiticaDataError)):
             self.hs.upsert_task({})

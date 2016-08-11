@@ -61,9 +61,15 @@ class Banking(scriptabit.IPlugin):
 
         return parser
 
-    def __get_balance_string(self, amount):
+    @classmethod
+    def get_balance_string(amount):
         """Gets the formatted bank balance string for a given amount"""
         return 'Balance: {0}'.format(amount)
+
+    @classmethod
+    def get_balance_from_string(s):
+        """Gets the bank balance from the formatted string"""
+        return int(re.findall('\d+', s)[0])
 
     def update(self):
         """ Update the banking plugin.
@@ -78,15 +84,17 @@ class Banking(scriptabit.IPlugin):
         default_bank = {
             'alias': 'scriptabit_banking',
             'attribute': 'per',
-            'notes': self.__get_balance_string(0),
+            'notes': Banking.get_balance_string(0),
             'priority': 1,
             'text': self._config.bank_name,
             'type': 'reward',
             'value': 0}
         bank = self._hs.upsert_task(default_bank)
 
+        print(bank)
+
         # Get the user and bank balances
-        bank_balance = int(re.findall('\d+', bank['notes'])[0])
+        bank_balance = Banking.get_balance_from_string(bank['notes'])
         user_balance = self._hs.get_stats()['gp'] # note this is a float!
 
         logging.getLogger(__name__).info(
@@ -97,17 +105,17 @@ class Banking(scriptabit.IPlugin):
         # Do the banking thing
         if self._config.bank_deposit > 0:
             # Don't deposit more money than the user has
-            amount = math.min(
+            amount = min(
                 math.trunc(user_balance),
                 self._config.bank_deposit)
             logging.getLogger(__name__).info('Depositing %d', amount)
 
             # update the bank balance
-            bank['notes'] = self.__get_balance_string(bank_balance + amount)
+            bank['notes'] = Banking.get_balance_string(bank_balance + amount)
             self._hs.upsert_task(bank)
 
             # subtract the gold from user balance
-            self._hs.set_gp(math.max(0, user_balance - amount))
+            self._hs.set_gp(max(0, user_balance - amount))
 
             # avoid being able to do a deposit and withdrawal at once,
             # as this would introduce gold balance bugs
@@ -115,12 +123,12 @@ class Banking(scriptabit.IPlugin):
 
         if self._config.bank_withdraw > 0:
             # Don't withdraw more money than the bank has
-            amount = math.min(bank_balance, self._config.bank_withdraw)
+            amount = min(bank_balance, self._config.bank_withdraw)
             logging.getLogger(__name__).info('Withdraw %d', amount)
 
             # update the bank balance
-            new_balance = math.max(0, bank_balance - amount)
-            bank['notes'] = self.__get_balance_string(new_balance)
+            new_balance = max(0, bank_balance - amount)
+            bank['notes'] = Banking.get_balance_string(new_balance)
             self._hs.upsert_task(bank)
 
             # add the gold to user balance

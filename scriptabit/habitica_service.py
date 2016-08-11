@@ -196,3 +196,18 @@ class HabiticaService(object):
         response = self.__put('user', {'stats.exp': exp})
         response.raise_for_status()
         return response.json()['data']['stats']['exp']
+
+    def set_gp(self, gp):
+        """ Sets the user's gold (gp).
+
+        Args:
+            gp (float): The new gold value.
+
+        Returns: float: The new gold value, extracted from the response data.
+        """
+        if gp < 0:
+            raise ArgumentOutOfRangeError("gp < 0")
+
+        response = self.__put('user', {'stats.gp': gp})
+        response.raise_for_status()
+        return response.json()['data']['stats']['gp']
