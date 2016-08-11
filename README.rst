@@ -7,7 +7,7 @@ Python scripting and scenarios for Habitica.
     :target: https://travis-ci.org/DC23/scriptabit
 
 .. image:: https://readthedocs.org/projects/scriptabit/badge/?version=latest
-    :target: http://scriptabit.readthedocs.io/en/master/?badge=latest
+    :target: http://scriptabit.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
 * Free software: Apache 2.0
