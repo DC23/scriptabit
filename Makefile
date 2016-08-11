@@ -98,5 +98,5 @@ register:
 
 .PHONY: upload
 upload: clean
-	python setup.py bdist_egg upload --identity="DC23"
-	python setup.py sdist upload --identity="DC23"
+	python setup.py bdist_egg upload
+	python setup.py sdist upload
