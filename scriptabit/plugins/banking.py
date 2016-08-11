@@ -21,6 +21,10 @@ class Banking(scriptabit.IPlugin):
 
     If neither a deposit or withdrawal is specified, then the balance is
     reported but not changed.
+
+    Deposits and withdrawals are capped to the amount available, so a simple
+    way to deposit or withdraw all the gold is to specify an amount larger than
+    the balance.
     """
 
     def initialise(self, configuration, habitica_service):
@@ -61,15 +65,18 @@ class Banking(scriptabit.IPlugin):
 
         return parser
 
-    @classmethod
+    @staticmethod
     def get_balance_string(amount):
         """Gets the formatted bank balance string for a given amount"""
         return 'Balance: {0}'.format(amount)
 
-    @classmethod
+    @staticmethod
     def get_balance_from_string(s):
         """Gets the bank balance from the formatted string"""
-        return int(re.findall('\d+', s)[0])
+        matches = re.findall('\d+', s)
+        if matches:
+            return int(matches[0])
+        return 0
 
     def update(self):
         """ Update the banking plugin.
@@ -84,14 +91,11 @@ class Banking(scriptabit.IPlugin):
         default_bank = {
             'alias': 'scriptabit_banking',
             'attribute': 'per',
-            'notes': Banking.get_balance_string(0),
             'priority': 1,
             'text': self._config.bank_name,
             'type': 'reward',
             'value': 0}
         bank = self._hs.upsert_task(default_bank)
-
-        print(bank)
 
         # Get the user and bank balances
         bank_balance = Banking.get_balance_from_string(bank['notes'])
@@ -108,7 +112,7 @@ class Banking(scriptabit.IPlugin):
             amount = min(
                 math.trunc(user_balance),
                 self._config.bank_deposit)
-            logging.getLogger(__name__).info('Depositing %d', amount)
+            logging.getLogger(__name__).info('Deposit: %d', amount)
 
             # update the bank balance
             bank['notes'] = Banking.get_balance_string(bank_balance + amount)
@@ -124,7 +128,7 @@ class Banking(scriptabit.IPlugin):
         if self._config.bank_withdraw > 0:
             # Don't withdraw more money than the bank has
             amount = min(bank_balance, self._config.bank_withdraw)
-            logging.getLogger(__name__).info('Withdraw %d', amount)
+            logging.getLogger(__name__).info('Withdraw: %d', amount)
 
             # update the bank balance
             new_balance = max(0, bank_balance - amount)
