@@ -203,7 +203,11 @@ def start_cli():
                                                       count)
                     updating = plugin.update()
                     count += 1
-                    sleep(plugin.update_interval_seconds())
+
+                    # Only sleep if we have another update pending
+                    if keep_updating():
+                        sleep(plugin.update_interval_seconds())
+
                 logging.getLogger(__name__).info("** %s done", config.plugin)
 
     except Exception as exception:
