@@ -84,8 +84,6 @@ class Banking(scriptabit.IPlugin):
         """
         super().update()
 
-        print()
-
         # Get the banking task
         default_bank = {
             'alias': 'scriptabit_banking',

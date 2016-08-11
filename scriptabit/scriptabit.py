@@ -175,6 +175,7 @@ def start_cli():
                 # Time to run the selected plugin
                 # First, find it
                 logging.getLogger(__name__).info("** %s running", config.run)
+                print()
 
                 plugin_info = plugin_manager.getPluginByName(config.run)
 
@@ -208,6 +209,7 @@ def start_cli():
                     if keep_updating():
                         sleep(plugin.update_interval_seconds())
 
+                print()
                 logging.getLogger(__name__).info("** %s done", config.run)
 
     except Exception as exception:
