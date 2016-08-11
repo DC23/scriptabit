@@ -57,3 +57,14 @@ Changelog
 
 * Updated documentation to include the built-in plugins.
 
+0.4.2 (2016-08-11)
+-----------------------------------------
+
+* Minor documentation fixes.
+
+0.4.3 (2016-08-11)
+-----------------------------------------
+
+* Restructured the documentation layout. I think this has better organisation
+  of the indices and TOCs.
+

@@ -3,6 +3,13 @@ scriptabit
 
 Python scripting and scenarios for Habitica.
 
+.. image:: https://travis-ci.org/DC23/scriptabit.svg?branch=master
+    :target: https://travis-ci.org/DC23/scriptabit
+
+.. image:: https://readthedocs.org/projects/scriptabit/badge/?version=latest
+    :target: http://scriptabit.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 * Free software: Apache 2.0
 * Homepage: https://github.com/DC23/scriptabit
 * Documentation: https://scriptabit.readthedocs.org
@@ -12,20 +19,13 @@ Contents
 --------
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
     readme
     contributing
     authors
     changelog
     license
-
-API Reference
--------------
-
-.. toctree::
-    :maxdepth: 2
-
     reference/index
 
 Indices and tables
@@ -33,4 +33,3 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
