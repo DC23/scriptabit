@@ -22,7 +22,6 @@ class Trello(scriptabit.IPlugin):
     """ Trello card synchronisation.
 
     Attributes:
-        __config: ConfigParser instance
         __tc: TrelloClient instance
     """
 
@@ -31,7 +30,6 @@ class Trello(scriptabit.IPlugin):
         Generally nothing to do here other than initialise any class attributes.
         """
         super().__init__()
-        self.__config = None
         self.__tc = None
 
     def get_arg_parser(self):
@@ -98,9 +96,6 @@ If empty, then cards are only marked done when archived.''')
             configuration.trello_done_lists)
 
         credentials = self.__load_authentication_credentials()
-
-        # we are finished with the configparser now
-        self.__config = None
 
         # Instantiate the Trello Client
         self.__tc = TrelloClient(
@@ -178,19 +173,19 @@ If empty, then cards are only marked done when archived.''')
             raise scriptabit.ConfigError(
                 "File '{0}' not found".format(config_file_path))
 
-        self.__config = ConfigParser()
-        self.__config.read(config_file_path)
+        config = ConfigParser()
+        config.read(config_file_path)
 
         credentials = {
-            'apikey': self.__config.get(section, 'apikey'),
-            'apisecret': self.__config.get(section, 'apisecret'),
+            'apikey': config.get(section, 'apikey'),
+            'apisecret': config.get(section, 'apisecret'),
             'token': '',
             'tokensecret': '',
         }
 
         try:
-            credentials['token'] = self.__config.get(section, 'token')
-            credentials['tokensecret'] = self.__config.get(section, 'tokensecret')
+            credentials['token'] = config.get(section, 'token')
+            credentials['tokensecret'] = config.get(section, 'tokensecret')
         except NoOptionError:
             # If the OAuth tokens are missing, they will get filled in later
             pass
@@ -222,11 +217,11 @@ If empty, then cards are only marked done when archived.''')
             with open(config_file_path, 'w') as f:
                 logging.getLogger(__name__).warning(
                     'Writing Trello OAuth tokens back to .auth.cfg')
-                self.__config.set('trello', 'token', credentials['token'])
-                self.__config.set(
+                config.set('trello', 'token', credentials['token'])
+                config.set(
                     'trello',
                     'tokensecret',
                     credentials['tokensecret'])
-                self.__config.write(f)
+                config.write(f)
 
         return credentials
