@@ -82,3 +82,8 @@ Changelog
 * Added to PyPI
 * Fixes issue #5 (missing files in PyPI package)
 
+0.4.6 (2016-08-12)
+-----------------------------------------
+
+* Fixes issue #6 (missing plugin metadata files in PyPI package)
+

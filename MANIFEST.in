@@ -13,5 +13,8 @@ include LICENSE
 include README.rst
 include scriptabit/*.cfg
 
+# Make sure that the plugin metadata files are included
+global-include *.yapsy-plugin
+
 # File patterns to exclude wherever they are found
 global-exclude *.py[co] __pycache__ *.so *.pyd
