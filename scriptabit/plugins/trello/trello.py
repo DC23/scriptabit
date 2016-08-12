@@ -139,9 +139,39 @@ If empty, then cards are only marked done when archived.''')
                     sync_lists_current_board.append(l)
             sync_lists.extend(sync_lists_current_board)
 
+        for b in sync_boards:
+            labels = b.get_labels()
+            pprint(labels)
+            print(labels[0].color)
+            found = (l for l in labels if l.name == 'test')
+            if not found:
+                print('test label not found, adding')
+                # b.add_label('test', 'black')
+            else:
+                print('test label found')
+
         print('Syncing the following lists')
         for l in sync_lists:
             print('   {0}.{1}'.format(l.board.name, l.name))
+
+        # debug code follows...
+        print()
+        print('tags from a board')
+        b = sync_boards[1]
+        pprint(b.get_labels())
+
+
+        print()
+        print('some card info')
+        cards = sync_lists[-2].list_cards()
+        # pprint(cards)
+        card = cards[0]
+        card.fetch()
+        print(card.name)
+        print(card.short_id)
+        print(card.list_labels)
+        print(card.id)
+        print(card.description)
 
         # pprint(dir(boards[0]))
 
