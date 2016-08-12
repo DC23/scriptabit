@@ -1,8 +1,3 @@
-scriptabit
-----------
-.. automodule:: scriptabit.scriptabit
-    :members: start_cli, __init_logging, __get_configuration, __get_plugin_manager, __list_plugins
-
 Authentication
 --------------
 .. automodule:: scriptabit.authentication
@@ -13,6 +8,13 @@ Authentication
 Configuration
 -------------
 .. automodule:: scriptabit.configuration
+    :special-members:
+    :members:
+    :private-members:
+
+Date Handling
+-------------
+.. automodule:: scriptabit.dates
     :special-members:
     :members:
     :private-members:
@@ -31,6 +33,11 @@ Plugin Baseclass
 ----------------
 .. autoclass:: scriptabit.IPlugin
     :members:
+
+Scriptabit
+----------
+.. automodule:: scriptabit.scriptabit
+    :members: start_cli, __init_logging, __get_configuration, __get_plugin_manager, __list_plugins
 
 Utility Functions
 -----------------

@@ -16,7 +16,7 @@ import pytz
 from tzlocal import get_localzone
 
 def parse_date_utc(date, milliseconds=True):
-    """Parses dates from Habitica data to standard datetime object.
+    """Parses dates from ISO8601 or Epoch formats to a standard datetime object.
 
     This is particularly useful since Habitica returns dates in two
     formats::
@@ -45,8 +45,8 @@ def parse_date_utc(date, milliseconds=True):
     return parsed_date.replace(tzinfo=pytz.utc)
 
 def parse_date_local(date, milliseconds=True):
-    """Parses dates from Habitica data to standard datetime object in the
-    current local timezone.
+    """Parses dates from ISO8601 or Epoch formats to a standard datetime object
+    in the current local timezone.
 
     **Note that this function should not be used in time calculations.**
     **It is primarily intended for displaying dates and times to the user.**
