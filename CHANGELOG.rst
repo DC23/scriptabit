@@ -76,8 +76,9 @@ Changelog
 * Refactored HabiticaService upsert method
 * Added create_task and get_task methods to HabiticaService
 
-0.4.5 (2016-08-11)
+0.4.5 unreleased
 -----------------------------------------
 
 * Added to PyPI
+* Fixes issue #5 (missing files in PyPI package)
 

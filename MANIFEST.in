@@ -11,6 +11,7 @@ include CHANGELOG.rst
 include CONTRIBUTING.rst
 include LICENSE
 include README.rst
+include scriptabit/*.cfg
 
 # File patterns to exclude wherever they are found
 global-exclude *.py[co] __pycache__ *.so *.pyd

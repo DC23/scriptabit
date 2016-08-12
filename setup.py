@@ -134,24 +134,11 @@ setup(
         ],
     },
 
-    # If there are data files included in your packages that need to be installed
-    package_data={
-        '': ['*.cfg'],
-    },
-
-    # Although 'package_data' is the preferred approach, in some case you may
-    # need to place data files outside of your packages.
-    # see http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
-    # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
-    # data_files=[('my_data', ['data/data_file'])],
-    data_files=[],
-
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
     # Delete either or both of these if not required (and remove the corresponding imports in the package __init__.py
     entry_points={
-
         'console_scripts': ['scriptabit = scriptabit:start_cli',],
     },
 
