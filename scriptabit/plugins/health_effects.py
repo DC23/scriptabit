@@ -13,6 +13,7 @@ from __future__ import (
 from builtins import *
 import logging
 
+import configargparse
 import scriptabit
 
 
@@ -45,9 +46,6 @@ class HealthEffects(scriptabit.IPlugin):
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
-
-        This method will be ignored when single_shot returns True.
-        The default interval is 60 minutes.
 
         Returns: float: The required update interval in minutes.
         """

@@ -1,0 +1,9 @@
+[Core]
+Name = sb_banking
+Module = banking
+   
+[Documentation]
+Description = Bank deposits and withdrawals from a custom reward
+Author = DC23
+Version = 1.0.0
+Website = https://github.com/DC23/scriptabit

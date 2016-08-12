@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-""" The scriptabit plugin interfaces.
+""" A sample plugin.
+Doesn't do anything, but it makes a good template for new plugins.
+Unused methods can be deleted.
 """
 
 # Ensure backwards compatibility with Python 2
@@ -9,30 +11,20 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+import logging
+
 import configargparse
+import scriptabit
 
-from yapsy.IPlugin import IPlugin as YapsyIPlugin
-
-
-# pylint: disable=no-self-use
-class IPlugin(YapsyIPlugin):
-    """ Scriptabit plugin base class.
-
-    Attributes:
-        _config (lookupdict): Configuration object returned from argparse.
-        _update_count (int): Number of updates (zero-based).
-        _hs (scriptabit.HabiticaService): The HabiticaService instance.
+class SamplePlugin(scriptabit.IPlugin):
+    """ Scriptabit sample plugin.
     """
 
     def __init__(self):
-        """ Initialises the plugin. It is hard to do any significant work here
-        as the yapsy framework instantiates plugins automatically. Thus extra
-        arguments cannot be passed easily.
+        """ Initialises the plugin.
+        Generally nothing to do here other than initialise any class attributes.
         """
         super().__init__()
-        self._config = None
-        self._update_count = 0
-        self._hs = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -41,13 +33,19 @@ class IPlugin(YapsyIPlugin):
         should be used, and they should be prefixed with the plugin-name or
         unique abbreviation.
 
-        To get their `ArgParser`, subclasses should call this method via super
-        and capture the returned `ArgParser` instance.
-
         Returns: argparse.ArgParser:  The `ArgParser` containing the argument
         definitions.
         """
-        return configargparse.ArgParser(add_help=False)
+        parser = super().get_arg_parser()
+
+        # parser.add(
+            # '--sample-plugin-argument',
+            # required=False,
+            # default=20.0,
+            # type=float,
+            # help='Sample plugin value')
+
+        return parser
 
     def activate(self):
         """ Called by the plugin framework when a plugin is activated."""
@@ -67,15 +65,7 @@ class IPlugin(YapsyIPlugin):
             configuration (ArgParse.Namespace): The application configuration.
             habitica_service: the Habitica Service instance.
         """
-        self._config = configuration
-        self._hs = habitica_service
-
-    def update_interval_seconds(self):
-        """ Indicates the required update interval in integer seconds.
-
-        Returns: int: update interval in whole seconds
-        """
-        return int(self.update_interval_minutes() * 60)
+        super().initialise(configuration, habitica_service)
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
@@ -95,5 +85,7 @@ class IPlugin(YapsyIPlugin):
         Returns: bool: True if further updates are required; False if the plugin
         is finished and the application should shut down.
         """
-        self._update_count += 1
+        # do work here
+
+        # return False if finished, and True to be updated again.
         return False
