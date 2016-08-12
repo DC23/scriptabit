@@ -14,8 +14,8 @@ import logging
 from pprint import pprint
 
 import configargparse
-import iso8601
 
+from .dates import parse_date_local
 
 class UtilityFunctions(object):
     """scriptabit utility functions.
@@ -133,19 +133,14 @@ class UtilityFunctions(object):
         """Shows the user data"""
         logging.getLogger(__name__).debug('Getting user data')
         data = self.__hs.get_user()
-
         print()
         print("Summarised User Data")
         print("--------------------")
         print()
-
         print(data['profile']['name'])
-
-        print("Last Cron: {0}".format(
-            iso8601.parse_date(data['lastCron']).astimezone()))
-
+        print("Last Cron: {0}".format(parse_date_local(data['lastCron'])))
         pprint(data['stats'])
-
+        print()
         print("--------------------")
         print()
 

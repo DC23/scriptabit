@@ -105,7 +105,9 @@ setup(
         'configparser',
         'future',
         'iso8601',
+        'pytz',
         'requests',
+        'tzlocal',
         'yapsy',
     ],
 

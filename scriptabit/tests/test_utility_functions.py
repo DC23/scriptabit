@@ -18,7 +18,7 @@ from scriptabit.utility_functions import UtilityFunctions
 from .fake_data import get_fake_stats
 
 
-class TestHabiticaService(object):
+class TestUtilityFunctions(object):
 
     hs = None
 

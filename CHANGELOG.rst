@@ -87,8 +87,8 @@ Changelog
 
 * Fixes issue #6 (missing plugin metadata files in PyPI package)
 
-Next version
+0.4.7 (2016-08-12)
 -----------------------------------------
 
 * Changed default logging options to be less intrusive.
-
+* A lot of fixes to datetime handling, which should fix #7
