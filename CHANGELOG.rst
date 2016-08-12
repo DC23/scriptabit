@@ -92,3 +92,15 @@ Changelog
 
 * Changed default logging options to be less intrusive.
 * A lot of fixes to datetime handling, which should fix #7
+
+0.5.0 (2016-08-12)
+-----------------------------------------
+
+* Fixed load-order issue for configuration files. Who would have thought that
+  configargparse started looking for configuration files from the end of the
+  list rather than the start?
+* Started adding Trello sync plugin. Doesn't really do much yet, but all the
+  authentication song and dance code is in place, as well as configuration for
+  defining which boards to sync, the lists on those boards, and the optional
+  lists that will indicate task completion.
+

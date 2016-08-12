@@ -4,7 +4,7 @@
     Python scripting for Habitica via the API
 """
 
-from .authentication import load_authentication_credentials
+from .authentication import load_habitica_authentication_credentials
 from .configuration import (
     get_configuration,
     get_config_file,

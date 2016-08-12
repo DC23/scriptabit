@@ -139,11 +139,13 @@ def get_configuration(basename='scriptabit.cfg', parents=None):
         formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
         parents=parents or [],
         default_config_files=[
-            os.path.join(os.curdir, basename),
-            os.path.join(os.path.expanduser("~"), ".config", basename),
             resource_filename(
                 Requirement.parse("scriptabit"),
-                os.path.join('scriptabit', basename))])
+                os.path.join('scriptabit', basename)),
+            os.path.join(
+                os.path.expanduser("~/.config/scriptabit"),
+                basename),
+            os.path.join(os.curdir, basename)])
 
     # logging config file
     parser.add(

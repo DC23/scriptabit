@@ -1,0 +1,9 @@
+[Core]
+Name = trello
+Module = trello
+   
+[Documentation]
+Description = Trello synchronisation with Habitica
+Author = DC23
+Version = 0.1.0
+Website = https://github.com/DC23/scriptabit

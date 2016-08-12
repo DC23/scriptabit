@@ -9,12 +9,10 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-
 import logging
 from pprint import pprint
 
 import configargparse
-
 from .dates import parse_date_local
 
 class UtilityFunctions(object):

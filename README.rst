@@ -27,7 +27,9 @@ To install the latest release from `PyPI <https://pypi.python.org/pypi>`_:
 
     pip install scriptabit
 
-You also require an authentication credentials file in your home directory
+Habitica Credentials
+++++++++++++++++++++
+You require an authentication credentials file in your home directory
 containing your
 `Habitica API Key and User ID <https://habitica.com/#/options/settings/api>`__.
 The file should have a typical ini file structure, with the following section:
@@ -53,6 +55,22 @@ set the permissions as follows:
 
     chmod 600 .auth.cfg
 
+Trello Credentials
+++++++++++++++++++
+If you wish to use the Trello plugin, you will need to add your Trello
+credentials to the .auth.cfg file as follows::
+
+    [trello]
+    apikey = 
+    apisecret = 
+    token = 
+    tokensecret =
+
+Your API key and API secret can be 
+`obtained here <https://trello.com/1/appKey/generate>`_.
+
+Your authorisation token and token secret can be obtained here.
+https://trello.com/1/connect?key={0}&amp;name={1}&amp;response_type=token&amp;scope=read,write&amp;expiration={2}
 
 Usage
 -----

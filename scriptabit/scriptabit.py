@@ -18,7 +18,7 @@ from time import sleep
 from pkg_resources import Requirement, resource_filename
 from yapsy.PluginManager import PluginManager
 
-from .authentication import load_authentication_credentials
+from .authentication import load_habitica_authentication_credentials
 from .configuration import (
     get_configuration,
     get_config_file,
@@ -153,7 +153,7 @@ def start_cli():
             # --------------------------------------------------
 
             # user credentials
-            auth_tokens = load_authentication_credentials(
+            auth_tokens = load_habitica_authentication_credentials(
                 section=config.auth_section)
 
             # Habitica Service
@@ -162,10 +162,10 @@ def start_cli():
                 config.habitica_api_url)
 
             # Test for server availability
-            if not habitica_service.is_server_up():
-                raise ServerUnreachableError(
-                    "Habitica API at '{0}' is unreachable or down".format(
-                        config.habitica_api_url))
+            # if not habitica_service.is_server_up():
+                # raise ServerUnreachableError(
+                    # "Habitica API at '{0}' is unreachable or down".format(
+                        # config.habitica_api_url))
 
             logging.getLogger(__name__).info("Habitica API at '%s' is up",
                                              config.habitica_api_url)

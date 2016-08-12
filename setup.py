@@ -106,6 +106,7 @@ setup(
         'future',
         'iso8601',
         'pytz',
+        'py-trello',
         'requests',
         'tzlocal',
         'yapsy',

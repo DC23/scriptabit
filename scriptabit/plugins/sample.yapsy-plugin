@@ -3,7 +3,7 @@ Name = sample
 Module = sample
    
 [Documentation]
-Description = Sample plugin
+Description = Sample plugin, does nothing.
 Author = DC23
 Version = 1.0.0
 Website = https://github.com/DC23/scriptabit

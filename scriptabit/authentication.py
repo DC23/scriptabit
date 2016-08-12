@@ -16,7 +16,7 @@ from .configuration import copy_default_config_to_user_directory
 from .errors import ConfigError
 
 
-def load_authentication_credentials(
+def load_habitica_authentication_credentials(
         config_file_name='.auth.cfg',
         section='habitica'):
     """ Loads authentication credentials from an ini-style configuration file.
