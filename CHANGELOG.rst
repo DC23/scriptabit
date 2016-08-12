@@ -87,3 +87,8 @@ Changelog
 
 * Fixes issue #6 (missing plugin metadata files in PyPI package)
 
+Next version
+-----------------------------------------
+
+* Changed default logging options to be less intrusive.
+
