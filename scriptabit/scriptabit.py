@@ -162,10 +162,10 @@ def start_cli():
                 config.habitica_api_url)
 
             # Test for server availability
-            # if not habitica_service.is_server_up():
-                # raise ServerUnreachableError(
-                    # "Habitica API at '{0}' is unreachable or down".format(
-                        # config.habitica_api_url))
+            if not habitica_service.is_server_up():
+                raise ServerUnreachableError(
+                    "Habitica API at '{0}' is unreachable or down".format(
+                        config.habitica_api_url))
 
             logging.getLogger(__name__).info("Habitica API at '%s' is up",
                                              config.habitica_api_url)

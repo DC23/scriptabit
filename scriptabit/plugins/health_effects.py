@@ -13,7 +13,6 @@ from __future__ import (
 from builtins import *
 import logging
 
-import configargparse
 import scriptabit
 
 
@@ -43,6 +42,7 @@ class HealthEffects(scriptabit.IPlugin):
             habitica_service: the Habitica Service instance.
         """
         super().initialise(configuration, habitica_service)
+        logging.getLogger(__name__).info('HealthEffects initialising')
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.

@@ -11,6 +11,7 @@ from .configuration import (
     copy_default_config_to_user_directory,
 )
 from .dates import parse_date_utc, parse_date_local
+from .errors import *
 from .habitica_service import HabiticaService
 from .iplugin import IPlugin
 from .scriptabit import start_cli

@@ -150,7 +150,7 @@ class HabiticaService(object):
                 'task %s not found, creating', key)
             self.create_task(task)
 
-    # TODO: I don't think the API lets me set partial user objects in this way.
+    # I don't think the API lets me set partial user objects in this way.
     # So I could get the entire user structure, swap the stats for the argument
     # version, and then PUT that back. Or I can wait to see if I even need this
     # method at all.

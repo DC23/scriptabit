@@ -11,11 +11,10 @@ from __future__ import (
 from builtins import *
 import logging
 import os
+from configparser import ConfigParser
 from pprint import pprint
 
-import configargparse
 import scriptabit
-from configparser import ConfigParser, NoSectionError, NoOptionError
 from trello import TrelloClient
 from trello.util import create_oauth_token
 
@@ -156,12 +155,12 @@ If empty, then cards are only marked done when archived.''')
         # logging.getLogger(__name__).info('')
 
         # pprint(dir(self.__tc))
-        # boards = self.__tc.list_boards()
-        # for b in boards:
-            # print('name: ', b.name)
-            # print('closed: ', b.closed)
+        boards = self.__tc.list_boards()
+        for b in boards:
+            print('name: ', b.name)
+            print('closed: ', b.closed)
 
-        # pprint(dir(boards[0]))
+        pprint(dir(boards[0]))
 
         # return False if finished, and True to be updated again.
         return False
@@ -170,7 +169,8 @@ If empty, then cards are only marked done when archived.''')
             self,
             config_file_name='.auth.cfg',
             section='trello'):
-        """ Loads authentication credentials from an ini-style configuration file.
+        """ Loads authentication credentials from an ini-style
+        configuration file.
 
         Args:
             config_file_name (str): Basename of the configuration file.
@@ -182,11 +182,13 @@ If empty, then cards are only marked done when archived.''')
             os.path.expanduser("~"),
             config_file_name)
 
-        logging.getLogger(__name__).info("Loading trello credentials from %s",
-                                        config_file_path)
+        logging.getLogger(__name__).info(
+            "Loading trello credentials from %s",
+            config_file_path)
 
         if not os.path.exists(config_file_path):
-            raise ConfigError("File '{0}' not found".format(config_file_path))
+            raise scriptabit.ConfigError(
+                "File '{0}' not found".format(config_file_path))
 
         self.__config = ConfigParser()
         self.__config.read(config_file_path)

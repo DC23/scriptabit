@@ -13,7 +13,6 @@ from __future__ import (
 from builtins import *
 import logging
 
-import configargparse
 import scriptabit
 
 class Sample(scriptabit.IPlugin):
