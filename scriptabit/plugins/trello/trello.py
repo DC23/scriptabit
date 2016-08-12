@@ -11,7 +11,7 @@ from __future__ import (
 from builtins import *
 import logging
 import os
-from configparser import ConfigParser
+from configparser import ConfigParser, NoOptionError
 from pprint import pprint
 
 import scriptabit
@@ -73,10 +73,11 @@ If empty, then cards are only marked done when archived.''')
         return parser
 
     def initialise(self, configuration, habitica_service):
-        """ Initialises the plugin.
+        """ Initialises the Trello plugin.
 
-        Generally, any initialisation should be done here rather than in
-        activate or __init__.
+        This involves loading the board and list configuration, confirming the
+        API key and secret, obtaining the OAuth tokens if required, and
+        instantiating the `TrelloClient` instance.
 
         Args:
             configuration (ArgParse.Namespace): The application configuration.
@@ -97,32 +98,6 @@ If empty, then cards are only marked done when archived.''')
             configuration.trello_done_lists)
 
         credentials = self.__load_authentication_credentials()
-
-        if not credentials['token'] or not credentials['tokensecret']:
-            logging.getLogger(__name__).warning('Getting Trello OAuth token')
-            access_token = create_oauth_token(
-                expiration='never',
-                scope='read,write',
-                key=credentials['apikey'],
-                secret=credentials['apisecret'],
-                name='scriptabit',
-                output=True)
-            credentials['token'] = access_token['oauth_token']
-            credentials['tokensecret'] = access_token['oauth_token_secret']
-
-            # Write back to the file
-            config_file_path = os.path.join(
-                os.path.expanduser("~"),
-                '.auth.cfg')
-            with open(config_file_path, 'w') as f:
-                logging.getLogger(__name__).warning(
-                    'Writing Trello OAuth tokens back to .auth.cfg')
-                self.__config.set('trello', 'token', credentials['token'])
-                self.__config.set(
-                    'trello',
-                    'tokensecret',
-                    credentials['tokensecret'])
-                self.__config.write(f)
 
         # we are finished with the configparser now
         self.__config = None
@@ -206,10 +181,52 @@ If empty, then cards are only marked done when archived.''')
         self.__config = ConfigParser()
         self.__config.read(config_file_path)
 
-        credentials = {}
-        credentials['apikey'] = self.__config.get(section, 'apikey')
-        credentials['apisecret'] = self.__config.get(section, 'apisecret')
-        credentials['token'] = self.__config.get(section, 'token')
-        credentials['tokensecret'] = self.__config.get(section, 'tokensecret')
+        credentials = {
+            'apikey': self.__config.get(section, 'apikey'),
+            'apisecret': self.__config.get(section, 'apisecret'),
+            'token': '',
+            'tokensecret': '',
+        }
+
+        try:
+            credentials['token'] = self.__config.get(section, 'token')
+            credentials['tokensecret'] = self.__config.get(section, 'tokensecret')
+        except NoOptionError:
+            # If the OAuth tokens are missing, they will get filled in later
+            pass
+
+        if not credentials['apikey']:
+            raise scriptabit.ConfigError(
+                'Trello API key not found in .auth.cfg')
+
+        if not credentials['apisecret']:
+            raise scriptabit.ConfigError(
+                'Trello API secret not found in .auth.cfg')
+
+        if not credentials['token'] or not credentials['tokensecret']:
+            logging.getLogger(__name__).warning('Getting Trello OAuth token')
+            access_token = create_oauth_token(
+                expiration='never',
+                scope='read,write',
+                key=credentials['apikey'],
+                secret=credentials['apisecret'],
+                name='scriptabit',
+                output=True)
+            credentials['token'] = access_token['oauth_token']
+            credentials['tokensecret'] = access_token['oauth_token_secret']
+
+            # Write back to the file
+            config_file_path = os.path.join(
+                os.path.expanduser("~"),
+                '.auth.cfg')
+            with open(config_file_path, 'w') as f:
+                logging.getLogger(__name__).warning(
+                    'Writing Trello OAuth tokens back to .auth.cfg')
+                self.__config.set('trello', 'token', credentials['token'])
+                self.__config.set(
+                    'trello',
+                    'tokensecret',
+                    credentials['tokensecret'])
+                self.__config.write(f)
 
         return credentials
