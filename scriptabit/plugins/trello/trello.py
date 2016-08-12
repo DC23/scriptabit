@@ -178,8 +178,8 @@ If empty, then cards are only marked done when archived.''')
         # return False if finished, and True to be updated again.
         return False
 
+    @staticmethod
     def __load_authentication_credentials(
-            self,
             config_file_name='.auth.cfg',
             section='trello'):
         """ Loads authentication credentials from an ini-style
