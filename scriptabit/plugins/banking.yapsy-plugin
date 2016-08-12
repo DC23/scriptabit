@@ -1,5 +1,5 @@
 [Core]
-Name = sb_banking
+Name = banking
 Module = banking
    
 [Documentation]

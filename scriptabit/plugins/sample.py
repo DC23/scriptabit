@@ -16,7 +16,7 @@ import logging
 import configargparse
 import scriptabit
 
-class SamplePlugin(scriptabit.IPlugin):
+class Sample(scriptabit.IPlugin):
     """ Scriptabit sample plugin.
     """
 
@@ -85,6 +85,8 @@ class SamplePlugin(scriptabit.IPlugin):
         Returns: bool: True if further updates are required; False if the plugin
         is finished and the application should shut down.
         """
+        logging.getLogger(__name__).info('Sample plugin doing stuff ...')
+
         # do work here
 
         # return False if finished, and True to be updated again.

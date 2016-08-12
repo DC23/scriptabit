@@ -1,5 +1,5 @@
 [Core]
-Name = sb_health_effects
+Name = health_effects
 Module = health_effects
    
 [Documentation]

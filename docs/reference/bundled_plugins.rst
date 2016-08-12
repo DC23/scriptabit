@@ -14,3 +14,10 @@ Health Effects
     :special-members:
     :members:
     :private-members:
+
+Sample
+++++++
+.. automodule:: scriptabit.plugins.sample
+    :special-members:
+    :members:
+    :private-members:

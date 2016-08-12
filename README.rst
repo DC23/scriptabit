@@ -91,5 +91,5 @@ then this location will be used instead of the default location.
 All plugins should subclass the `IPlugin` class. Refer to the API
 documentation for details of the available methods.
 
-Plugins use `Yapsy <http://yapsy.sourceforge.net/>`__, so all Yapsy
-documentation is relevant to writing `scriptabit` plugins.
+Also refer to the API documentation (and the view source option) for the 
+sample plugin which can be used as a template for new plugins.

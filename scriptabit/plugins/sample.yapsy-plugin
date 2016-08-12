@@ -1,9 +1,9 @@
 [Core]
-Name = sb_banking
-Module = banking
+Name = sample
+Module = sample
    
 [Documentation]
-Description = Bank deposits and withdrawals from a custom reward
+Description = Sample plugin
 Author = DC23
 Version = 1.0.0
 Website = https://github.com/DC23/scriptabit
