@@ -136,6 +136,9 @@ def start_cli():
     __init_logging(config.logging_config)
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
 
+    if config.version:
+        return
+
     # Disabling the broad exception warning as catching
     # everything is *exactly* the intent here.
     # pylint: disable=broad-except

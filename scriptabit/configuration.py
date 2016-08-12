@@ -188,6 +188,13 @@ new plugin that combines the effects as required.''')
         help='''List available plugins''')
 
     parser.add(
+        '-v',
+        '--version',
+        required=False,
+        action='store_true',
+        help='''Display scriptabit version''')
+
+    parser.add(
         '-mup',
         '--max-updates',
         required=False,
