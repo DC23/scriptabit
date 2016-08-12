@@ -21,3 +21,10 @@ Sample
     :special-members:
     :members:
     :private-members:
+
+Trello
+++++++
+.. automodule:: scriptabit.plugins.trello.trello
+    :special-members:
+    :members:
+    :private-members:
