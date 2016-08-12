@@ -10,6 +10,7 @@ from .configuration import (
     get_config_file,
     copy_default_config_to_user_directory,
 )
+from .dates import parse_date_utc, parse_date_local
 from .habitica_service import HabiticaService
 from .iplugin import IPlugin
 from .scriptabit import start_cli
