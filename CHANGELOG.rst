@@ -93,7 +93,7 @@ Changelog
 * Changed default logging options to be less intrusive.
 * A lot of fixes to datetime handling, which should fix #7
 
-0.5.0 (2016-08-12)
+0.5.0 Not released
 -----------------------------------------
 
 * Fixed load-order issue for configuration files. Who would have thought that

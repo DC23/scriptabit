@@ -154,13 +154,26 @@ If empty, then cards are only marked done when archived.''')
         """
         # logging.getLogger(__name__).info('')
 
-        # pprint(dir(self.__tc))
-        boards = self.__tc.list_boards()
-        for b in boards:
-            print('name: ', b.name)
-            print('closed: ', b.closed)
+        # retrieve the boards to sync
+        boards = self.__tc.list_boards(board_filter='open')
+        sync_boards = [
+            b for b in boards if b.name in self._config.trello_boards]
 
-        pprint(dir(boards[0]))
+        # Build a list of sync lists by matching the sync
+        # list names in each board
+        sync_lists = []
+        for b in sync_boards:
+            sync_lists_current_board = []
+            for l in b.open_lists():
+                if l.name in self._config.trello_lists:
+                    sync_lists_current_board.append(l)
+            sync_lists.extend(sync_lists_current_board)
+
+        print('Syncing the following lists')
+        for l in sync_lists:
+            print('   {0}.{1}'.format(l.board.name, l.name))
+
+        # pprint(dir(boards[0]))
 
         # return False if finished, and True to be updated again.
         return False
