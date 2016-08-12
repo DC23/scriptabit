@@ -69,8 +69,10 @@ credentials to the .auth.cfg file as follows::
 Your API key and API secret can be 
 `obtained here <https://trello.com/1/appKey/generate>`_.
 
-Your authorisation token and token secret can be obtained here.
-https://trello.com/1/connect?key={0}&amp;name={1}&amp;response_type=token&amp;scope=read,write&amp;expiration={2}
+Your authorisation token and token secret will be obtained through an
+interactive process when you first run the trello plugin. You must save your API
+key and API secret to the .auth.cfg file before you will be able to authorise
+the scriptabit application with Trello.
 
 Usage
 -----
