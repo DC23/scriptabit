@@ -3,6 +3,6 @@
 elsewhere.
 """
 
-__author__ = 'JugglinDan'
+__author__ = 'DC23'
 __email__ = 'jugglindan@gmail.com'
 __version__ = '0.4.4'

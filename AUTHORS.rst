@@ -4,7 +4,7 @@ Authors
 Development Lead
 ----------------
 
-* JugglinDan <jugglindan@gmail.com>
+* DC23 <jugglindan@gmail.com>
 
 Contributors
 ------------
