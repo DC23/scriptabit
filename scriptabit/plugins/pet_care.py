@@ -11,6 +11,7 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import logging
+from pprint import pprint
 
 import scriptabit
 
@@ -23,6 +24,7 @@ class PetCare(scriptabit.IPlugin):
         Generally nothing to do here other than initialise any class attributes.
         """
         super().__init__()
+        self.__items = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -32,12 +34,11 @@ class PetCare(scriptabit.IPlugin):
         """
         parser = super().get_arg_parser()
 
-        # parser.add(
-            # '--sample-plugin-argument',
-            # required=False,
-            # default=20.0,
-            # type=float,
-            # help='Sample plugin value')
+        parser.add(
+            '--pets-list-items',
+            required=False,
+            action='store_true',
+            help='Lists all pet-related items')
 
         return parser
 
@@ -54,6 +55,8 @@ class PetCare(scriptabit.IPlugin):
         super().initialise(configuration, habitica_service)
         logging.getLogger(__name__).info('Scriptabit Pet Care Services: looking'
                                          ' after your pets since yesterday')
+
+        self.__items = self._hs.get_user()['items']
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
@@ -75,6 +78,31 @@ class PetCare(scriptabit.IPlugin):
         """
 
         # do work here
+        if self._config.pets_list_items:
+            self.__list_pet_items(self.__items)
+            return False
 
         # return False if finished, and True to be updated again.
         return False
+
+    def __list_pet_items(self, items):
+        """ Lists all pet-related inventory items.
+
+        Args:
+            items (dict): The Habitica user.items dictionary.
+        """
+        print()
+        print('Eggs:')
+        pprint(items['eggs'])
+        print()
+        print('Hatching potions:')
+        pprint(items['hatchingPotions'])
+        print()
+        print('Food:')
+        pprint(items['food'])
+        print()
+        print('Pets:')
+        pprint(items['pets'])
+        print()
+        print('Mounts:')
+        pprint(items['mounts'])
