@@ -141,8 +141,8 @@ If empty, then cards are only marked done when archived.''')
 
         for b in sync_boards:
             labels = b.get_labels()
-            pprint(labels)
-            print(labels[0].color)
+            l = labels[0]
+            print(l.name, l.id, l.color)
             found = (l for l in labels if l.name == 'test')
             if not found:
                 print('test label not found, adding')
@@ -155,11 +155,6 @@ If empty, then cards are only marked done when archived.''')
             print('   {0}.{1}'.format(l.board.name, l.name))
 
         # debug code follows...
-        print()
-        print('tags from a board')
-        b = sync_boards[1]
-        pprint(b.get_labels())
-
 
         print()
         print('some card info')
