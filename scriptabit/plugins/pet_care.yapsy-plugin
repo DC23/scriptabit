@@ -1,0 +1,9 @@
+[Core]
+Name = pet_care
+Module = pet_care
+   
+[Documentation]
+Description = Provides options for batch hatching and feeding of pets.
+Author = DC23
+Version = 1.0.0
+Website = https://github.com/DC23/scriptabit
