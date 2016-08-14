@@ -1,5 +1,65 @@
 # -*- coding: utf-8 -*-
 """ Synchronisation of Trello cards to Habitica To-Dos.
+
+Card Synchronisation Design Notes
+---------------------------------
+
+Key requirements
+++++++++++++++++
+
+- Must be testable without required touching actual services.
+- Must have one-way synchronisation
+- Could have two-way synchronisation
+- Must synchronise basic tasks and completed status
+- Should synchronise due dates
+- Should synchronise checklists
+- Should synchronise difficulty (trivial, easy, medium, hard)
+- Should synchronise Habitica character attributes (str, con, per, int)
+
+Design notes
+++++++++++++
+
+- Interfaces/abstract base classes for
+    - task
+    - checklist
+    - task service
+    - FK mapping store. Maps src.id to dst.id
+- Synchronisation service operates on interfaces only
+- Unit testing will use simple implementations of the interfaces
+- All task persistence is delayed until the end when a list of tasks can be
+    supplied. Makes testing easier, and allows more efficient web operations.
+
+Basic algorithm for One-way sync
+++++++++++++++++++++++++++++++++
+
+- Build list of candidate tasks from source(src) and destination(dst)
+    - exclude any dst tasks that don't have a foreign key to a src task
+- Check for orphans
+    - FK mappings for which src tasks can't be found
+        - assume deleted and delete dst
+    - FK mappings for which dst can't be found
+        - Recreate dst (treat as new?)
+        - Delete src (in 2-way mapping perhaps)
+- Check for completed tasks
+    - src tasks marked completed (in trello this is both the done list and
+    archived cards (need src.id from dst.FK to find these))
+    - sync src task to dst and flag as 'complete'
+    - remove FK mapping from FK store
+- Check for new tasks
+    - src tasks with no FK in the store
+    - add new tasks to dst list (with 'new' flag)
+    - add FK mapping to FK store
+- Sync all remaining matched tasks
+    - src->dst mappings should all exist in FK store
+    - flag 'updated'
+- Check for orphans
+    - FK mappings for which src tasks can't be found
+        - assume deleted and flag dst as 'deleted' (or 'complete'?)
+    - FK mappings for which dst can't be found
+        - Recreate dst (treat as new?)
+        - Delete src (in 2-way mapping perhaps)
+- Pass list of dst tasks to dst task service for persistence
+
 """
 
 # Ensure backwards compatibility with Python 2
