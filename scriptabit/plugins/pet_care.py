@@ -25,6 +25,7 @@ class PetCare(scriptabit.IPlugin):
         """
         super().__init__()
         self.__items = None
+        self.__print_help = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -39,6 +40,8 @@ class PetCare(scriptabit.IPlugin):
             required=False,
             action='store_true',
             help='Lists all pet-related items')
+
+        self.__print_help = parser.print_help
 
         return parser
 
@@ -81,6 +84,8 @@ class PetCare(scriptabit.IPlugin):
         if self._config.pets_list_items:
             self.__list_pet_items(self.__items)
             return False
+
+        self.__print_help()
 
         # return False if finished, and True to be updated again.
         return False
