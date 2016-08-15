@@ -80,10 +80,14 @@ def test_new_tasks():
 
 def test_existing_tasks_are_updated():
     src = random_task()
+    src.difficulty = Difficulty.hard
+    src.attribute = CharacterAttribute.strength
     src_tasks = [src]
     src_svc = TestTaskService(src_tasks)
     dst = random_task()
     dst.description = 'something different'
+    dst.difficulty = Difficulty.medium
+    dst.attribute = CharacterAttribute.constitution
     dst_tasks = [dst]
     dst_svc = TestTaskService(dst_tasks)
 
