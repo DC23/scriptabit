@@ -50,15 +50,25 @@ class TaskSync(object):
         src_tasks = self.src_service.get_all_tasks()
         dst_tasks = self.dst_service.get_all_tasks()
 
+        src_index = { s.id:s for s in src_tasks }
+        dst_index = { d.id:d for d in dst_tasks }
+
+        def get_src_by_id(id):
+            """ Looks up a cached source task by ID """
+            return src_index.get(id, None)
+
+        def get_dst_by_id(id):
+            """ Looks up a cached destination task by ID """
+            return dst_index.get(id, None)
+
         # run through the source tasks, checking for existing mappings
         for src in src_tasks:
             dst_id = self.map.try_get_dst_id(src)
             if dst_id:
-                dst = self.__get_by_id(dst_tasks, dst_id)
+                dst = get_dst_by_id(dst_id)
                 if dst:
                     # dst found, so this is an existing mapping
-                    # TODO: task copy
-                    dst.status = SyncStatus.updated
+                    dst.copy_fields(src, status=SyncStatus.updated)
                 else:
                     # dst expected but not found, assume deleted.
                     # TODO: Should we recreate? Or delete back to source?

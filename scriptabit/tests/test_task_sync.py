@@ -78,3 +78,36 @@ def test_new_tasks():
         assert s.difficulty == d.difficulty
         assert s.attribute == d.attribute
 
+def test_existing_tasks_are_updated():
+    src = random_task()
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+    dst = random_task()
+    dst.description = 'something different'
+    dst_tasks = [dst]
+    dst_svc = TestTaskService(dst_tasks)
+
+    # precondition tests
+    assert src.id != dst.id
+    assert src.status == SyncStatus.unchanged
+    assert dst.name != src.name
+    assert dst.attribute != src.attribute
+    assert dst.difficulty != src.difficulty
+    assert dst.status == SyncStatus.unchanged
+    assert dst.description != src.description
+    map = TaskMap()
+    map.map(src, dst)
+
+    sync = TaskSync(src_svc, dst_svc, map)
+    sync.synchronise()
+
+    assert len(dst_svc.persisted_tasks) == 1
+    actual = dst_svc.persisted_tasks[0]
+    assert actual.id == dst.id, "id not changed"
+    assert actual.id != src.id, "id not changed"
+    assert actual.name == src.name
+    assert actual.attribute == src.attribute
+    assert actual.difficulty == src.difficulty
+    assert actual.completed == src.completed
+    assert actual.status == SyncStatus.updated
+    assert actual.description == src.description

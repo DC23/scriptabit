@@ -107,11 +107,12 @@ class Task(object):
             raise TypeError
         self.__attribute = attribute
 
-    def copy_fields(self, src):
+    def copy_fields(self, src, status=SyncStatus.updated):
         """ Copies fields from src.
 
         Args:
             src (Task): the source task
+            status (SyncStatus): the status to set
 
         Returns: Task: self
         """
@@ -120,8 +121,7 @@ class Task(object):
         self.completed = src.completed
         self.difficulty = src.difficulty
         self.attribute = src.attribute
-        self.dirty = True
-        self.status = SyncStatus.new
+        self.status = status
         return self
 
 
