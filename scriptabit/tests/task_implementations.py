@@ -24,11 +24,12 @@ from scriptabit import (
 
 
 class TestTask(Task):
+    def __init__(
+        self,
+        id,
+        name=''):
+        super().__init__(id, name)
 
-    @staticmethod
-    def create_from(src):
-        t = TestTask(id=uuid.uuid4())
-        return t._copy_fields(src)
 
 class TestTaskService(TaskService):
     def __init__(self, tasks):
@@ -44,6 +45,5 @@ class TestTaskService(TaskService):
         self.persisted_tasks = tasks
 
     def create(self, src):
-        t = TestTask.create_from(src)
-        t.status = SyncStatus.new
+        t = TestTask(id=uuid.uuid4()).copy_fields(src)
         return t

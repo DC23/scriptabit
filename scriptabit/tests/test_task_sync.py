@@ -10,6 +10,7 @@ import json
 import pytest
 import requests
 import requests_mock
+import uuid
 from pkg_resources import resource_filename
 
 from bidict import (
@@ -19,8 +20,12 @@ from bidict import (
 from tempfile import NamedTemporaryFile
 from scriptabit import SyncStatus, TaskSync, Task, TaskMap
 
-from .task_implementations import TestTaskService
+from .task_implementations import TestTaskService, TestTask
 
+
+def random_task():
+    t = TestTask(id=uuid.uuid4())
+    t.name = uuid.uuid1()
 
 def test_new_tasks():
     src_tasks = [Task(id=i) for i in range(2)]

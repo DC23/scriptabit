@@ -62,7 +62,7 @@ class Task(object):
 
     def __init__(
         self,
-        id='',
+        id,
         name=''):
         """ Initialise the task.
 
@@ -72,7 +72,7 @@ class Task(object):
             description (str): A longer description
         """
         super().__init__()
-        self.id = id
+        self.__id = id
         self.name = name
         self.description = ''
         self.completed = False
@@ -80,6 +80,11 @@ class Task(object):
         self.__attribute = CharacterAttribute.strength
         self.dirty = False
         self.status = SyncStatus.new
+
+    @property
+    def id(self):
+        """ Task id """
+        return self.__id
 
     @property
     def difficulty(self):
@@ -105,19 +110,7 @@ class Task(object):
             raise TypeError
         self.__attribute = attribute
 
-    @staticmethod
-    @abstractmethod
-    def create_from(src):
-        """ Creates a new Task and initialises it from the src values.
-
-        Args:
-            src (Task): the source task
-
-        Returns: Task: the new concrete task instance.
-        """
-        return NotImplemented
-
-    def _copy_fields(self, src):
+    def copy_fields(self, src):
         """ Copies fields from src.
 
         Args:

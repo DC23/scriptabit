@@ -33,11 +33,11 @@ class TaskService(object):
         return NotImplemented
 
     @abstractmethod
-    def create(self, src):
-        """ Creates a new task, with data copied from the source task.
+    def create(self, src=None):
+        """ Creates a new task.
 
         Args:
-            src (Task): The data source.
+            src (Task): The optional data source.
 
         Returns: Task: The new task.
         """
