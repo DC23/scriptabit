@@ -25,10 +25,11 @@ class TestTaskService(TaskService):
     def __init__(self, tasks):
         super().__init__()
         self.tasks = tasks
+        self.dst_tasks = []
 
     def get_all_tasks(self):
         """ Get all tasks """
         return self.tasks
 
     def persist_tasks(self, tasks):
-        pass
+        self.persisted_tasks = tasks
