@@ -76,10 +76,34 @@ class Task(object):
         self.name = name
         self.description = ''
         self.completed = False
-        self.difficulty = Difficulty.easy
-        self.attribute = CharacterAttribute.strength
+        self.__difficulty = Difficulty.easy
+        self.__attribute = CharacterAttribute.strength
         self.dirty = False
         self.status = SyncStatus.new
+
+    @property
+    def difficulty(self):
+        """ Task difficulty """
+        return self.__difficulty
+
+    @difficulty.setter
+    def difficulty(self, difficulty):
+        """ Task difficulty """
+        if not isinstance(difficulty, Difficulty):
+            raise TypeError
+        self.__difficulty = difficulty
+
+    @property
+    def attribute(self):
+        """ Task character attribute """
+        return self.__attribute
+
+    @attribute.setter
+    def attribute(self, attribute):
+        """ Task character attribute """
+        if not isinstance(attribute, CharacterAttribute):
+            raise TypeError
+        self.__attribute = attribute
 
     @staticmethod
     @abstractmethod
