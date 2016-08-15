@@ -17,7 +17,7 @@ from scriptabit import (
     Difficulty,
     CharacterAttribute,
     TaskService,
-    TaskMapping,
+    TaskMap,
 )
 
 from .task_implementations import *
@@ -46,12 +46,12 @@ def test_default_task():
 def test_invalid_difficulty():
     task = Task()
     with pytest.raises(TypeError):
-        task.difficulty = 'hard'
+        task.difficulty = 'really hard'
 
 def test_invalid_attribute():
     task = Task()
     with pytest.raises(TypeError):
-        task.attribute = 'str'
+        task.attribute = 'dex'
 
 def test_valid_difficulty():
     task = Task()

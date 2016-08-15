@@ -8,6 +8,7 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+from abc import ABCMeta, abstractmethod
 from enum import Enum
 
 
@@ -25,6 +26,14 @@ class CharacterAttribute(Enum):
     intelligence = 'int'
     constitution = 'con'
     perception = 'per'
+
+
+class SyncStatus(Enum):
+    """ Indicates the synchronisation status of the task.
+    """
+    new = 1
+    updated = 2
+    deleted = 3
 
 
 class Task(object):
@@ -48,6 +57,8 @@ class Task(object):
     """
     # TODO: define and add checklists
     # TODO: define due date
+     # old-style ABCMeta usage for Python 2.7 compatibility.
+    __metaclass__ = ABCMeta
 
     def __init__(
         self,
@@ -65,30 +76,38 @@ class Task(object):
         self.name = name
         self.description = ''
         self.completed = False
-        self.__difficulty = Difficulty.easy
-        self.__attribute = CharacterAttribute.strength
+        self.difficulty = Difficulty.easy
+        self.attribute = CharacterAttribute.strength
         self.dirty = False
+        self.status = SyncStatus.new
 
-    @property
-    def difficulty(self):
-        """ Task difficulty """
-        return self.__difficulty
+    @staticmethod
+    @abstractmethod
+    def create_from(src):
+        """ Creates a new Task and initialises it from the src values.
 
-    @difficulty.setter
-    def difficulty(self, difficulty):
-        """ Task difficulty """
-        if not isinstance(difficulty, Difficulty):
-            raise TypeError
-        self.__difficulty = difficulty
+        Args:
+            src (Task): the source task
 
-    @property
-    def attribute(self):
-        """ Task character attribute """
-        return self.__attribute
+        Returns: Task: the new concrete task instance.
+        """
+        return NotImplemented
 
-    @attribute.setter
-    def attribute(self, attribute):
-        """ Task character attribute """
-        if not isinstance(attribute, CharacterAttribute):
-            raise TypeError
-        self.__attribute = attribute
+    def _copy_fields(self, src):
+        """ Copies fields from src.
+
+        Args:
+            src (Task): the source task
+
+        Returns: Task: self
+        """
+        self.name = src.name
+        self.description = src.description
+        self.completed = src.completed
+        self.difficulty = src.difficulty
+        self.attribute = src.attribute
+        self.dirty = True
+        self.status = SyncStatus.new
+        return self
+
+

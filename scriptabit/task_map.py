@@ -13,12 +13,12 @@ import pickle
 from bidict import bidict, DuplicationBehavior
 
 
-class TaskMapping(object):
+class TaskMap(object):
     """ Persistent 1-1 task mapping.
     """
 
     def __init__(self, filename=''):
-        """ Initialise the TaskMapping instance.
+        """ Initialise the TaskMap instance.
 
         Args:
             filename (str): The optional filename to load from.
@@ -31,7 +31,7 @@ class TaskMapping(object):
             self.__bidict = bidict()
 
     def persist(self, filename):
-        """ Persist the TaskMapping instance to a file.
+        """ Persist the TaskMap instance to a file.
 
         Args:
             filename (str): The destination file name.

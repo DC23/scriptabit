@@ -17,25 +17,25 @@ from bidict import (
     ValueDuplicationError,
     KeyAndValueDuplicationError)
 from tempfile import NamedTemporaryFile
-from scriptabit import Task, TaskMapping
+from scriptabit import Task, TaskMap
 
 
-class TestTaskMapping(object):
+class TestTaskMap(object):
 
     def setup(self):
-        self.tm = TaskMapping()
+        self.tm = TaskMap()
         self.src = Task(id='1')
         self.dst = Task(id='a')
         self.missing = Task(id='blah')
 
     def test_persist_task_mapping(self):
-        expected = TaskMapping()
+        expected = TaskMap()
         tasks = [Task(id=i) for i in range(4)]
         expected.map(tasks[0], tasks[1])
         expected.map(tasks[2], tasks[3])
         filename = NamedTemporaryFile(suffix='.pickle')
         expected.persist(filename.name)
-        actual = TaskMapping(filename.name)
+        actual = TaskMap(filename.name)
 
         assert actual.get_dst_id(tasks[0]) == tasks[1].id
         assert actual.get_dst_id(tasks[2]) == tasks[3].id

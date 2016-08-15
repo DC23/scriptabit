@@ -31,3 +31,14 @@ class TaskService(object):
     def persist_tasks(self, tasks):
         """ Persists all dirty tasks """
         return NotImplemented
+
+    @abstractmethod
+    def create(self, src):
+        """ Creates a new task, with data copied from the source task.
+
+        Args:
+            src (Task): The data source.
+
+        Returns: Task: The new task.
+        """
+        return NotImplemented
