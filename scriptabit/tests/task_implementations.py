@@ -52,8 +52,5 @@ class TestTaskService(TaskService):
     def persist_tasks(self, tasks):
         self.persisted_tasks = tasks
 
-    def create(self, src=None):
-        t = TestTask(id=uuid.uuid4())
-        if src:
-            t.copy_fields(src, status=SyncStatus.new)
-        return t
+    def _task_factory(self):
+        return TestTask(id=uuid.uuid4())

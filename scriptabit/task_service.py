@@ -15,6 +15,7 @@ from __future__ import (
 from builtins import *
 from abc import ABCMeta, abstractmethod
 
+from .task import SyncStatus, Task
 
 class TaskService(object):
     """ Defines an abstract Task Service.
@@ -38,6 +39,9 @@ class TaskService(object):
         return NotImplemented
 
     @abstractmethod
+    def _task_factory(self):
+        return NotImplemented
+
     def create(self, src=None):
         """ Creates a new task.
 
@@ -46,4 +50,7 @@ class TaskService(object):
 
         Returns: Task: The new task.
         """
-        return NotImplemented
+        t = self._task_factory()
+        if src:
+            t.copy_fields(src, status=SyncStatus.new)
+        return t
