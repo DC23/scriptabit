@@ -18,6 +18,7 @@ from .scriptabit import start_cli
 from .task import Task, Difficulty, CharacterAttribute
 from .task_mapping import TaskMapping
 from .task_service import TaskService
+from .task_sync import TaskSync
 from .utility_functions import UtilityFunctions
 
 

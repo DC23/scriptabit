@@ -22,12 +22,11 @@ from scriptabit import Task, TaskMapping
 
 class TestTaskMapping(object):
 
-    @classmethod
-    def setup_class(cls):
-        cls.tm = TaskMapping()
-        cls.src = Task(id='1')
-        cls.dst = Task(id='a')
-        cls.missing = Task(id='blah')
+    def setup(self):
+        self.tm = TaskMapping()
+        self.src = Task(id='1')
+        self.dst = Task(id='a')
+        self.missing = Task(id='blah')
 
     def test_persist_task_mapping(self):
         expected = TaskMapping()
