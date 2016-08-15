@@ -15,6 +15,9 @@ from .errors import *
 from .habitica_service import HabiticaService
 from .iplugin import IPlugin
 from .scriptabit import start_cli
+from .task import Task, Difficulty, CharacterAttribute
+from .task_mapping import TaskMapping
+from .task_service import TaskService
 from .utility_functions import UtilityFunctions
 
 

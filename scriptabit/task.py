@@ -8,6 +8,24 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+from enum import Enum
+
+
+class Difficulty(Enum):
+    """ Implements Task difficulty levels. """
+    trivial = 0.1
+    easy = 1.0
+    medium = 1.5
+    hard = 2.0
+
+
+class CharacterAttribute(Enum):
+    """ Implements Task character attributes """
+    strength = 'str'
+    intelligence = 'int'
+    constitution = 'con'
+    perception = 'per'
+
 
 class Task(object):
     """ Defines a Habitica task data transfer object.
@@ -19,11 +37,17 @@ class Task(object):
     Attributes:
         name (str): The task name.
         description (str): A longer description
+        id (str): The task ID
         completed (bool): Indicates the completion status of the task.
-        difficulty (str): One of 'trivial', 'easy', 'medium', 'hard'.
+        difficulty (Difficulty): The task difficulty.
+        attribute (CharacterAttribute): Character attribute of the task.
+        dirty (bool): Indicates that the task is dirty and requires persistence.
+            Note that the dirty flag is **not** set automatically when
+            attributes are modified. Clients must set this value manually as
+            required.
     """
     # TODO: define and add checklists
-    # TODO: what other attributes should I include? ID? Last modified date?
+    # TODO: define due date
 
     def __init__(self):
         """ Initialise the task.
@@ -31,15 +55,32 @@ class Task(object):
         super().__init__()
         self.name = ''
         self.description = ''
+        self.id = ''
         self.completed = False
-        self.__difficulty = 'easy'
+        self.__difficulty = Difficulty.easy
+        self.__attribute = CharacterAttribute.strength
+        self.dirty = False
 
     @property
     def difficulty(self):
+        """ Task difficulty """
         return self.__difficulty
 
     @difficulty.setter
     def difficulty(self, difficulty):
-        if difficulty not in ('trivial', 'easy', 'medium', 'hard'):
-            raise ValueError('difficulty not valid')
+        """ Task difficulty """
+        if not isinstance(difficulty, Difficulty):
+            raise TypeError
         self.__difficulty = difficulty
+
+    @property
+    def attribute(self):
+        """ Task character attribute """
+        return self.__attribute
+
+    @attribute.setter
+    def attribute(self, attribute):
+        """ Task character attribute """
+        if not isinstance(attribute, CharacterAttribute):
+            raise TypeError
+        self.__attribute = attribute
