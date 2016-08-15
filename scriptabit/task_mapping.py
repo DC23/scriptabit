@@ -9,18 +9,36 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 
+from bidict import bidict
+
 
 class TaskMapping(object):
     """ Persistent 1-1 task mapping.
     """
 
-    # TODO: implement with bidict
-
     def __init__(self):
         """ Initialise the TaskMapping instance """
         super().__init__()
 
-    def map_tasks(self, src, dst):
+    @staticmethod
+    def create(filename):
+        """ Factory method to create a TaskMapping instance.
+
+        Args:
+            filename (str): The filename to load from.
+        """
+        raise NotImplemented
+
+    def persist(self, filename):
+        """ Persist the TaskMapping instance to a file.
+
+        Args:
+            filename (str): The destination file name.
+
+        """
+        raise NotImplemented
+
+    def map(self, src, dst):
         """ Create a mapping between a source and destination task.
 
         Args:
