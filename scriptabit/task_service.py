@@ -50,6 +50,7 @@ class TaskService(object):
 
         Returns: Task: The new task.
         """
+        # TODO: logging statements
         t = self._task_factory()
         if src:
             t.copy_fields(src, status=SyncStatus.new)

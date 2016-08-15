@@ -17,6 +17,7 @@ from .task_service import TaskService
 class TaskSync(object):
     """ Provides synchronisation between two task services.
     """
+    # TODO: logging statements
 
     def __init__(self, src_service, dst_service, task_map):
         """ Initialise the TaskSync instance.
@@ -46,7 +47,6 @@ class TaskSync(object):
         """ Synchronise the source service with the destination.
         The task_map will be updated.
         """
-
         src_tasks = self.src_service.get_all_tasks()
         dst_tasks = self.dst_service.get_all_tasks()
 

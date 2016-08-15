@@ -53,6 +53,7 @@ class Task(object):
         attribute (CharacterAttribute): Character attribute of the task.
         status (SyncStatus): A synchronisation status hint for the TaskService.
     """
+    # TODO: logging statements
     # TODO: define and add checklists
     # TODO: define due date
      # old-style ABCMeta usage for Python 2.7 compatibility.
