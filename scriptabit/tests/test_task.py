@@ -20,18 +20,7 @@ from scriptabit import (
     TaskMapping,
 )
 
-
-class TestTaskService(TaskService):
-    def __init__(self, tasks):
-        super().__init__()
-        self.tasks = tasks
-
-    def get_all_tasks(self):
-        """ Get all tasks """
-        return self.tasks
-
-    def persist_tasks(self, tasks):
-        pass
+from .task_implementations import *
 
 
 def test_task_service_():
