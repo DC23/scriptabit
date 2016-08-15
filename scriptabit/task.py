@@ -49,13 +49,21 @@ class Task(object):
     # TODO: define and add checklists
     # TODO: define due date
 
-    def __init__(self):
+    def __init__(
+        self,
+        id='',
+        name=''):
         """ Initialise the task.
+
+        Args:
+            id (str): The task ID
+            name (str): The task name.
+            description (str): A longer description
         """
         super().__init__()
-        self.name = ''
+        self.id = id
+        self.name = name
         self.description = ''
-        self.id = ''
         self.completed = False
         self.__difficulty = Difficulty.easy
         self.__attribute = CharacterAttribute.strength

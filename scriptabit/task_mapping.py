@@ -9,25 +9,26 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 
-from bidict import bidict
+import pickle
+from bidict import bidict, DuplicationBehavior
 
 
 class TaskMapping(object):
     """ Persistent 1-1 task mapping.
     """
 
-    def __init__(self):
-        """ Initialise the TaskMapping instance """
-        super().__init__()
-
-    @staticmethod
-    def create(filename):
-        """ Factory method to create a TaskMapping instance.
+    def __init__(self, filename=''):
+        """ Initialise the TaskMapping instance.
 
         Args:
-            filename (str): The filename to load from.
+            filename (str): The optional filename to load from.
         """
-        raise NotImplemented
+        super().__init__()
+        if filename:
+            with open(filename, 'rb') as f:
+                self.__bidict = pickle.load(f)
+        else:
+            self.__bidict = bidict()
 
     def persist(self, filename):
         """ Persist the TaskMapping instance to a file.
@@ -36,7 +37,8 @@ class TaskMapping(object):
             filename (str): The destination file name.
 
         """
-        raise NotImplemented
+        with open(filename, 'wb') as f:
+            pickle.dump(self.__bidict, f, pickle.HIGHEST_PROTOCOL)
 
     def map(self, src, dst):
         """ Create a mapping between a source and destination task.
@@ -44,9 +46,13 @@ class TaskMapping(object):
         Args:
             src (Task): The source task.
             dst (Task): The destination task.
-
         """
-        raise NotImplemented
+        self.__bidict.put(
+            src.id,
+            dst.id,
+            on_dup_key=DuplicationBehavior.RAISE,
+            on_dup_val=DuplicationBehavior.RAISE,
+            on_dup_kv=DuplicationBehavior.RAISE)
 
     def get_dst_id(self, src):
         """ Get the mapped destination task ID for a source task.
@@ -55,9 +61,12 @@ class TaskMapping(object):
             src (Task): The source task.
 
         Returns:
-            If a mapping exists, the destination task ID, otherwise False.
+            If a mapping exists, the destination task ID.
+
+        returns:
+            KeyError: if the input ID has no mapping.
         """
-        raise NotImplemented
+        return self.__bidict[src.id]
 
     def get_src_id(self, dst):
         """ Get the mapped source task ID for a destination task.
@@ -66,6 +75,31 @@ class TaskMapping(object):
             dst (Task): The destination task.
 
         Returns:
+            If a mapping exists, the source task ID.
+
+        returns:
+            KeyError: if the input ID has no mapping.
+        """
+        return self.__bidict.inv[dst.id]
+
+    def try_get_dst_id(self, src):
+        """ Get the mapped destination task ID for a source task.
+
+        Args:
+            src (Task): The source task.
+
+        Returns:
+            If a mapping exists, the destination task ID, otherwise False.
+        """
+        return self.__bidict.get(src.id, False)
+
+    def try_get_src_id(self, dst):
+        """ Get the mapped source task ID for a destination task.
+
+        Args:
+            dst (Task): The destination task.
+
+        Returns:
             If a mapping exists, the source task ID, otherwise False.
         """
-        raise NotImplemented
+        return self.__bidict.inv.get(dst.id, False)

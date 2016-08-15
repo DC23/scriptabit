@@ -37,14 +37,9 @@ class TestTaskService(TaskService):
 def test_task_service_():
     """Confirm that the abstract base class features work on all supported
     Python versions"""
-    task0 = Task()
-    task0.name = 'task 0'
-    task0.id = '000'
-
+    task0 = Task('000', name='task 0')
     expected = [task0]
-
     ts = TestTaskService(expected)
-
     actual = ts.get_all_tasks()
     assert actual == expected
     assert actual[0].name == task0.name
