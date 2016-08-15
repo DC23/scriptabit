@@ -45,15 +45,12 @@ class Task(object):
 
     Attributes:
         name (str): The task name.
-        description (str): A longer description
-        id (str): The task ID
+        description (str): A longer description.
+        id (str): The task ID.
         completed (bool): Indicates the completion status of the task.
         difficulty (Difficulty): The task difficulty.
         attribute (CharacterAttribute): Character attribute of the task.
-        dirty (bool): Indicates that the task is dirty and requires persistence.
-            Note that the dirty flag is **not** set automatically when
-            attributes are modified. Clients must set this value manually as
-            required.
+        status (SyncStatus): A synchronisation status hint for the TaskService.
     """
     # TODO: define and add checklists
     # TODO: define due date
@@ -78,7 +75,6 @@ class Task(object):
         self.completed = False
         self.__difficulty = Difficulty.easy
         self.__attribute = CharacterAttribute.strength
-        self.dirty = False
         self.status = SyncStatus.new
 
     @property

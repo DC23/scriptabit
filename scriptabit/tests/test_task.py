@@ -22,7 +22,7 @@ from scriptabit import (
 from .task_implementations import *
 
 
-def test_task_service_():
+def test_task_service():
     """Confirm that the abstract base class features work on all supported
     Python versions"""
     task0 = Task(id='000', name='task 0')
@@ -40,7 +40,7 @@ def test_default_task():
     assert task.completed == False
     assert task.difficulty == Difficulty.easy
     assert task.attribute == CharacterAttribute.strength
-    assert task.dirty == False
+    assert task.status == SyncStatus.new
 
 def test_invalid_difficulty():
     task = Task(id='439')
