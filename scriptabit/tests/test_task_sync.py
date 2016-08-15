@@ -50,6 +50,7 @@ def random_task():
     t.completed = choice((True, False))
     t.difficulty = difficulties[randint(0,len(difficulties)-1)]
     t.attribute = attributes[randint(0,len(attributes)-1)]
+    t.status = SyncStatus.unchanged
     return t
 
 def test_new_tasks():
@@ -68,5 +69,12 @@ def test_new_tasks():
         assert map.try_get_src_id(d)
 
     for s in src.get_all_tasks():
-        assert map.try_get_dst_id(s)
+        dst_id = map.try_get_dst_id(s)
+        assert dst_id
+        d = dst.get_task(dst_id)
+        assert s.name == d.name
+        assert s.description == d.description
+        assert s.completed == d.completed
+        assert s.difficulty == d.difficulty
+        assert s.attribute == d.attribute
 

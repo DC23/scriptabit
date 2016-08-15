@@ -39,8 +39,6 @@ class TaskSync(object):
         """
         # factory method as we don't know the concrete task type
         dst = self.dst_service.create(src)
-        # TODO: should this be set by the factory method?
-        dst.status = SyncStatus.new
         self.map.map(src, dst)
         return dst
 

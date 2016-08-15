@@ -34,6 +34,7 @@ class SyncStatus(Enum):
     new = 1
     updated = 2
     deleted = 3
+    unchanged = 4
 
 
 class Task(object):

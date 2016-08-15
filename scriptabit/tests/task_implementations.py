@@ -41,6 +41,14 @@ class TestTaskService(TaskService):
         """ Get all tasks """
         return self.tasks
 
+    def get_task(self, id):
+        """ Gets a task by id """
+        # Quick and nasty sequential search, good enough for these small tests
+        for t in self.tasks:
+            if t.id == id:
+                return t
+        return None
+
     def persist_tasks(self, tasks):
         self.persisted_tasks = tasks
 

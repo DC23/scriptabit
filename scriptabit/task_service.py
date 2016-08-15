@@ -28,6 +28,11 @@ class TaskService(object):
         return NotImplemented
 
     @abstractmethod
+    def get_task(self, id):
+        """ Gets a task by id """
+        return NotImplemented
+
+    @abstractmethod
     def persist_tasks(self, tasks):
         """ Persists all dirty tasks """
         return NotImplemented
