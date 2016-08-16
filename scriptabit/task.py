@@ -8,7 +8,7 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-from abc import ABCMeta, abstractmethod
+# from abc import ABCMeta, abstractmethod
 from enum import Enum
 
 
@@ -56,22 +56,22 @@ class Task(object):
     # TODO: logging statements
     # TODO: define and add checklists
     # TODO: define due date
-     # old-style ABCMeta usage for Python 2.7 compatibility.
-    __metaclass__ = ABCMeta
+    # old-style ABCMeta usage for Python 2.7 compatibility.
+    # __metaclass__ = ABCMeta
 
     def __init__(
-        self,
-        id,
-        name=''):
+            self,
+            _id,
+            name=''):
         """ Initialise the task.
 
         Args:
-            id (str): The task ID
+            _id (str): The task ID
             name (str): The task name.
             description (str): A longer description
         """
         super().__init__()
-        self.__id = id
+        self.__id = _id
         self.name = name
         self.description = ''
         self.completed = False
@@ -124,5 +124,3 @@ class Task(object):
         self.attribute = src.attribute
         self.status = status
         return self
-
-

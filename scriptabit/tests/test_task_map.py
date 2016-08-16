@@ -24,13 +24,13 @@ class TestTaskMap(object):
 
     def setup(self):
         self.tm = TaskMap()
-        self.src = Task(id='1')
-        self.dst = Task(id='a')
-        self.missing = Task(id='blah')
+        self.src = Task(_id='1')
+        self.dst = Task(_id='a')
+        self.missing = Task(_id='blah')
 
     def test_persist_task_mapping(self):
         expected = TaskMap()
-        tasks = [Task(id=i) for i in range(4)]
+        tasks = [Task(_id=i) for i in range(4)]
         expected.map(tasks[0], tasks[1])
         expected.map(tasks[2], tasks[3])
         filename = NamedTemporaryFile(suffix='.pickle')
@@ -51,13 +51,13 @@ class TestTaskMap(object):
             self.tm.map(s, dd)
 
     def test_duplicate_dst(self):
-        src2 = Task(id='9')
+        src2 = Task(_id='9')
         self.tm.map(self.src, self.dst)
         with pytest.raises(ValueDuplicationError):
             self.tm.map(src2, self.dst)
 
     def test_duplicate_src_dst(self):
-        tasks = [Task(id=i) for i in range(4)]
+        tasks = [Task(_id=i) for i in range(4)]
         self.tm.map(tasks[0], tasks[1])
         self.tm.map(tasks[2], tasks[3])
         with pytest.raises(KeyAndValueDuplicationError):

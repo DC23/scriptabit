@@ -90,7 +90,8 @@ class PetCare(scriptabit.IPlugin):
         # return False if finished, and True to be updated again.
         return False
 
-    def __list_pet_items(self, items):
+    @staticmethod
+    def __list_pet_items(items):
         """ Lists all pet-related inventory items.
 
         Args:

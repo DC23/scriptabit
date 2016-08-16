@@ -15,9 +15,9 @@ from __future__ import (
 from builtins import *
 from abc import ABCMeta, abstractmethod
 
-from .task import SyncStatus, Task
+from .task import SyncStatus
 
-class TaskService(object):
+class TaskService(metaclass=ABCMeta):
     """ Defines an abstract Task Service.
     """
      # old-style ABCMeta usage for Python 2.7 compatibility.
@@ -25,23 +25,43 @@ class TaskService(object):
 
     @abstractmethod
     def get_all_tasks(self):
-        """ Get all tasks """
+        """ Get all tasks. """
         return NotImplemented
 
     @abstractmethod
-    def get_task(self, id):
-        """ Gets a task by id """
+    def get_task(self, _id):
+        """ Gets a task by id.
+
+        Args:
+            _id (str): The task ID to get.
+
+        Returns: Task: The task if it exists, otherwise None.
+        """
         return NotImplemented
 
     @abstractmethod
     def persist_tasks(self, tasks):
-        """ Persists all dirty tasks """
+        """ Persists the tasks.
+
+        New and existing tasks will be upserted. Tasks flagged for deletion
+        will be deleted.
+
+        Args: tasks: The collection of tasks to persist.
+        """
         return NotImplemented
 
     @abstractmethod
-    def _task_factory(self):
+    def _create_task(self):
+        """ Task factory method.
+
+        Allows subclasses to create the appropriate Task type.
+        """
         return NotImplemented
 
+    # pylint correctly detects that _task_factory returns NotImplemented, but
+    # it fails to detect that the method is marked abstract, so the error is
+    # spurious.
+    #pylint: disable=no-member
     def create(self, src=None):
         """ Creates a new task.
 
@@ -51,7 +71,7 @@ class TaskService(object):
         Returns: Task: The new task.
         """
         # TODO: logging statements
-        t = self._task_factory()
+        t = self._create_task()
         if src:
             t.copy_fields(src, status=SyncStatus.new)
         return t

@@ -9,11 +9,12 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 
-from .task import SyncStatus, Task
-from .task_map import TaskMap
-from .task_service import TaskService
+from .task import SyncStatus
+# from .task_map import TaskMap
+# from .task_service import TaskService
 
 
+# pylint: disable=too-few-public-methods
 class TaskSync(object):
     """ Provides synchronisation between two task services.
     """
@@ -50,16 +51,16 @@ class TaskSync(object):
         src_tasks = self.src_service.get_all_tasks()
         dst_tasks = self.dst_service.get_all_tasks()
 
-        src_index = { s.id:s for s in src_tasks }
-        dst_index = { d.id:d for d in dst_tasks }
+        src_index = {s.id:s for s in src_tasks}
+        dst_index = {d.id:d for d in dst_tasks}
 
-        def get_src_by_id(id):
+        def get_src_by_id(_id):
             """ Looks up a cached source task by ID """
-            return src_index.get(id, None)
+            return src_index.get(_id, None)
 
-        def get_dst_by_id(id):
+        def get_dst_by_id(_id):
             """ Looks up a cached destination task by ID """
-            return dst_index.get(id, None)
+            return dst_index.get(_id, None)
 
         # run through the source tasks, checking for existing mappings
         for src in src_tasks:
@@ -82,3 +83,5 @@ class TaskSync(object):
         # TODO: check for deleted tasks: mapping where we have dst but not src
 
         self.dst_service.persist_tasks(dst_tasks)
+
+# pylint: enable=too-few-public-methods
