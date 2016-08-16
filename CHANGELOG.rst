@@ -111,4 +111,5 @@ Changelog
 
 * Fixed task sync bug with missing destination tasks.
 * Implemented Habitica sync task
+* HabiticaService now supports a task filter on get_tasks
 

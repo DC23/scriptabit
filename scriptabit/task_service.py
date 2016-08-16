@@ -26,15 +26,15 @@ class TaskService(object):
         """ Get all tasks. """
         raise NotImplementedError
 
-    def get_task(self, _id):
-        """ Gets a task by id.
+    # def get_task(self, _id):
+        # """ Gets a task by id.
 
-        Args:
-            _id (str): The task ID to get.
+        # Args:
+            # _id (str): The task ID to get.
 
-        Returns: Task: The task if it exists, otherwise None.
-        """
-        raise NotImplementedError
+        # Returns: Task: The task if it exists, otherwise None.
+        # """
+        # raise NotImplementedError
 
     def persist_tasks(self, tasks):
         """ Persists the tasks.

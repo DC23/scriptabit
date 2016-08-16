@@ -15,6 +15,8 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 
+from .habitica_service import HabiticaTaskTypes
+from .habitica_task import HabiticaTask
 from .task import SyncStatus
 
 
@@ -32,17 +34,8 @@ class TaskService(object):
 
     def get_all_tasks(self):
         """ Get all tasks. """
-        raise NotImplementedError
-
-    def get_task(self, _id):
-        """ Gets a task by id.
-
-        Args:
-            _id (str): The task ID to get.
-
-        Returns: Task: The task if it exists, otherwise None.
-        """
-        raise NotImplementedError
+        raw_tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.todos)
+        return [HabiticaTask(rt) for rt in raw_tasks]
 
     def persist_tasks(self, tasks):
         """ Persists the tasks.

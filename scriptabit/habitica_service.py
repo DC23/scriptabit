@@ -99,14 +99,25 @@ class HabiticaService(object):
         response.raise_for_status()
         return response.json()['data']
 
-    def create_task(self, task):
+    def create_task(self, task, task_type=HabiticaTaskTypes.todos):
         """ Creates a task.
 
         Args:
             task (dict): The task.
+            task_type (HabiticaTaskTypes): The type of task to get.
+                Default is to create a new todo.
 
         Returns: dict: The new task as returned from the server.
         """
+        _type = 'todo'
+        if task_type == HabiticaTaskTypes.dailies:
+            _type = 'daily'
+        elif task_type == HabiticaTaskTypes.habits:
+            _type = 'habit'
+        elif task_type == HabiticaTaskTypes.rewards:
+            _type = 'reward'
+        task['type'] = _type
+
         response = self.__post('tasks/user', task)
         response.raise_for_status()
         return response.json()['data']
