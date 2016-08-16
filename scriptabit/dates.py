@@ -29,7 +29,8 @@ def parse_date_utc(date, milliseconds=True):
         milliseconds (bool): If True, then epoch times are treated as
             millisecond values, otherwise they are evaluated as seconds.
 
-    Returns: datetime: The parsed date time in UTC.
+    Returns:
+        datetime: The parsed date time in UTC.
     """
 
     parsed_date = None
@@ -56,6 +57,7 @@ def parse_date_local(date, milliseconds=True):
         milliseconds (bool): If True, then epoch times are treated as
             millisecond values, otherwise they are evaluated as seconds.
 
-    Returns: datetime: The parsed date time in local time.
+    Returns:
+        datetime: The parsed date time in local time.
     """
     return parse_date_utc(date, milliseconds).astimezone(get_localzone())

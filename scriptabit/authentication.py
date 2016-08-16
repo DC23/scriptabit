@@ -25,12 +25,15 @@ def load_habitica_authentication_credentials(
         config_file_name (str): Basename of the configuration file.
         section (str): Configuration file section name.
 
-    Returns: dict: the selected credentials::
+    Returns:
+        dict: the selected credentials
 
-        {
-        'x-api-user': 'the user name',
-        'x-api-key':  'the user API key',
-        }
+        ::
+
+            {
+            'x-api-user': 'the user name',
+            'x-api-key':  'the user API key',
+            }
 
     Raises:
         ConfigError: specified file section or options are missing

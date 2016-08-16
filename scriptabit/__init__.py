@@ -14,6 +14,7 @@ from .dates import parse_date_utc, parse_date_local
 from .errors import *
 from .habitica_service import HabiticaService, HabiticaTaskTypes
 from .habitica_task import HabiticaTask
+from .habitica_task_service import HabiticaTaskService
 from .iplugin import IPlugin
 from .scriptabit import start_cli
 from .task import Task, Difficulty, CharacterAttribute, SyncStatus

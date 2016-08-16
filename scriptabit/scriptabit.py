@@ -51,7 +51,8 @@ def __get_configuration(plugin_manager):
     Args:
         plugin_manager (yapsy.PluginManager): The plugin manager.
 
-    Returns: The argparse compatible configuration object.
+    Returns:
+        The argparse compatible configuration object.
     """
 
     extra_args = [UtilityFunctions.get_arg_parser()]
@@ -68,7 +69,8 @@ def __get_configuration(plugin_manager):
 def __get_plugin_manager():
     """ Discovers and instantiates all plugins, returning a management object.
 
-    Returns: yapsy.PluginManager: The plugin manager with the loaded plugins.
+    Returns:
+        yapsy.PluginManager: The plugin manager with the loaded plugins.
     """
 
     def init_user_plugin_directory():
@@ -110,7 +112,7 @@ def __list_plugins(plugin_manager):
     Args:
         plugin_manager (yapsy.PluginManager): the plugin manager containing
         the plugins.
-        """
+    """
 
     def print_plugin_metadata(plugin_info):
         """Utility class to pretty-print plugin information."""

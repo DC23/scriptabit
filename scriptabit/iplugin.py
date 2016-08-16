@@ -73,14 +73,16 @@ class IPlugin(YapsyIPlugin):
     def update_interval_seconds(self):
         """ Indicates the required update interval in integer seconds.
 
-        Returns: int: update interval in whole seconds
+        Returns:
+            int: update interval in whole seconds
         """
         return int(self.update_interval_minutes() * 60)
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
 
-        Returns: float: The required update interval in minutes.
+        Returns:
+            float: The required update interval in minutes.
         """
         return 60
 
@@ -92,8 +94,9 @@ class IPlugin(YapsyIPlugin):
         If a plugin implements a single-shot function, then update should
         return `False`.
 
-        Returns: bool: True if further updates are required; False if the plugin
-        is finished and the application should shut down.
+        Returns:
+            bool: True if further updates are required; False if the plugin
+            is finished and the application should shut down.
         """
         self._update_count += 1
         return False

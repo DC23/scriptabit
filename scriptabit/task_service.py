@@ -23,7 +23,11 @@ class TaskService(object):
     """
 
     def get_all_tasks(self):
-        """ Get all tasks. """
+        """ Get all tasks.
+
+        Returns:
+            list: The list of tasks
+        """
         raise NotImplementedError
 
     # def get_task(self, _id):
@@ -39,10 +43,8 @@ class TaskService(object):
     def persist_tasks(self, tasks):
         """ Persists the tasks.
 
-        New and existing tasks will be upserted. Tasks flagged for deletion
-        will be deleted.
-
-        Args: tasks: The collection of tasks to persist.
+        Args:
+            tasks (list): The collection of tasks to persist.
         """
         raise NotImplementedError
 
@@ -50,6 +52,9 @@ class TaskService(object):
         """ Task factory method.
 
         Allows subclasses to create the appropriate Task type.
+
+        Returns:
+            Task: The new task
         """
         raise NotImplementedError
 
@@ -59,7 +64,8 @@ class TaskService(object):
         Args:
             src (Task): The optional data source.
 
-        Returns: Task: The new task.
+        Returns:
+            Task: The new task.
         """
         t = self._create_task()
         if src:

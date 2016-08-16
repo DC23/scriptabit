@@ -8,17 +8,27 @@ Basic algorithm
 - Index the candidate tasks for lookup by ID
 - Get the existing list of source to destination task mappings
 - Check all source tasks
+
     - Mapping exists, destination task found:
+
         - update destination
+
     - Mapping exists, destination task not found:
+
         - recreate destination
         - alternatively, could delete source task
+
     - No mapping found: new task
+
 - Check all destination tasks for which mapped source tasks can't be found:
+
     - assume deleted and flag destination as 'deleted'
+
 - Check for orphan mappings: both source and destination not found
+
     - delete mapping
-- Not implemented: persist source tasks
+
+- **Not implemented**: persist source tasks
 - Persist destination tasks
 
 """
@@ -53,10 +63,12 @@ class TaskSync(object):
 
     def __create_new_dst(self, src):
         """ Creates and maps a new destination task.
+
         Args:
             src (Task): source task
 
-        Returns: Task: The new destination task
+        Returns:
+            Task: The new destination task
         """
         # factory method as we don't know the concrete task type
         dst = self.__dst_service.create(src)

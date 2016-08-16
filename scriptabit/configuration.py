@@ -73,7 +73,8 @@ def get_config_file(basename):
     Args:
         basename (str): The base filename.
 
-    Returns: str: The full path to the configuration file.
+    Returns:
+        str: The full path to the configuration file.
     """
     locations = [
         os.path.join(os.curdir, basename),

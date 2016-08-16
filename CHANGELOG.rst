@@ -113,3 +113,4 @@ Changelog
 * HabiticaService now supports a task filter on get_tasks
 * Implemented Habitica sync task
 * Implemented HabiticaTaskService
+* Updated documentation with sync information

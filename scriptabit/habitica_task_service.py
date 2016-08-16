@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Defines an abstract task service.
-
-A task service provides the following features:
-
-    - Query for tasks (including all tasks)
-    - Create a new task
-    - Persist a list of tasks
+""" Implements the Habitica synchronisation task service.
 """
 # Ensure backwards compatibility with Python 2
 from __future__ import (
@@ -20,7 +14,7 @@ from .habitica_task import HabiticaTask
 from .task import SyncStatus
 
 
-class TaskService(object):
+class HabiticaTaskService(object):
     """ Implements the Habitica synchronisation task service.
     """
     def __init__(self, hs):
@@ -33,7 +27,11 @@ class TaskService(object):
         self.__hs = hs
 
     def get_all_tasks(self):
-        """ Get all tasks. """
+        """ Get all tasks.
+
+        Returns:
+            list: The list of tasks
+        """
         raw_tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.todos)
         tasks = [HabiticaTask(rt) for rt in raw_tasks]
         for t in tasks:
@@ -41,12 +39,12 @@ class TaskService(object):
         return tasks
 
     def persist_tasks(self, tasks):
-        """ Persists the tasks.
+        """ Task factory method.
 
-        New and existing tasks will be upserted. Tasks flagged for deletion
-        will be deleted.
+        Allows subclasses to create the appropriate Task type.
 
-        Args: tasks: The collection of tasks to persist.
+        Returns:
+            Task: The new task
         """
         for task in tasks:
             # TODO: new tasks can be created with a single API call. I should do that

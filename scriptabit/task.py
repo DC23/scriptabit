@@ -158,7 +158,8 @@ class Task(object):
             src (Task): the source task
             status (SyncStatus): the status to set
 
-        Returns: Task: self
+        Returns:
+            Task: self
         """
         self.name = src.name
         self.description = src.description

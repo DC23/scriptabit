@@ -35,7 +35,6 @@ class TaskMap(object):
 
         Args:
             filename (str): The destination file name.
-
         """
         with open(filename, 'wb') as f:
             pickle.dump(self.__bidict, f, pickle.HIGHEST_PROTOCOL)
@@ -71,7 +70,7 @@ class TaskMap(object):
         Returns:
             If a mapping exists, the destination task ID.
 
-        returns:
+        Raises:
             KeyError: if the input ID has no mapping.
         """
         return self.__bidict[_id]
@@ -85,7 +84,7 @@ class TaskMap(object):
         Returns:
             If a mapping exists, the source task ID.
 
-        returns:
+        Raises:
             KeyError: if the input ID has no mapping.
         """
         return self.__bidict.inv[_id]
@@ -97,7 +96,7 @@ class TaskMap(object):
             _id: The source task ID
 
         Returns:
-            If a mapping exists, the destination task ID, otherwise False.
+            str: If a mapping exists, the destination task ID, otherwise False.
         """
         return self.__bidict.get(_id, False)
 
@@ -108,20 +107,22 @@ class TaskMap(object):
             _id: The destination task ID
 
         Returns:
-            If a mapping exists, the source task ID, otherwise False.
+            str: If a mapping exists, the source task ID, otherwise False.
         """
         return self.__bidict.inv.get(_id, False)
 
     def get_all_src_keys(self):
         """ Gets a list of all source keys.
 
-        Returns: List: all source keys.
+        Returns:
+            list: all source keys.
         """
         return self.__bidict.keys()
 
     def get_all_dst_keys(self):
         """ Gets a list of all destination keys.
 
-        Returns: List: all destination keys.
+        Returns:
+            list: all destination keys.
         """
         return self.__bidict.inv.keys()
