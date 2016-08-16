@@ -45,19 +45,11 @@ class Task(object):
     to this class, then moving tasks between services becomes easier.
 
     Attributes:
-        name (str): The task name.
-        description (str): A longer description.
         id (str): The task ID.
-        completed (bool): Indicates the completion status of the task.
-        difficulty (Difficulty): The task difficulty.
-        attribute (CharacterAttribute): Character attribute of the task.
-        status (SyncStatus): A synchronisation status hint for the TaskService.
     """
     # TODO: logging statements
     # TODO: define and add checklists
     # TODO: define due date
-    # old-style ABCMeta usage for Python 2.7 compatibility.
-    # __metaclass__ = ABCMeta
 
     def __init__(
             self,
@@ -84,8 +76,8 @@ class Task(object):
         self.name = name
         self.description = description
         self.completed = completed
-        self.__difficulty = difficulty
-        self.__attribute = attribute
+        self.difficulty = difficulty
+        self.attribute = attribute
         self.status = status
 
     @property
@@ -94,28 +86,68 @@ class Task(object):
         return self.__id
 
     @property
+    def name(self):
+        """ Task name """
+        raise NotImplementedError
+
+    @name.setter
+    def name(self, name):
+        """ Task name """
+        raise NotImplementedError
+
+    @property
+    def description(self):
+        """ Task description """
+        raise NotImplementedError
+
+    @description.setter
+    def description(self, description):
+        """ Task description """
+        raise NotImplementedError
+
+    @property
+    def completed(self):
+        """ Task completed """
+        raise NotImplementedError
+
+    @completed.setter
+    def completed(self, completed):
+        """ Task completed """
+        raise NotImplementedError
+
+    @property
     def difficulty(self):
         """ Task difficulty """
-        return self.__difficulty
+        raise NotImplementedError
 
     @difficulty.setter
     def difficulty(self, difficulty):
         """ Task difficulty """
         if not isinstance(difficulty, Difficulty):
             raise TypeError
-        self.__difficulty = difficulty
+        raise NotImplementedError
 
     @property
     def attribute(self):
         """ Task character attribute """
-        return self.__attribute
+        raise NotImplementedError
 
     @attribute.setter
     def attribute(self, attribute):
         """ Task character attribute """
         if not isinstance(attribute, CharacterAttribute):
             raise TypeError
-        self.__attribute = attribute
+        raise NotImplementedError
+
+    @property
+    def status(self):
+        """ Task status """
+        raise NotImplementedError
+
+    @status.setter
+    def status(self, status):
+        """ Task status """
+        raise NotImplementedError
 
     def copy_fields(self, src, status=SyncStatus.updated):
         """ Copies fields from src.

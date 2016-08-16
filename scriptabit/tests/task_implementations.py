@@ -36,6 +36,70 @@ class TestTask(Task):
         super().__init__(_id, name, description, completed, difficulty,
                          attribute, status)
 
+    @property
+    def name(self):
+        """ Task name """
+        return self.__name
+
+    @name.setter
+    def name(self, name):
+        """ Task name """
+        self.__name = name
+
+    @property
+    def description(self):
+        """ Task description """
+        return self.__description
+
+    @description.setter
+    def description(self, description):
+        """ Task description """
+        self.__description = description
+
+    @property
+    def completed(self):
+        """ Task completed """
+        return self.__completed
+
+    @completed.setter
+    def completed(self, completed):
+        """ Task completed """
+        self.__completed = completed
+
+    @property
+    def difficulty(self):
+        """ Task difficulty """
+        return self.__difficulty
+
+    @difficulty.setter
+    def difficulty(self, difficulty):
+        """ Task difficulty """
+        if not isinstance(difficulty, Difficulty):
+            raise TypeError
+        self.__difficulty = difficulty
+
+    @property
+    def attribute(self):
+        """ Task character attribute """
+        return self.__attribute
+
+    @attribute.setter
+    def attribute(self, attribute):
+        """ Task character attribute """
+        if not isinstance(attribute, CharacterAttribute):
+            raise TypeError
+        self.__attribute = attribute
+
+    @property
+    def status(self):
+        """ Task status """
+        return self.__status
+
+    @status.setter
+    def status(self, status):
+        """ Task status """
+        self.__status = status
+
 
 class TestTaskService(TaskService):
     def __init__(self, tasks):
