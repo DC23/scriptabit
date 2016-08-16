@@ -1,5 +1,26 @@
 # -*- coding: utf-8 -*-
 """ Provides synchronisation between two task services.
+
+Basic algorithm
++++++++++++++++
+
+- Build list of candidate tasks from source and destination services
+- Index the candidate tasks for lookup by ID
+- Get the existing list of source to destination task mappings
+- Check all source tasks
+    - Mapping exists, destination task found:
+        - update destination
+    - Mapping exists, destination task not found:
+        - recreate destination
+        - alternatively, could delete source task
+    - No mapping found: new task
+- Check all destination tasks for which mapped source tasks can't be found:
+    - assume deleted and flag destination as 'deleted'
+- Check for orphan mappings: both source and destination not found
+    - delete mapping
+- Not implemented: persist source tasks
+- Persist destination tasks
+
 """
 # Ensure backwards compatibility with Python 2
 from __future__ import (
