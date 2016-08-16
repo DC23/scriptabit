@@ -6,5 +6,5 @@ Module = health_effects
 Description = Implements poisoning and health regeneration effects,
     based on your performance with dailies.
 Author = DC23
-Version = 0.4.7
+Version = 0.5.0
 Website = https://github.com/DC23/scriptabit
