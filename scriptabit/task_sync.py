@@ -81,6 +81,7 @@ class TaskSync(object):
                     logging.getLogger(__name__).debug(
                         'dst task not found, recreating: %s --> %s',
                         src.id, dst_id)
+                    self.__map.unmap(src.id)
                     dst_tasks.append(self.__create_new_dst(src))
             else:
                 # mapping not found, so create new task
