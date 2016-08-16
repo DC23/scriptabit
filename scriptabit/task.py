@@ -25,6 +25,7 @@ class Difficulty(Enum):
         for e in Difficulty:
             if e.value == value:
                 return e
+        return Difficulty.easy
 
 
 class CharacterAttribute(Enum):
@@ -40,6 +41,7 @@ class CharacterAttribute(Enum):
         for e in CharacterAttribute:
             if e.value == value:
                 return e
+        return CharacterAttribute.strength
 
 
 class SyncStatus(Enum):

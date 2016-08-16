@@ -11,8 +11,9 @@ from __future__ import (
 from builtins import *
 
 import logging
-import requests
 from enum import Enum
+
+import requests
 
 from .errors import *
 
@@ -41,7 +42,13 @@ class HabiticaService(object):
         self.__base_url = base_url
         logging.getLogger(__name__).debug('HabiticaService online')
 
-    def __get(self, command, params = {}):
+    def __delete(self, command, params=None):
+        """Utility wrapper around a HTTP DELETE"""
+        url = self.__base_url + command
+        logging.getLogger(__name__).debug('GET %s', url)
+        return requests.delete(url, params=params, headers=self.__headers)
+
+    def __get(self, command, params=None):
         """Utility wrapper around a HTTP GET"""
         url = self.__base_url + command
         logging.getLogger(__name__).debug('GET %s', url)
@@ -148,6 +155,15 @@ class HabiticaService(object):
             return response.json()['data']
         else:
             return None
+
+    def delete_task(self, _id):
+        """ Delete a task by ID.
+
+        Args:
+            _id (str): The task ID.
+        """
+        response = self.__delete('tasks/{0}', _id)
+        response.raise_for_status()
 
     def upsert_task(self, task, task_type=HabiticaTaskTypes.todos):
         """Upserts a task.

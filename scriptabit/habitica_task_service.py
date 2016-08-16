@@ -35,7 +35,10 @@ class TaskService(object):
     def get_all_tasks(self):
         """ Get all tasks. """
         raw_tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.todos)
-        return [HabiticaTask(rt) for rt in raw_tasks]
+        tasks = [HabiticaTask(rt) for rt in raw_tasks]
+        for t in tasks:
+            t.status = SyncStatus.unchanged
+        return tasks
 
     def persist_tasks(self, tasks):
         """ Persists the tasks.
@@ -45,28 +48,16 @@ class TaskService(object):
 
         Args: tasks: The collection of tasks to persist.
         """
-        raise NotImplementedError
+        for task in tasks:
+            # TODO: new tasks can be created with a single API call. I should do that
+            if task.status in (SyncStatus.updated, SyncStatus.new):
+                self.__hs.upsert_task(task)
+            elif task.status == SyncStatus.deleted:
+                self.__hs.delete_task(task)
 
     def _create_task(self):
         """ Task factory method.
 
         Allows subclasses to create the appropriate Task type.
         """
-        raise NotImplementedError
-
-    # pylint correctly detects that _task_factory returns NotImplemented, but
-    # it fails to detect that the method is marked abstract, so the error is
-    # spurious.
-    #pylint: disable=no-member
-    def create(self, src=None):
-        """ Creates a new task.
-
-        Args:
-            src (Task): The optional data source.
-
-        Returns: Task: The new task.
-        """
-        t = self._create_task()
-        if src:
-            t.copy_fields(src, status=SyncStatus.new)
-        return t
+        return HabiticaTask()

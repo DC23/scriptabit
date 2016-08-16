@@ -16,7 +16,7 @@ class HabiticaTask(Task):
     """ Defines a Habitica synchronisation task.
     """
 
-    def __init__(self, task_dict):
+    def __init__(self, task_dict=None):
         """ Initialise the task.
 
         Args:
@@ -27,6 +27,9 @@ class HabiticaTask(Task):
         if not isinstance(task_dict, dict):
             raise TypeError
 
+        if not task_dict:
+            task_dict = {'text': 'scriptabit todo'}
+        task_dict['type'] = 'todo'
         self.__task_dict = task_dict
         self.__difficulty = Difficulty.from_value(task_dict['priority'])
         self.__attribute = CharacterAttribute.from_value(task_dict['attribute'])
