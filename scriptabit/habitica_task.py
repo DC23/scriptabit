@@ -9,7 +9,7 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 
-from .task import CharacterAttribute, Difficulty, SyncStatus, Task
+from .task import CharacterAttribute, Difficulty, Task
 
 
 class HabiticaTask(Task):
@@ -28,8 +28,8 @@ class HabiticaTask(Task):
             raise TypeError
 
         self.__task_dict = task_dict
-        self.difficulty = Difficulty.from_value(task_dict['priority'])
-        self.attribute = CharacterAttribute.from_value(task_dict['attribute'])
+        self.__difficulty = Difficulty.from_value(task_dict['priority'])
+        self.__attribute = CharacterAttribute.from_value(task_dict['attribute'])
 
     @property
     def id(self):

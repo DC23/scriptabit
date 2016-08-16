@@ -53,10 +53,6 @@ class TaskService(object):
         """
         raise NotImplementedError
 
-    # pylint correctly detects that _task_factory returns NotImplemented, but
-    # it fails to detect that the method is marked abstract, so the error is
-    # spurious.
-    #pylint: disable=no-member
     def create(self, src=None):
         """ Creates a new task.
 

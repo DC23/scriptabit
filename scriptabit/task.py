@@ -21,6 +21,7 @@ class Difficulty(Enum):
 
     @staticmethod
     def from_value(value):
+        """ Creates an enum instance from the corresponding value. """
         for e in Difficulty:
             if e.value == value:
                 return e
@@ -35,6 +36,7 @@ class CharacterAttribute(Enum):
 
     @staticmethod
     def from_value(value):
+        """ Creates an enum instance from the corresponding value. """
         for e in CharacterAttribute:
             if e.value == value:
                 return e
@@ -49,6 +51,7 @@ class SyncStatus(Enum):
     unchanged = 4
 
 
+# pylint: disable=no-self-use
 class Task(object):
     """ Defines a Habitica task data transfer object.
 
@@ -162,3 +165,4 @@ class Task(object):
         self.attribute = src.attribute
         self.status = status
         return self
+# pylint: enable=no-self-use
