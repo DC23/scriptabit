@@ -13,22 +13,19 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-from abc import ABCMeta, abstractmethod
+import sys
 
 from .task import SyncStatus
 
-class TaskService(metaclass=ABCMeta):
+
+class TaskService(object):
     """ Defines an abstract Task Service.
     """
-     # old-style ABCMeta usage for Python 2.7 compatibility.
-    __metaclass__ = ABCMeta
 
-    @abstractmethod
     def get_all_tasks(self):
         """ Get all tasks. """
-        return NotImplemented
+        raise NotImplementedError
 
-    @abstractmethod
     def get_task(self, _id):
         """ Gets a task by id.
 
@@ -37,9 +34,8 @@ class TaskService(metaclass=ABCMeta):
 
         Returns: Task: The task if it exists, otherwise None.
         """
-        return NotImplemented
+        raise NotImplementedError
 
-    @abstractmethod
     def persist_tasks(self, tasks):
         """ Persists the tasks.
 
@@ -48,15 +44,14 @@ class TaskService(metaclass=ABCMeta):
 
         Args: tasks: The collection of tasks to persist.
         """
-        return NotImplemented
+        raise NotImplementedError
 
-    @abstractmethod
     def _create_task(self):
         """ Task factory method.
 
         Allows subclasses to create the appropriate Task type.
         """
-        return NotImplemented
+        raise NotImplementedError
 
     # pylint correctly detects that _task_factory returns NotImplemented, but
     # it fails to detect that the method is marked abstract, so the error is
