@@ -12,9 +12,18 @@ from builtins import *
 
 import logging
 import requests
+from enum import Enum
 
 from .errors import *
 
+
+class HabiticaTaskTypes(Enum):
+    """ Habitica task types """
+    habits = 'habits'
+    dailies = 'dailys'
+    todos = 'todos'
+    rewards = 'rewards'
+    completed_todos = 'completedTodos'
 
 class HabiticaService(object):
     """ Habitica API service interface. """
@@ -32,11 +41,11 @@ class HabiticaService(object):
         self.__base_url = base_url
         logging.getLogger(__name__).debug('HabiticaService online')
 
-    def __get(self, command):
+    def __get(self, command, params = {}):
         """Utility wrapper around a HTTP GET"""
         url = self.__base_url + command
         logging.getLogger(__name__).debug('GET %s', url)
-        return requests.get(url, headers=self.__headers)
+        return requests.get(url, params=params, headers=self.__headers)
 
     def __put(self, command, data):
         """Utility wrapper around a HTTP PUT"""
@@ -76,12 +85,17 @@ class HabiticaService(object):
         """
         return self.get_user()['stats']
 
-    def get_tasks(self):
+    def get_tasks(self, task_type=None):
         """Gets all tasks for the current user.
+
+        Args:
+            task_type (HabiticaTaskTypes): The type of task to get.
+                Default is all tasks.
 
         Returns: dictionary: The tasks.
         """
-        response = self.__get('tasks/user')
+        params = {'type': task_type.value} if task_type else {}
+        response = self.__get('tasks/user', params)
         response.raise_for_status()
         return response.json()['data']
 

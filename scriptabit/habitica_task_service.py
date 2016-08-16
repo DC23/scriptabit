@@ -19,8 +19,16 @@ from .task import SyncStatus
 
 
 class TaskService(object):
-    """ Defines an abstract Task Service.
+    """ Implements the Habitica synchronisation task service.
     """
+    def __init__(self, hs):
+        """ Initialises the Habitica synchronisation task service.
+
+        Args:
+            hs (HabiticaService): The Habitica Service.
+        """
+        super().__init__()
+        self.__hs = hs
 
     def get_all_tasks(self):
         """ Get all tasks. """

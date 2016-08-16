@@ -12,7 +12,7 @@ from .configuration import (
 )
 from .dates import parse_date_utc, parse_date_local
 from .errors import *
-from .habitica_service import HabiticaService
+from .habitica_service import HabiticaService, HabiticaTaskTypes
 from .habitica_task import HabiticaTask
 from .iplugin import IPlugin
 from .scriptabit import start_cli
