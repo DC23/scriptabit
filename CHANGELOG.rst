@@ -103,6 +103,11 @@ Changelog
   authentication song and dance code is in place, as well as configuration for
   defining which boards to sync, the lists on those boards, and the optional
   lists that will indicate task completion.
-* Implemented core functionality for task synchronisation between generic 
+* Implemented core functionality for task synchronisation between generic
   task services.
+
+0.6.0 Not released
+-----------------------------------------
+
+* Fixed task sync bug with missing destination tasks.
 
