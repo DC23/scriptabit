@@ -12,9 +12,10 @@ from builtins import *
 from .habitica_service import HabiticaTaskTypes
 from .habitica_task import HabiticaTask
 from .task import SyncStatus
+from .task_service import TaskService
 
 
-class HabiticaTaskService(object):
+class HabiticaTaskService(TaskService):
     """ Implements the Habitica synchronisation task service.
     """
     def __init__(self, hs):
@@ -56,6 +57,7 @@ class HabiticaTaskService(object):
     def _create_task(self):
         """ Task factory method.
 
-        Allows subclasses to create the appropriate Task type.
+        Returns:
+            HabiticaTask: A new HabiticaTask instance.
         """
         return HabiticaTask()
