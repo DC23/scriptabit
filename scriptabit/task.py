@@ -62,22 +62,31 @@ class Task(object):
     def __init__(
             self,
             _id,
-            name=''):
+            name='',
+            description='',
+            completed=False,
+            difficulty=Difficulty.easy,
+            attribute=CharacterAttribute.strength,
+            status=SyncStatus.new):
         """ Initialise the task.
 
         Args:
             _id (str): The task ID
             name (str): The task name.
             description (str): A longer description
+            completed (bool): Indicates the completion status of the task.
+            difficulty (Difficulty): The task difficulty.
+            attribute (CharacterAttribute): Character attribute of the task.
+            status (SyncStatus): Sync status hint for the TaskService.
         """
         super().__init__()
         self.__id = _id
         self.name = name
-        self.description = ''
-        self.completed = False
-        self.__difficulty = Difficulty.easy
-        self.__attribute = CharacterAttribute.strength
-        self.status = SyncStatus.new
+        self.description = description
+        self.completed = completed
+        self.__difficulty = difficulty
+        self.__attribute = attribute
+        self.status = status
 
     @property
     def id(self):

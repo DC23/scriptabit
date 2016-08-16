@@ -44,7 +44,7 @@ attributes = (
     CharacterAttribute.perception)
 
 def random_task():
-    t = TestTask(id=uuid.uuid4())
+    t = TestTask(_id=uuid.uuid4())
     t.name = uuid.uuid1()
     t.description = 'blah blah tired blah coffee'
     t.completed = choice((True, False))

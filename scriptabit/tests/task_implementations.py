@@ -24,11 +24,8 @@ from scriptabit import (
 
 
 class TestTask(Task):
-    def __init__(
-        self,
-        id,
-        name=''):
-        super().__init__(id, name)
+    def __init__(self, _id, **kwargs):
+        super().__init__(_id, kwargs)
 
 
 class TestTaskService(TaskService):
@@ -43,7 +40,7 @@ class TestTaskService(TaskService):
 
     def get_task(self, _id):
         """ Gets a task by id """
-        # Quick and nasty sequential search, good enough for these small tests
+        # Quick and nasty sequential search, good enough for testing
         for t in self.tasks:
             if t.id == _id:
                 return t
@@ -53,4 +50,4 @@ class TestTaskService(TaskService):
         self.persisted_tasks = tasks
 
     def _create_task(self):
-        return TestTask(id=uuid.uuid4())
+        return TestTask(_id=uuid.uuid4())

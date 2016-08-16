@@ -4,6 +4,7 @@
 A task service provides the following features:
 
     - Query for tasks (including all tasks)
+    - Create a new task
     - Persist a list of tasks
 """
 # Ensure backwards compatibility with Python 2
@@ -13,7 +14,6 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-import sys
 
 from .task import SyncStatus
 

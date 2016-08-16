@@ -70,3 +70,37 @@ def test_id_readonly():
     task = Task(_id='34kid0')
     with pytest.raises(AttributeError):
         task.id = 'aeai239'
+
+def test_copy_fields():
+    _id = '111'
+    name = 'a task'
+    description = 'something'
+    completed = True
+    difficulty = Difficulty.hard
+    attribute = CharacterAttribute.intelligence
+    status = SyncStatus.updated
+
+    a = Task(
+        _id=_id, name=name, description=description, completed=completed,
+        difficulty=difficulty, attribute=attribute, status=status)
+    b = TestTask('222')
+
+    # preconditions
+    assert a.id != b.id
+    assert a.name != b.name
+    assert a.description != b.description
+    assert a.completed != b.completed
+    assert a.difficulty != b.difficulty
+    assert a.attribute != b.attribute
+    assert a.status != b.status
+
+    b.copy_fields(a)
+
+    # postconditions
+    assert a.id != b.id
+    assert a.name == b.name
+    assert a.description == b.description
+    assert a.completed == b.completed
+    assert a.difficulty == b.difficulty
+    assert a.attribute == b.attribute
+    assert a.status == b.status
