@@ -24,8 +24,17 @@ from scriptabit import (
 
 
 class TestTask(Task):
-    def __init__(self, _id, **kwargs):
-        super().__init__(_id, kwargs)
+    def __init__(
+            self,
+            _id,
+            name='',
+            description='',
+            completed=False,
+            difficulty=Difficulty.easy,
+            attribute=CharacterAttribute.strength,
+            status=SyncStatus.new):
+        super().__init__(_id, name, description, completed, difficulty,
+                         attribute, status)
 
 
 class TestTaskService(TaskService):
