@@ -104,19 +104,22 @@ class HabiticaService(object):
 
         Args:
             task (dict): The task.
-            task_type (HabiticaTaskTypes): The type of task to get.
-                Default is to create a new todo.
+            task_type (HabiticaTaskTypes): The type of task to create.
+                Default is to create a new todo. Only used if the task['type']
+                is empty or not present.
 
         Returns: dict: The new task as returned from the server.
         """
-        _type = 'todo'
-        if task_type == HabiticaTaskTypes.dailies:
-            _type = 'daily'
-        elif task_type == HabiticaTaskTypes.habits:
-            _type = 'habit'
-        elif task_type == HabiticaTaskTypes.rewards:
-            _type = 'reward'
-        task['type'] = _type
+
+        if not task.get('type', None):
+            _type = 'todo'
+            if task_type == HabiticaTaskTypes.dailies:
+                _type = 'daily'
+            elif task_type == HabiticaTaskTypes.habits:
+                _type = 'habit'
+            elif task_type == HabiticaTaskTypes.rewards:
+                _type = 'reward'
+            task['type'] = _type
 
         response = self.__post('tasks/user', task)
         response.raise_for_status()
@@ -146,13 +149,16 @@ class HabiticaService(object):
         else:
             return None
 
-    def upsert_task(self, task):
+    def upsert_task(self, task, task_type=HabiticaTaskTypes.todos):
         """Upserts a task.
 
         Existing tasks will be updated, otherwise a new task will be created.
 
         Args:
             task (dict): The task.
+            task_type (HabiticaTaskTypes): The type of task to create if a new
+                task is required. Can be overriden by an existing task['type']
+                value.
 
         Returns: dict: The new task as returned from the server.
 
@@ -175,7 +181,7 @@ class HabiticaService(object):
         else:
             logging.getLogger(__name__).debug(
                 'task %s not found, creating', key)
-            self.create_task(task)
+            self.create_task(task, task_type)
 
     # I don't think the API lets me set partial user objects in this way.
     # So I could get the entire user structure, swap the stats for the argument
