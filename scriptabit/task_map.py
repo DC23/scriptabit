@@ -54,11 +54,19 @@ class TaskMap(object):
             on_dup_val=DuplicationBehavior.RAISE,
             on_dup_kv=DuplicationBehavior.RAISE)
 
-    def get_dst_id(self, src):
+    def unmap(self, src_id):
+        """ Delete a mapping.
+
+        Args:
+            src_id: The source id to unmap.
+        """
+        self.__bidict.pop(src_id)
+
+    def get_dst_id(self, _id):
         """ Get the mapped destination task ID for a source task.
 
         Args:
-            src (Task): The source task.
+            _id: The source task ID.
 
         Returns:
             If a mapping exists, the destination task ID.
@@ -66,13 +74,13 @@ class TaskMap(object):
         returns:
             KeyError: if the input ID has no mapping.
         """
-        return self.__bidict[src.id]
+        return self.__bidict[_id]
 
-    def get_src_id(self, dst):
+    def get_src_id(self, _id):
         """ Get the mapped source task ID for a destination task.
 
         Args:
-            dst (Task): The destination task.
+            _id: The destination task.
 
         Returns:
             If a mapping exists, the source task ID.
@@ -80,26 +88,40 @@ class TaskMap(object):
         returns:
             KeyError: if the input ID has no mapping.
         """
-        return self.__bidict.inv[dst.id]
+        return self.__bidict.inv[_id]
 
-    def try_get_dst_id(self, src):
+    def try_get_dst_id(self, _id):
         """ Get the mapped destination task ID for a source task.
 
         Args:
-            src (Task): The source task.
+            _id: The source task ID
 
         Returns:
             If a mapping exists, the destination task ID, otherwise False.
         """
-        return self.__bidict.get(src.id, False)
+        return self.__bidict.get(_id, False)
 
-    def try_get_src_id(self, dst):
+    def try_get_src_id(self, _id):
         """ Get the mapped source task ID for a destination task.
 
         Args:
-            dst (Task): The destination task.
+            _id: The destination task ID
 
         Returns:
             If a mapping exists, the source task ID, otherwise False.
         """
-        return self.__bidict.inv.get(dst.id, False)
+        return self.__bidict.inv.get(_id, False)
+
+    def get_all_src_keys(self):
+        """ Gets a list of all source keys.
+
+        Returns: List: all source keys.
+        """
+        return self.__bidict.keys()
+
+    def get_all_dst_keys(self):
+        """ Gets a list of all destination keys.
+
+        Returns: List: all destination keys.
+        """
+        return self.__bidict.inv.keys()

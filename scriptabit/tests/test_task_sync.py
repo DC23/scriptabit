@@ -66,10 +66,10 @@ def test_new_tasks():
     for d in dst.persisted_tasks:
         assert d.status == SyncStatus.new
         assert d in dst_tasks
-        assert map.try_get_src_id(d)
+        assert map.try_get_src_id(d.id)
 
     for s in src.get_all_tasks():
-        dst_id = map.try_get_dst_id(s)
+        dst_id = map.try_get_dst_id(s.id)
         assert dst_id
         d = dst.get_task(dst_id)
         assert s.name == d.name
@@ -115,3 +115,51 @@ def test_existing_tasks_are_updated():
     assert actual.completed == src.completed
     assert actual.status == SyncStatus.updated
     assert actual.description == src.description
+
+def test_deleted_src_tasks():
+    src_tasks = []
+    dst = random_task()
+    dst_tasks = [dst]
+    ss = TestTaskService(src_tasks)
+    ds = TestTaskService(dst_tasks)
+    map = TaskMap()
+
+    # we need to create a mapping between a src task and dst, but leave
+    # the source task out of the source service
+    src = random_task()
+    map.map(src, dst)
+
+    sync = TaskSync(ss, ds, map)
+
+    # preconditions
+    assert len(ss.tasks) == 0
+    assert len(ds.tasks) == 1
+    assert dst.status == SyncStatus.unchanged
+
+    sync.synchronise()
+
+    # the task list lengths should not be changed
+    assert len(ss.tasks) == 0
+    assert len(ds.tasks) == 1
+
+    # dst should now be flagged as deleted
+    assert dst.status == SyncStatus.deleted
+
+def test_remove_orphan_mappings():
+    src_tasks = [random_task()]
+    dst_tasks = []
+    ss = TestTaskService(src_tasks)
+    ds = TestTaskService(dst_tasks)
+    map = TaskMap()
+
+    # add a few task mappings that won't exist in either source or destination
+    map.map(random_task(), random_task())
+    map.map(random_task(), random_task())
+    map.map(random_task(), random_task())
+
+    TaskSync(ss, ds, map).synchronise(clean_orphans=True)
+
+    # We now expect just one mapping for the new src task
+    all_mappings = map.get_all_src_keys()
+    assert len(all_mappings) == 1
+    assert map.get_dst_id(src_tasks[0].id)

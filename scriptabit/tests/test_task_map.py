@@ -37,10 +37,10 @@ class TestTaskMap(object):
         expected.persist(filename.name)
         actual = TaskMap(filename.name)
 
-        assert actual.get_dst_id(tasks[0]) == tasks[1].id
-        assert actual.get_dst_id(tasks[2]) == tasks[3].id
-        assert actual.get_src_id(tasks[1]) == tasks[0].id
-        assert actual.get_src_id(tasks[3]) == tasks[2].id
+        assert actual.get_dst_id(tasks[0].id) == tasks[1].id
+        assert actual.get_dst_id(tasks[2].id) == tasks[3].id
+        assert actual.get_src_id(tasks[1].id) == tasks[0].id
+        assert actual.get_src_id(tasks[3].id) == tasks[2].id
 
     def test_duplicate_src(self):
         s = Task('1')
@@ -66,7 +66,7 @@ class TestTaskMap(object):
 
     def test_valid_forward(self):
         self.tm.map(self.src, self.dst)
-        assert self.tm.get_dst_id(self.src) == self.dst.id
+        assert self.tm.get_dst_id(self.src.id) == self.dst.id
 
     def test_invalid_forward(self):
         with pytest.raises(KeyError):
@@ -74,22 +74,50 @@ class TestTaskMap(object):
 
     def test_valid_reverse(self):
         self.tm.map(self.src, self.dst)
-        assert self.tm.get_src_id(self.dst) == self.src.id
+        assert self.tm.get_src_id(self.dst.id) == self.src.id
 
     def test_invalid_reverse(self):
         with pytest.raises(KeyError):
-            self.tm.get_src_id(self.missing)
+            self.tm.get_src_id(self.missing.id)
 
     def test_valid_forward_try_get(self):
         self.tm.map(self.src, self.dst)
-        assert self.tm.try_get_dst_id(self.src) == self.dst.id
+        assert self.tm.try_get_dst_id(self.src.id) == self.dst.id
 
     def test_invalid_forward_try_get(self):
-        assert not self.tm.try_get_dst_id(self.missing)
+        assert not self.tm.try_get_dst_id(self.missing.id)
 
     def test_valid_reverse_try_get(self):
         self.tm.map(self.src, self.dst)
-        assert self.tm.try_get_src_id(self.dst) == self.src.id
+        assert self.tm.try_get_src_id(self.dst.id) == self.src.id
 
     def test_invalid_reverse_try_get(self):
-        assert not self.tm.try_get_src_id(self.missing)
+        assert not self.tm.try_get_src_id(self.missing.id)
+
+    def test_get_all_src_keys(self):
+        src_keys = (1,2,3,4)
+        src_tasks = [Task(_id=i) for i in src_keys]
+        dst_tasks = [Task(_id=i+20) for i in range(4)]
+        map = TaskMap()
+        for s,d in zip(src_tasks, dst_tasks):
+            map.map(s,d)
+
+        for actual in map.get_all_src_keys():
+            assert actual in src_keys
+
+    def test_get_all_dst_keys(self):
+        src_tasks = [Task(_id=i+20) for i in range(4)]
+        dst_keys = (1,2,3,4)
+        dst_tasks = [Task(_id=i) for i in dst_keys]
+        map = TaskMap()
+        for s,d in zip(src_tasks, dst_tasks):
+            map.map(s,d)
+
+        for actual in map.get_all_dst_keys():
+            assert actual in dst_keys
+
+    def test_delete_mapping(self):
+        self.tm.map(self.src, self.dst)
+        self.tm.unmap(self.src.id)
+        assert not self.tm.try_get_dst_id(self.src.id)
+        assert not self.tm.try_get_src_id(self.dst.id)

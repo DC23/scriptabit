@@ -93,7 +93,7 @@ Changelog
 * Changed default logging options to be less intrusive.
 * A lot of fixes to datetime handling, which should fix #7
 
-0.5.0 Not released
+0.5.0 (2016-08-16)
 -----------------------------------------
 
 * Fixed load-order issue for configuration files. Who would have thought that
@@ -103,4 +103,6 @@ Changelog
   authentication song and dance code is in place, as well as configuration for
   defining which boards to sync, the lists on those boards, and the optional
   lists that will indicate task completion.
+* Implemented core functionality for task synchronisation between generic 
+  task services.
 
