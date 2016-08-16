@@ -134,7 +134,9 @@ class HabiticaService(object):
         Raises:
             ValueError
         """
-        key = task['_id'] if '_id' in task else task.get('alias', None)
+        key = task.get('_id', None)
+        if not key:
+            key = task.get('alias', None)
         if not key:
             raise ValueError(
                 'The task must specify an id or alias')

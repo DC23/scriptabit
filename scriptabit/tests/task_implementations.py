@@ -33,8 +33,19 @@ class TestTask(Task):
             difficulty=Difficulty.easy,
             attribute=CharacterAttribute.strength,
             status=SyncStatus.new):
-        super().__init__(_id, name, description, completed, difficulty,
-                         attribute, status)
+        super().__init__()
+        self.__id = _id
+        self.name = name
+        self.description = description
+        self.completed = completed
+        self.difficulty = difficulty
+        self.attribute = attribute
+        self.status = status
+
+    @property
+    def id(self):
+        """ Task id """
+        return self.__id
 
     @property
     def name(self):
@@ -89,16 +100,6 @@ class TestTask(Task):
         if not isinstance(attribute, CharacterAttribute):
             raise TypeError
         self.__attribute = attribute
-
-    @property
-    def status(self):
-        """ Task status """
-        return self.__status
-
-    @status.setter
-    def status(self, status):
-        """ Task status """
-        self.__status = status
 
 
 class TestTaskService(TaskService):

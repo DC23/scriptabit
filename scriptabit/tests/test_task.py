@@ -34,13 +34,7 @@ def test_task_service():
 
 def test_default_task():
     task = TestTask(_id='432')
-    assert task.name == ''
-    assert task.description == ''
     assert task.id == '432'
-    assert task.completed == False
-    assert task.difficulty == Difficulty.easy
-    assert task.attribute == CharacterAttribute.strength
-    assert task.status == SyncStatus.new
 
 def test_invalid_difficulty():
     task = TestTask(_id='439')

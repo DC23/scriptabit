@@ -10,6 +10,8 @@ from __future__ import (
 from builtins import *
 import json
 
+from scriptabit import HabiticaTask
+
 
 def get_fake_stats(
     _id='this is not a common guid',
@@ -60,24 +62,22 @@ def get_fake_task(
     notes='notes',
     text='text',
     _type='habit',
+    completed=False,
     value=0):
     """Generates test task data as both a dictionary and json"""
 
     task = \
     {
+        '_id': _id,
+        'alias': alias,
         'attribute': attribute,
         'notes': notes,
         'priority': 1,
         'text': text,
         'type': _type,
-        'value': value
+        'value': value,
+        'completed': completed,
     }
-
-    if _id:
-        task['_id'] = _id
-
-    if alias:
-        task['alias'] = alias
 
     _json = json.dumps({'data': task})
 

@@ -19,6 +19,12 @@ class Difficulty(Enum):
     medium = 1.5
     hard = 2.0
 
+    @staticmethod
+    def from_value(value):
+        for e in Difficulty:
+            if e.value == value:
+                return e
+
 
 class CharacterAttribute(Enum):
     """ Implements Task character attributes """
@@ -26,6 +32,12 @@ class CharacterAttribute(Enum):
     intelligence = 'int'
     constitution = 'con'
     perception = 'per'
+
+    @staticmethod
+    def from_value(value):
+        for e in CharacterAttribute:
+            if e.value == value:
+                return e
 
 
 class SyncStatus(Enum):
@@ -46,44 +58,27 @@ class Task(object):
 
     Attributes:
         id (str): The task ID.
+        name (str): The task name.
+        description (str): The description.
+        completed (bool): Completion/checked status
+        difficulty (Difficulty): task difficulty.
+        attribute (CharacterAttribute): habitica character attribute of the task
+        status (SyncStatus): Synchronisation status flag.
     """
     # TODO: logging statements
     # TODO: define and add checklists
     # TODO: define due date
 
-    def __init__(
-            self,
-            _id,
-            name='',
-            description='',
-            completed=False,
-            difficulty=Difficulty.easy,
-            attribute=CharacterAttribute.strength,
-            status=SyncStatus.new):
+    def __init__(self):
         """ Initialise the task.
-
-        Args:
-            _id (str): The task ID
-            name (str): The task name.
-            description (str): A longer description
-            completed (bool): Indicates the completion status of the task.
-            difficulty (Difficulty): The task difficulty.
-            attribute (CharacterAttribute): Character attribute of the task.
-            status (SyncStatus): Sync status hint for the TaskService.
         """
         super().__init__()
-        self.__id = _id
-        self.name = name
-        self.description = description
-        self.completed = completed
-        self.difficulty = difficulty
-        self.attribute = attribute
-        self.status = status
+        self.__status = SyncStatus.new
 
     @property
     def id(self):
         """ Task id """
-        return self.__id
+        raise NotImplementedError
 
     @property
     def name(self):
@@ -142,12 +137,14 @@ class Task(object):
     @property
     def status(self):
         """ Task status """
-        raise NotImplementedError
+        return self.__status
 
     @status.setter
     def status(self, status):
         """ Task status """
-        raise NotImplementedError
+        if not isinstance(status, SyncStatus):
+            raise TypeError
+        self.__status = status
 
     def copy_fields(self, src, status=SyncStatus.updated):
         """ Copies fields from src.
