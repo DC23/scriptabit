@@ -10,19 +10,49 @@ from __future__ import (
 from builtins import *
 
 from scriptabit import SyncStatus, TaskService
+from trello import TrelloClient
 
 from .trello_task import TrelloTask
 
 class TrelloTaskService(TaskService):
     """ Implements the Trello synchronisation task service.
     """
-    def __init__(self):
+    def __init__(
+            self,
+            trello_client,
+            lists,
+            done_lists):
         """ Initialises the Trello synchronisation task service.
 
         Args:
+            trello_client (trello.TrelloClient): The Trello client.
+            lists (list): The list of Trello lists to sync from.
+            done_lists (list): The list of Trello boards containing
+                completed tasks.
         """
         super().__init__()
-        raise NotImplementedError
+        self.__tc = trello_client
+        self.__lists = lists
+        self.__done_lists = done_lists
+
+    @staticmethod
+    def __get_tasks_from_lists(lists, force_completed):
+        """ Gets all tasks from a list of Trello lists.
+
+        Args:
+            lists (list): The Trello lists.
+            force_completed (bool): The completion status override.
+
+        Returns:
+            list: The list of TrelloTask instances.
+        """
+        tasks = []
+        for l in lists:
+            for card in l.list_cards(card_filter='all'):
+                card.fetch()  # force load most card data
+                task = TrelloTask(card, force_completed=force_completed)
+                tasks.append(task)
+        return tasks
 
     def get_all_tasks(self):
         """ Get all tasks.
@@ -30,7 +60,15 @@ class TrelloTaskService(TaskService):
         Returns:
             list: The list of tasks
         """
-        raise NotImplementedError
+        tasks = self.__get_tasks_from_lists(
+            self.__lists,
+            force_completed=False)
+
+        tasks.extend(self.__get_tasks_from_lists(
+            self.__done_lists,
+            force_completed=True))
+
+        return tasks
 
     def persist_tasks(self, tasks):
         """ Task factory method.
@@ -48,4 +86,4 @@ class TrelloTaskService(TaskService):
         Returns:
             TrelloTask: A new TrelloTask instance.
         """
-        return TrelloTask()
+        raise NotImplementedError

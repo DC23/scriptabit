@@ -43,11 +43,11 @@ attributes = (
     CharacterAttribute.constitution,
     CharacterAttribute.perception)
 
-def random_task():
+def random_task(completed=False):
     t = TestTask(_id=uuid.uuid4())
     t.name = uuid.uuid1()
     t.description = 'blah blah tired blah coffee'
-    t.completed = choice((True, False))
+    t.completed = completed
     t.difficulty = difficulties[randint(0,len(difficulties)-1)]
     t.attribute = attributes[randint(0,len(attributes)-1)]
     t.status = SyncStatus.unchanged
@@ -215,33 +215,39 @@ def test_remove_orphan_mappings():
     assert len(all_mappings) == 1
     assert map.get_dst_id(src_tasks[0].id)
 
-def test_new_completed_tasks():
-    src = random_task()
-    src.completed = True
+def test_new_completed_tasks_sync_completed_is_true():
+    src = random_task(completed=True)
     src_tasks = [src]
     src_svc = TestTaskService(src_tasks)
     dst_tasks = []
     dst_svc = TestTaskService(dst_tasks)
-
     map = TaskMap()
-
-    sync = TaskSync(src_svc, dst_svc, map)
-    sync.synchronise()
+    TaskSync(src_svc, dst_svc, map).synchronise(sync_completed_new_tasks=True)
 
     assert len(dst_svc.tasks) == 1
     assert dst_svc.tasks[0].completed
     assert dst_svc.tasks[0].status == SyncStatus.new
 
+def test_new_completed_tasks_sync_completed_is_false():
+    src = random_task(completed=True)
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+    dst_tasks = []
+    dst_svc = TestTaskService(dst_tasks)
+    map = TaskMap()
+    TaskSync(src_svc, dst_svc, map).synchronise(sync_completed_new_tasks=False)
+
+    assert len(dst_svc.tasks) == 0
+
 def test_completion_of_existing_mapped_tasks():
-    src = random_task()
-    src.completed = True
+    src = random_task(completed=True)
     src_tasks = [src]
     src_svc = TestTaskService(src_tasks)
 
     dst = random_task()
-    dst.completed = False
     # make dst the same in all but the completed flag
     dst.copy_fields(dst)
+    dst.completed = False
     dst_tasks = [dst]
     dst_svc = TestTaskService(dst_tasks)
 
@@ -250,8 +256,7 @@ def test_completion_of_existing_mapped_tasks():
 
     assert not dst_svc.tasks[0].completed
 
-    sync = TaskSync(src_svc, dst_svc, map)
-    sync.synchronise()
+    TaskSync(src_svc, dst_svc, map).synchronise()
 
     assert len(dst_svc.tasks) == 1
     assert dst_svc.tasks[0].completed

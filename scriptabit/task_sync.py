@@ -75,7 +75,11 @@ class TaskSync(object):
         self.__map.map(src, dst)
         return dst
 
-    def synchronise(self, clean_orphans=False, recreate_completed_tasks=False):
+    def synchronise(
+            self,
+            clean_orphans=False,
+            recreate_completed_tasks=False,
+            sync_completed_new_tasks=False):
         """ Synchronise the source service with the destination.
         The task_map will be updated.
 
@@ -84,6 +88,9 @@ class TaskSync(object):
                 neither the source or destination are deleted.
             recreate_completed_tasks (bool): If True, completed source tasks
                 that are missing from the destination will be recreated.
+            sync_completed_new_tasks (bool): If True, new source tasks that are
+                already completed are synced. The default is to ignore such
+                tasks.
         """
         src_tasks = self.__src_service.get_all_tasks()
         dst_tasks = self.__dst_service.get_all_tasks()
@@ -120,11 +127,11 @@ class TaskSync(object):
                         self.__map.unmap(src.id)
                         dst_tasks.append(self.__create_new_dst(src))
             else:
-                # mapping not found, so create new task
-                # factory method as we don't know the concrete task type
-                logging.getLogger(__name__).debug(
-                    'Found new task: %s: %s', src.id, src.name)
-                dst_tasks.append(self.__create_new_dst(src))
+                # mapping not found
+                if sync_completed_new_tasks or not src.completed:
+                    logging.getLogger(__name__).debug(
+                        'Found new task: %s: %s', src.id, src.name)
+                    dst_tasks.append(self.__create_new_dst(src))
 
         # check for deleted tasks: mappings where we have dst but not src
         for dst in dst_tasks:
@@ -149,5 +156,4 @@ class TaskSync(object):
 
         # TODO: should this be optional?
         self.__dst_service.persist_tasks(dst_tasks)
-
 # pylint: enable=too-few-public-methods

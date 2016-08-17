@@ -10,58 +10,65 @@ from __future__ import (
 from builtins import *
 
 from scriptabit import CharacterAttribute, Difficulty, Task
+from trello import Card
 
 
 class TrelloTask(Task):
     """ Defines a Trello synchronisation task.
     """
 
-    def __init__(self):
+    def __init__(self, card, force_completed=False):
         """ Initialise the task.
 
         Args:
+            card (Trello.Card): The underlying Trello card.
+            force_completed (bool): If True, the task will report as completed
+                even if card.closed is False.
         """
         super().__init__()
+        self.__card = card
+        self.__force_completed = force_completed
 
     @property
     def id(self):
         """ Task id """
-        raise NotImplementedError
+        return self.__card.id
 
     @property
     def name(self):
         """ Task name """
-        raise NotImplementedError
+        return self.__card.name
 
     @name.setter
     def name(self, name):
         """ Task name """
-        raise NotImplementedError
+        self.__card.set_name(name)
 
     @property
     def description(self):
         """ Task description """
-        raise NotImplementedError
+        return self.__card.description
 
     @description.setter
     def description(self, description):
         """ Task description """
-        raise NotImplementedError
+        self.__card.set_description(description)
 
     @property
     def completed(self):
         """ Task completed """
-        raise NotImplementedError
+        return self.__force_completed or self.__card.closed
 
     @completed.setter
     def completed(self, completed):
         """ Task completed """
-        raise NotImplementedError
+        self.__card.set_closed(completed)
 
     @property
     def difficulty(self):
         """ Task difficulty """
-        raise NotImplementedError
+        # TODO: parse difficulty from labels
+        return Difficulty.easy
 
     @difficulty.setter
     def difficulty(self, difficulty):
@@ -69,11 +76,13 @@ class TrelloTask(Task):
         if not isinstance(difficulty, Difficulty):
             raise TypeError
         raise NotImplementedError
+        # TODO: apply a label to set the difficulty
 
     @property
     def attribute(self):
         """ Task character attribute """
-        raise NotImplementedError
+        # TODO: parse from label
+        return CharacterAttribute.strength
 
     @attribute.setter
     def attribute(self, attribute):
@@ -81,3 +90,4 @@ class TrelloTask(Task):
         if not isinstance(attribute, CharacterAttribute):
             raise TypeError
         raise NotImplementedError
+        # TODO: apply a label

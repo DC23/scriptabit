@@ -147,43 +147,48 @@ If empty, then cards are only marked done when archived.''')
         # Build a list of sync lists by matching the sync
         # list names in each board
         sync_lists = []
+        done_lists = []
         for b in sync_boards:
-            sync_lists_current_board = []
             for l in b.open_lists():
                 if l.name in self._config.trello_lists:
-                    sync_lists_current_board.append(l)
-            sync_lists.extend(sync_lists_current_board)
-
-        for b in sync_boards:
-            labels = b.get_labels()
-            l = labels[0]
-            print(l.name, l.id, l.color)
-            found = (l for l in labels if l.name == 'test')
-            if not found:
-                print('test label not found, adding')
-                # b.add_label('test', 'black')
-            else:
-                print('test label found')
+                    sync_lists.append(l)
+                elif l.name in self._config.trello_done_lists:
+                    done_lists.append(l)
 
         print('Syncing the following lists')
         for l in sync_lists:
             print('   {0}.{1}'.format(l.board.name, l.name))
 
-        # debug code follows...
-
         print()
-        print('some card info')
-        cards = sync_lists[-2].list_cards()
-        # pprint(cards)
-        card = cards[0]
-        card.fetch()
-        print(card.name)
-        print(card.short_id)
-        print(card.list_labels)
-        print(card.id)
-        print(card.description)
+        print('Treating cards in the following lists as completed')
+        for l in done_lists:
+            print('   {0}.{1}'.format(l.board.name, l.name))
 
-        # pprint(dir(boards[0]))
+        # debug code follows...
+        # for b in sync_boards:
+            # labels = b.get_labels()
+            # l = labels[0]
+            # print(l.name, l.id, l.color)
+            # found = (l for l in labels if l.name == 'test')
+            # if not found:
+                # print('test label not found, adding')
+                # # b.add_label('test', 'black')
+            # else:
+                # print('test label found')
+
+        l = sync_lists[1]
+        print(l.name)
+        print('open')
+        for c in l.list_cards(card_filter='open'):
+            print('\t', c.name, c.closed)
+
+        print('all')
+        for c in l.list_cards(card_filter='all'):
+            print('\t', c.name, c.closed)
+
+        print('closed')
+        for c in l.list_cards(card_filter='closed'):
+            print('\t', c.name, c.closed)
 
         # return False if finished, and True to be updated again.
         return False
