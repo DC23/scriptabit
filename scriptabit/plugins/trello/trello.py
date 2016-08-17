@@ -16,6 +16,8 @@ from pprint import pprint
 
 import scriptabit
 from scriptabit import (
+    CharacterAttribute,
+    Difficulty,
     HabiticaTaskService,
     TaskMap,
     TaskSync)
@@ -146,6 +148,8 @@ If empty, then cards are only marked done when archived.''')
         sync_boards = [
             b for b in boards if b.name in self._config.trello_boards]
 
+        self.__ensure_labels_exist(sync_boards)
+
         # Build a list of sync lists by matching the sync
         # list names in each board
         sync_lists = []
@@ -181,17 +185,6 @@ If empty, then cards are only marked done when archived.''')
         # Persist the updated task map
         task_map.persist(self.__task_map_file)
 
-        # debug code follows...
-        # for b in sync_boards:
-            # labels = b.get_labels()
-            # l = labels[0]
-            # print(l.name, l.id, l.color)
-            # found = (l for l in labels if l.name == 'test')
-            # if not found:
-                # print('test label not found, adding')
-                # # b.add_label('test', 'black')
-            # else:
-                # print('test label found')
 
         # return False if finished, and True to be updated again.
         return False
@@ -273,3 +266,35 @@ If empty, then cards are only marked done when archived.''')
                 config.write(f)
 
         return credentials
+
+    def __ensure_labels_exist(self, boards):
+        """ Ensures that the Trello labels used to mark task difficulty and
+        Habitica character attributes exist.
+
+        Args:
+            boards (list): The list of boards that are being synchronised.
+        """
+        difficulty_labels = [a.name for a in Difficulty]
+        attribute_labels = [a.name for a in CharacterAttribute]
+        required_labels = difficulty_labels + attribute_labels
+
+        for b in boards:
+            for rl in required_labels:
+                found = [x for x in b.get_labels() if x.name == rl]
+                if not found:
+                    logging.getLogger(__name__).info(
+                        'Board "%s": Label "%s" not found, creating',
+                        b.name,
+                        rl)
+                    b.add_label(rl, color=None)
+
+        # for b in sync_boards:
+            # labels = b.get_labels()
+            # l = labels[0]
+            # print(l.name, l.id, l.color)
+            # found = (l for l in labels if l.name == 'test')
+            # if not found:
+                # print('test label not found, adding')
+                # # b.add_label('test', 'black')
+            # else:
+                # print('test label found')
