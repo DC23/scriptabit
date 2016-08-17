@@ -384,9 +384,17 @@ class HabiticaService(object):
         """ Create the tags. Existing tags are ignored.
 
         Args:
-            tags (list): The list of tags.
+            tags (list): The list of tag names.
+
+        Returns:
+            tags (list): The list of Habitica Tag objects corresponding to
+                the tags argument.
         """
-        existing = [t['name'] for t in self.get_tags()]
+        current_tags = self.get_tags()
+        current_tag_names = [t['name'] for t in current_tags]
+        return_tags = [t for t in current_tags if t['name'] in tags]
         for required in tags:
-            if required not in existing:
-                self.create_tag(required)
+            if required not in current_tag_names:
+                return_tags.append(self.create_tag(required))
+
+        return return_tags

@@ -26,17 +26,8 @@ class HabiticaTaskService(TaskService):
             tags (list): The list of tags to be applied to synchronised tasks.
         """
         super().__init__()
-
         self.__hs = hs
-        self.__task_tags = None
-
-        if tags:
-            # ensure tags exist
-            self.__hs.create_tags(tags)
-
-            # get and save the tags to add
-            all_tags = self.__hs.get_tags()
-            self.__task_tags = [t for t in all_tags if t['name'] in tags]
+        self.__task_tags = self.__hs.create_tags(tags) if tags else None
 
     def get_all_tasks(self):
         """ Get all tasks.
