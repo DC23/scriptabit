@@ -183,13 +183,13 @@ class HabiticaService(object):
         else:
             return None
 
-    def delete_task(self, _id):
-        """ Delete a task by ID.
+    def delete_task(self, task):
+        """ Delete a task.
 
         Args:
-            _id (str): The task ID.
+            task (dict): The task.
         """
-        response = self.__delete('tasks/{0}', _id)
+        response = self.__delete('tasks/{0}'.format(task['_id']))
         response.raise_for_status()
 
     def update_task(self, task):
