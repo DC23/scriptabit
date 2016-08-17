@@ -106,7 +106,7 @@ Changelog
 * Implemented core functionality for task synchronisation between generic
   task services.
 
-0.6.0 Not released
+1.0.0 (2016-08-17)
 -----------------------------------------
 
 * Fixed task sync bug with missing destination tasks.

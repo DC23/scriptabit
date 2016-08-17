@@ -1,20 +1,5 @@
 # -*- coding: utf-8 -*-
 """ Synchronisation of Trello cards to Habitica To-Dos.
-
-Card Synchronisation Design Notes
----------------------------------
-
-Key requirements
-++++++++++++++++
-
-- Must be testable without required touching actual services.
-- Must have one-way synchronisation
-- Must synchronise basic tasks and completed status
-- Should synchronise due dates
-- Should synchronise checklists
-- Should synchronise difficulty (trivial, easy, medium, hard)
-- Should synchronise Habitica character attributes (str, con, per, int)
-- Could have two-way synchronisation
 """
 
 # Ensure backwards compatibility with Python 2
