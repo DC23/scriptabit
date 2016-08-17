@@ -95,7 +95,34 @@ def test_new_tasks_are_mapped():
     assert src_tasks[0].id in map.get_all_src_keys()
     assert map.get_dst_id(src_tasks[0].id) == dst_tasks[0].id
 
-def test_missing_mapped_destination_tasks():
+def test_missing_mapped_destination_tasks_src_complete():
+    """ Tests expected behaviours on mapped tasks that are missing in
+    the destination.
+    """
+    src = random_task()
+    src.completed = True
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+
+    dst = random_task()
+    dst_tasks = []
+    dst_svc = TestTaskService(dst_tasks)
+
+    map = TaskMap()
+
+    # create the pre-existing mapping
+    map.map(src, dst)
+
+    # preconditions
+    assert len(map.get_all_src_keys()) == 1
+    assert map.get_dst_id(src.id) == dst.id
+    assert map.get_src_id(dst.id) == src.id
+
+    TaskSync(src_svc, dst_svc, map).synchronise()
+
+    assert len(dst_svc.tasks) == 0
+
+def test_missing_mapped_destination_tasks_src_not_complete():
     """ Tests expected behaviours on mapped tasks that are missing in
     the destination.
     """
@@ -118,15 +145,14 @@ def test_missing_mapped_destination_tasks():
     assert map.get_dst_id(src.id) == dst.id
     assert map.get_src_id(dst.id) == src.id
 
-    sync = TaskSync(src_svc, dst_svc, map)
-    sync.synchronise()
+    TaskSync(src_svc, dst_svc, map).synchronise()
 
-    # assert dst.id != dst_svc.tasks[0].id
-    # assert len(map.get_all_src_keys()) == 1, "should still be just one mapping"
-    # assert not map.try_get_src_id(dst.id), "old dst should be unmapped"
-    # assert map.get_dst_id(src.id) != dst.id, "src should be mapped to something else"
-    # assert dst_svc.tasks[0].status == SyncStatus.new, "should be flagged as a new task"
-    assert len(dst_svc.tasks) == 0
+    assert dst.id != dst_svc.tasks[0].id
+    assert len(map.get_all_src_keys()) == 1, "should still be just one mapping"
+    assert not map.try_get_src_id(dst.id), "old dst should be unmapped"
+    assert map.get_dst_id(src.id) != dst.id, "src should be mapped to something else"
+    assert dst_svc.tasks[0].status == SyncStatus.new, "should be flagged as a new task"
+    assert len(dst_svc.tasks) == 1
 
 def test_existing_tasks_are_updated():
     src = random_task()
