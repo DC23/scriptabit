@@ -100,6 +100,7 @@ def test_missing_mapped_destination_tasks():
     the destination.
     """
     src = random_task()
+    src.completed = False
     src_tasks = [src]
     src_svc = TestTaskService(src_tasks)
 
@@ -120,6 +121,7 @@ def test_missing_mapped_destination_tasks():
     sync = TaskSync(src_svc, dst_svc, map)
     sync.synchronise()
 
+    assert dst.id != dst_svc.tasks[0].id
     assert len(map.get_all_src_keys()) == 1, "should still be just one mapping"
     assert not map.try_get_src_id(dst.id), "old dst should be unmapped"
     assert map.get_dst_id(src.id) != dst.id, "src should be mapped to something else"
@@ -163,6 +165,7 @@ def test_existing_tasks_are_updated():
     assert actual.completed == src.completed
     assert actual.status == SyncStatus.updated
     assert actual.description == src.description
+    assert actual.completed == src.completed
 
 def test_deleted_src_tasks():
     src_tasks = []
@@ -211,3 +214,93 @@ def test_remove_orphan_mappings():
     all_mappings = map.get_all_src_keys()
     assert len(all_mappings) == 1
     assert map.get_dst_id(src_tasks[0].id)
+
+def test_new_completed_tasks():
+    src = random_task()
+    src.completed = True
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+    dst_tasks = []
+    dst_svc = TestTaskService(dst_tasks)
+
+    map = TaskMap()
+
+    sync = TaskSync(src_svc, dst_svc, map)
+    sync.synchronise()
+
+    assert len(dst_svc.tasks) == 1
+    assert dst_svc.tasks[0].completed
+    assert dst_svc.tasks[0].status == SyncStatus.new
+
+def test_completion_of_existing_mapped_tasks():
+    src = random_task()
+    src.completed = True
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+
+    dst = random_task()
+    dst.completed = False
+    # make dst the same in all but the completed flag
+    dst.copy_fields(dst)
+    dst_tasks = [dst]
+    dst_svc = TestTaskService(dst_tasks)
+
+    map = TaskMap()
+    map.map(src, dst)
+
+    assert not dst_svc.tasks[0].completed
+
+    sync = TaskSync(src_svc, dst_svc, map)
+    sync.synchronise()
+
+    assert len(dst_svc.tasks) == 1
+    assert dst_svc.tasks[0].completed
+    assert dst_svc.tasks[0].status == SyncStatus.updated
+
+def test_missing_mapped_destination_task_when_src_is_completed():
+    """ Tests expected behaviours on mapped tasks that are missing in
+    the destination and where the source task is completed.
+    """
+    src = random_task()
+    src.completed = True
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+
+    dst = random_task()
+    dst_tasks = []
+    dst_svc = TestTaskService(dst_tasks)
+
+    map = TaskMap()
+    map.map(src, dst)
+
+    TaskSync(src_svc, dst_svc, map).synchronise(recreate_completed_tasks=False)
+
+    # For the case where a destination task is missing and the source has been
+    # completed, we expect that the destination will not be recreated.
+    # This is required for Habitica, as completed tasks are not kept very long,
+    # so they will show up as missing after a short time
+
+    assert len(dst_svc.tasks) == 0
+
+def test_missing_mapped_destination_task_when_src_is_completed_recreate_true():
+    """ Tests expected behaviours on mapped tasks that are missing in
+    the destination and where the source task is completed.
+    """
+    src = random_task()
+    src.completed = True
+    src.name = 'completed yeah'
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+
+    dst = random_task()
+    dst_tasks = []
+    dst_svc = TestTaskService(dst_tasks)
+
+    map = TaskMap()
+    map.map(src, dst)
+
+    TaskSync(src_svc, dst_svc, map).synchronise(recreate_completed_tasks=True)
+
+    assert len(dst_svc.tasks) == 1
+    assert dst_svc.tasks[0].completed
+    assert dst_svc.tasks[0].name == 'completed yeah'

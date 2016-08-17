@@ -75,13 +75,15 @@ class TaskSync(object):
         self.__map.map(src, dst)
         return dst
 
-    def synchronise(self, clean_orphans=False):
+    def synchronise(self, clean_orphans=False, recreate_completed_tasks=False):
         """ Synchronise the source service with the destination.
         The task_map will be updated.
 
         Args:
             clean_orphans (bool): If True, mappings for tasks that exist in
                 neither the source or destination are deleted.
+            recreate_completed_tasks (bool): If True, completed source tasks
+                that are missing from the destination will be recreated.
         """
         src_tasks = self.__src_service.get_all_tasks()
         dst_tasks = self.__dst_service.get_all_tasks()
@@ -111,11 +113,12 @@ class TaskSync(object):
                 else:
                     # dst expected but not found, assume deleted.
                     # TODO: Should we recreate? Or delete back to source?
-                    logging.getLogger(__name__).debug(
-                        'dst task not found, recreating: %s --> %s',
-                        src.id, dst_id)
-                    self.__map.unmap(src.id)
-                    dst_tasks.append(self.__create_new_dst(src))
+                    if recreate_completed_tasks or not src.completed:
+                        logging.getLogger(__name__).debug(
+                            'dst task not found, recreating: %s --> %s',
+                            src.id, dst_id)
+                        self.__map.unmap(src.id)
+                        dst_tasks.append(self.__create_new_dst(src))
             else:
                 # mapping not found, so create new task
                 # factory method as we don't know the concrete task type
