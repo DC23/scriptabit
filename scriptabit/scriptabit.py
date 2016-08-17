@@ -66,6 +66,20 @@ def __get_configuration(plugin_manager):
 
     return config
 
+def __init_user_plugin_directory():
+    """ Locates (and creates if necessary) the user plugin directory. """
+
+    default = os.path.expanduser('~/scriptabit_plugins')
+    user = os.path.expanduser(os.getenv('SCRIPTABIT_USER_PLUGIN_DIR', ''))
+    plugin_dir = user if user else default
+
+    if not os.path.exists(plugin_dir):
+        # Can't use logging, as logging is initialised after plugins
+        print('Creating user plugin directory {0}'.format(plugin_dir))
+        os.mkdir(plugin_dir)
+
+    return plugin_dir
+
 def __get_plugin_manager():
     """ Discovers and instantiates all plugins, returning a management object.
 
@@ -73,19 +87,6 @@ def __get_plugin_manager():
         yapsy.PluginManager: The plugin manager with the loaded plugins.
     """
 
-    def init_user_plugin_directory():
-        """ Locates (and creates if necessary) the user plugin directory. """
-
-        default = os.path.expanduser('~/scriptabit_plugins')
-        user = os.path.expanduser(os.getenv('SCRIPTABIT_USER_PLUGIN_DIR', ''))
-        plugin_dir = user if user else default
-
-        if not os.path.exists(plugin_dir):
-            # Can't use logging, as logging is initialised after plugins
-            print('Creating user plugin directory {0}'.format(plugin_dir))
-            os.mkdir(plugin_dir)
-
-        return plugin_dir
 
     # Build the manager
     plugin_manager = PluginManager()
@@ -96,7 +97,7 @@ def __get_plugin_manager():
         os.path.join('scriptabit', 'plugins'))
 
     # user plugin location
-    user_plugin_path = init_user_plugin_directory()
+    user_plugin_path = __init_user_plugin_directory()
 
     # Set plugin locations
     plugin_manager.setPluginPlaces([package_plugin_path, user_plugin_path])
@@ -190,7 +191,10 @@ def start_cli():
                 # Second, activate it
                 plugin_manager.activatePluginByName(config.run)
                 plugin = plugin_info.plugin_object
-                plugin.initialise(config, habitica_service)
+                plugin.initialise(
+                    config,
+                    habitica_service,
+                    __init_user_plugin_directory())
 
                 # Finally, run it
                 updating = True

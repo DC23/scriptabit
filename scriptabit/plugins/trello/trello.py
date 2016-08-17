@@ -54,6 +54,7 @@ class Trello(scriptabit.IPlugin):
         super().__init__()
         self.__tc = None
         self.__habitica_task_service = None
+        self.__task_map_file = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -133,6 +134,10 @@ If empty, then cards are only marked done when archived.''')
         # instantiate the HabiticaTaskService
         self.__habitica_task_service = HabiticaTaskService(habitica_service)
 
+        self.__task_map_file = os.path.join(
+            self._data_dir,
+            'trello_habitica_task_map')
+
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
 
@@ -179,7 +184,7 @@ If empty, then cards are only marked done when archived.''')
             print('   {0}.{1}'.format(l.board.name, l.name))
 
         # Load the task map from disk
-        task_map = TaskMap(self._config.trello_task_map)
+        task_map = TaskMap(self.__task_map_file)
 
         # Create the services
         source_service = TrelloTaskService(self.__tc, sync_lists, done_lists)
@@ -193,7 +198,7 @@ If empty, then cards are only marked done when archived.''')
             sync_completed_new_tasks=False)
 
         # Persist the updated task map
-        task_map.persist(self._config.trello_task_map)
+        task_map.persist(self.__task_map_file)
 
         # debug code follows...
         # for b in sync_boards:
