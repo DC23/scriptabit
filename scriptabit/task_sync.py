@@ -89,7 +89,10 @@ class TaskSync(object):
                 already completed are synced. The default is to ignore such
                 tasks.
         """
+        logging.getLogger(__name__).debug('Fetching source tasks')
         src_tasks = self.__src_service.get_all_tasks()
+
+        logging.getLogger(__name__).debug('Fetching destination tasks')
         dst_tasks = self.__dst_service.get_all_tasks()
 
         src_index = {s.id:s for s in src_tasks}
@@ -103,8 +106,12 @@ class TaskSync(object):
             """ Looks up a cached destination task by ID """
             return dst_index.get(_id, None)
 
+        logging.getLogger(__name__).debug('Starting sync')
+
         # run through the source tasks, checking for existing mappings
+        task_count = 0
         for src in src_tasks:
+            task_count += 1
             dst_id = self.__map.try_get_dst_id(src.id)
             if dst_id:
                 dst = get_dst_by_id(dst_id)
@@ -146,6 +153,7 @@ class TaskSync(object):
 
         # check for deleted tasks: mappings where we have dst but not src
         for dst in dst_tasks:
+            task_count += 1
             src_id = self.__map.try_get_src_id(dst.id)
             if src_id and not get_src_by_id(src_id):
                 # source deleted for existing mapping
@@ -167,6 +175,7 @@ class TaskSync(object):
                         dst_key)
                     self.__map.unmap(src_key)
 
-        # TODO: should this be optional?
         self.__dst_service.persist_tasks(dst_tasks)
+        logging.getLogger(__name__).debug(
+            'sync complete. Processed %d tasks', task_count)
 # pylint: enable=too-few-public-methods

@@ -156,8 +156,6 @@ If empty, then cards are only marked done when archived.''')
         Returns: bool: True if further updates are required; False if the plugin
         is finished and the application should shut down.
         """
-        logging.getLogger(__name__).debug('Getting Trello data')
-
         # retrieve the boards to sync
         boards = self.__tc.list_boards(board_filter='open')
         sync_boards = [
@@ -178,7 +176,7 @@ If empty, then cards are only marked done when archived.''')
         message = 'Syncing the following lists'
         for l in sync_lists:
             message += '\n   {0}.{1}'.format(l.board.name, l.name)
-        message += 'Treating cards in the following lists as completed'
+        message += '\nTreating cards in the following lists as completed'
         for l in done_lists:
             message += '\n   {0}.{1}'.format(l.board.name, l.name)
         logging.getLogger(__name__).debug(message)
@@ -190,13 +188,10 @@ If empty, then cards are only marked done when archived.''')
         source_service = TrelloTaskService(self.__tc, sync_lists, done_lists)
 
         # synchronise
-        logging.getLogger(__name__).debug('Starting Trello to Habitica sync')
         sync = TaskSync(source_service, self.__habitica_task_service, task_map)
         sync.synchronise(
             clean_orphans=True,
             sync_completed_new_tasks=False)
-
-        logging.getLogger(__name__).debug('Finished Trello to Habitica sync')
 
         # Persist the updated task map
         task_map.persist(self.__task_map_file)
