@@ -28,10 +28,15 @@ class HabiticaTaskService(TaskService):
         super().__init__()
 
         self.__hs = hs
-        self.__task_tags = tags
+        self.__task_tags = None
 
         if tags:
+            # ensure tags exist
             self.__hs.create_tags(tags)
+
+            # get and save the tags to add
+            all_tags = self.__hs.get_tags()
+            self.__task_tags = [t for t in all_tags if t['name'] in tags]
 
     def get_all_tasks(self):
         """ Get all tasks.
@@ -74,5 +79,9 @@ class HabiticaTaskService(TaskService):
             HabiticaTask: A new HabiticaTask instance.
         """
 
-        new_task_dict = self.__hs.create_task({'text': src.name})
+        new_task_dict = self.__hs.create_task(
+            {
+                'text': src.name,
+                'tags': [t['id'] for t in self.__task_tags]
+            })
         return HabiticaTask(new_task_dict)

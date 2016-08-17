@@ -123,3 +123,4 @@ Changelog
 * Trello sync now uses optional Trello labels to indicate Habitica task
   difficulty and character attribute (strength, perception, intelligence,
   constitution)
+* Habitica cards are now created with a "Trello" tag.

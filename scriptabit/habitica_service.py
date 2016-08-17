@@ -390,5 +390,3 @@ class HabiticaService(object):
         for required in tags:
             if required not in existing:
                 self.create_tag(required)
-
-

@@ -12,7 +12,6 @@ from builtins import *
 import logging
 import os
 from configparser import ConfigParser, NoOptionError
-from pprint import pprint
 
 import scriptabit
 from scriptabit import (
@@ -268,7 +267,8 @@ If empty, then cards are only marked done when archived.''')
 
         return credentials
 
-    def __ensure_labels_exist(self, boards):
+    @staticmethod
+    def __ensure_labels_exist(boards):
         """ Ensures that the Trello labels used to mark task difficulty and
         Habitica character attributes exist.
 

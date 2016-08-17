@@ -79,8 +79,11 @@ class TrelloTaskService(TaskService):
         """
         raise NotImplementedError
 
-    def _create_task(self):
+    def _create_task(self, src=None):
         """ Task factory method.
+
+        Args:
+            src (Task): The optional data source.
 
         Returns:
             TrelloTask: A new TrelloTask instance.

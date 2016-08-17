@@ -136,7 +136,7 @@ class TaskSync(object):
                         dst_tasks.append(self.__create_new_dst(src))
                     else:
                         logging.getLogger(__name__).info(
-                            'Destination task deleted or complete, ignoring: %s',
+                            'Ignoring deleted/completed destination task: %s',
                             src.name)
             else:
                 # mapping not found
