@@ -48,10 +48,13 @@ class TaskService(object):
         """
         raise NotImplementedError
 
-    def _create_task(self):
+    def _create_task(self, src=None):
         """ Task factory method.
 
         Allows subclasses to create the appropriate Task type.
+
+        Args:
+            src (Task): The optional data source.
 
         Returns:
             Task: The new task
@@ -67,7 +70,7 @@ class TaskService(object):
         Returns:
             Task: The new task.
         """
-        t = self._create_task()
+        t = self._create_task(src)
         if src:
             t.copy_fields(src, status=SyncStatus.new)
         return t

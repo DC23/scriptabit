@@ -43,6 +43,11 @@ class HabiticaTask(Task):
             self.__attribute = CharacterAttribute.default
 
     @property
+    def task_dict(self):
+        """ Gets the internal task dictionary. """
+        return self.__task_dict
+
+    @property
     def id(self):
         """ Task id """
         return self.__task_dict['_id']

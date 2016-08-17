@@ -182,6 +182,7 @@ If empty, then cards are only marked done when archived.''')
         print('Treating cards in the following lists as completed')
         for l in done_lists:
             print('   {0}.{1}'.format(l.board.name, l.name))
+        print()
 
         # Load the task map from disk
         task_map = TaskMap(self.__task_map_file)
@@ -193,9 +194,8 @@ If empty, then cards are only marked done when archived.''')
         # synchronise
         sync = TaskSync(source_service, self.__habitica_task_service, task_map)
         sync.synchronise(
-            clean_orphans=False,
-            recreate_completed_tasks=False,
-            sync_completed_new_tasks=False)
+            clean_orphans=True,
+            sync_completed_new_tasks=True)
 
         # Persist the updated task map
         task_map.persist(self.__task_map_file)

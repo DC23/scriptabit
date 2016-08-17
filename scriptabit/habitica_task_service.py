@@ -47,17 +47,27 @@ class HabiticaTaskService(TaskService):
         Returns:
             Task: The new task
         """
+        return
         for task in tasks:
-            # TODO: new tasks can be created with a single API call. I should do that
-            if task.status in (SyncStatus.updated, SyncStatus.new):
-                self.__hs.upsert_task(task)
+            td = task.task_dict
+            if task.completed:
+                self.__hs.score_task(td)
+            elif task.status in (SyncStatus.updated, SyncStatus.new):
+                # new tasks have already been created in _create_task,
+                # so we just need an update.
+                self.__hs.update_task(td)
             elif task.status == SyncStatus.deleted:
-                self.__hs.delete_task(task)
+                self.__hs.delete_task(td)
 
-    def _create_task(self):
+    def _create_task(self, src=None):
         """ Task factory method.
+
+        Args:
+            src (Task): The optional data source.
 
         Returns:
             HabiticaTask: A new HabiticaTask instance.
         """
-        return HabiticaTask()
+
+        new_task_dict = self.__hs.create_task({'text': src.name})
+        return HabiticaTask(new_task_dict)

@@ -66,6 +66,27 @@ class HabiticaService(object):
         logging.getLogger(__name__).debug('PUT %s', url)
         return requests.post(url, headers=self.__headers, data=data)
 
+    @staticmethod
+    def __get_key(task):
+        """ Gets the key from the task ID or alias.
+        Preference is given to the ID.
+
+        Args:
+            task (dict): The task.
+
+        Returns:
+            str: The key
+
+        Raises:
+            ValueError: ID or alias not present in task.
+        """
+        key = task.get('_id', None)
+        if not key:
+            key = task.get('alias', None)
+        if not key:
+            raise ValueError('The task must specify an id or alias')
+        return key
+
     def is_server_up(self):
         """Check that the Habitica API is reachable and up
 
@@ -171,6 +192,44 @@ class HabiticaService(object):
         response = self.__delete('tasks/{0}', _id)
         response.raise_for_status()
 
+    def update_task(self, task):
+        """ Updates an existing task.
+
+        Args:
+            task (dict): The task.
+
+        Returns:
+            dict: The new task as returned from the server.
+
+        Raises:
+            ValueError: if neither an ID or alias are present in task.
+        """
+        key = self.__get_key(task)
+        response = self.__put('tasks/{0}'.format(key), task)
+        response.raise_for_status()
+        return response.json()['data']
+
+    def score_task(self, task, direction='up'):
+        """ Score a task.
+
+        Args:
+            task (dict): the task to score.
+            direction (str): 'up' or 'down'
+
+        Returns:
+            dict: Habitica API response data.
+
+        Raises:
+            ValueError: invalid direction.
+            ValueError: missing ID or alias.
+        """
+        key = self.__get_key(task)
+        response = self.__post(
+            'tasks/{0}/score/{1}'.format(key, direction),
+            data=None)
+        response.raise_for_status()
+        return response.json()['data']
+
     def upsert_task(self, task, task_type=HabiticaTaskTypes.todos):
         """Upserts a task.
 
@@ -192,8 +251,7 @@ class HabiticaService(object):
         if not key:
             key = task.get('alias', None)
         if not key:
-            raise ValueError(
-                'The task must specify an id or alias')
+            raise ValueError('The task must specify an id or alias')
 
         # Does the task already exist?
         if self.get_task(key):

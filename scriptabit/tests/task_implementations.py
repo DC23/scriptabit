@@ -123,5 +123,5 @@ class TestTaskService(TaskService):
     def persist_tasks(self, tasks):
         self.persisted_tasks = tasks
 
-    def _create_task(self):
+    def _create_task(self, src=None):
         return TestTask(_id=uuid.uuid4())

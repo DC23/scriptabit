@@ -78,7 +78,6 @@ class TaskSync(object):
     def synchronise(
             self,
             clean_orphans=False,
-            recreate_completed_tasks=False,
             sync_completed_new_tasks=False):
         """ Synchronise the source service with the destination.
         The task_map will be updated.
@@ -86,8 +85,6 @@ class TaskSync(object):
         Args:
             clean_orphans (bool): If True, mappings for tasks that exist in
                 neither the source or destination are deleted.
-            recreate_completed_tasks (bool): If True, completed source tasks
-                that are missing from the destination will be recreated.
             sync_completed_new_tasks (bool): If True, new source tasks that are
                 already completed are synced. The default is to ignore such
                 tasks.
@@ -113,33 +110,37 @@ class TaskSync(object):
                 dst = get_dst_by_id(dst_id)
                 if dst:
                     # dst found, so this is an existing mapping
-                    logging.getLogger(__name__).debug(
-                        'task mapping found, updating: %s --> %s',
-                        src.id, dst_id)
+                    if src.completed:
+                        logging.getLogger(__name__).info(
+                            'Completing: %s --> %s', src.name, dst.name)
+                    else:
+                        logging.getLogger(__name__).info(
+                            'Updating: %s --> %s', src.name, dst.name)
                     dst.copy_fields(src, status=SyncStatus.updated)
                 else:
                     # dst expected but not found, assume deleted.
-                    # TODO: Should we recreate? Or delete back to source?
-                    if recreate_completed_tasks or not src.completed:
-                        logging.getLogger(__name__).debug(
-                            'dst task not found, recreating: %s --> %s',
-                            src.id, dst_id)
-                        self.__map.unmap(src.id)
-                        dst_tasks.append(self.__create_new_dst(src))
+                    # TODO: Ignore, recreate, delete back to source?
+                    logging.getLogger(__name__).info(
+                        'Destination task deleted, ignoring: %s', src.name)
+                    # if recreate_completed_tasks or not src.completed:
+                        # logging.getLogger(__name__).info(
+                            # 'Recreating: %s', src.name)
+                        # self.__map.unmap(src.id)
+                        # dst_tasks.append(self.__create_new_dst(src))
             else:
                 # mapping not found
                 if sync_completed_new_tasks or not src.completed:
-                    logging.getLogger(__name__).debug(
-                        'Found new task: %s: %s', src.id, src.name)
+                    logging.getLogger(__name__).info(
+                        'Creating: %s', src.name)
                     dst_tasks.append(self.__create_new_dst(src))
 
         # check for deleted tasks: mappings where we have dst but not src
         for dst in dst_tasks:
             src_id = self.__map.try_get_src_id(dst.id)
-            if not get_src_by_id(src_id):
+            if src_id and not get_src_by_id(src_id):
                 # source deleted for existing mapping
-                logging.getLogger(__name__).debug(
-                    'Found deleted task: %s --> %s', src_id, dst.id)
+                logging.getLogger(__name__).info(
+                    'Deleting: %s --> %s', src_id, dst.name)
                 dst.status = SyncStatus.deleted
 
         # check for orphans: mappings that have neither a src or dst task
@@ -150,8 +151,10 @@ class TaskSync(object):
             for src_key in all_src_keys:
                 dst_key = self.__map.get_dst_id(src_key)
                 if not get_src_by_id(src_key) and not get_dst_by_id(dst_key):
-                    logging.getLogger(__name__).debug(
-                        'Found orphan task map: %s --> %s', src_key, dst_key)
+                    logging.getLogger(__name__).info(
+                        'Found orphan relationship: %s --> %s',
+                        src_key,
+                        dst_key)
                     self.__map.unmap(src_key)
 
         # TODO: should this be optional?

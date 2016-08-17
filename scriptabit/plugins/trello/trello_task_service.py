@@ -47,7 +47,7 @@ class TrelloTaskService(TaskService):
         """
         tasks = []
         for l in lists:
-            for card in l.list_cards(card_filter='all'):
+            for card in l.list_cards(card_filter='open'):
                 card.fetch()  # force load most card data
                 task = TrelloTask(card, force_completed=force_completed)
                 tasks.append(task)
