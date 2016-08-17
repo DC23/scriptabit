@@ -37,8 +37,8 @@ The file should have a typical ini file structure, with the following section:
 ::
 
     [habitica]
-    userid = ; Paste your User ID here
-    apikey = ; Paste your API key here
+    userid =
+    apikey =
 
 Additional sections can be added, and the section name to use can be
 supplied as a command-line argument.
