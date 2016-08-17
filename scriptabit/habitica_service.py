@@ -356,3 +356,39 @@ class HabiticaService(object):
         response = self.__put('user', {'stats.gp': gp})
         response.raise_for_status()
         return response.json()['data']['stats']['gp']
+
+    def get_tags(self):
+        """ Get the current user's tags.
+
+        Returns:
+            list: The tags.
+        """
+        response = self.__get('tags')
+        response.raise_for_status()
+        return response.json()['data']
+
+    def create_tag(self, name):
+        """ Create a tag.
+
+        Args:
+            name (str): the tag name.
+
+        Returns:
+            dict: The new tag.
+        """
+        response = self.__post('tags', data={'name': name})
+        response.raise_for_status()
+        return response.json()['data']
+
+    def create_tags(self, tags):
+        """ Create the tags. Existing tags are ignored.
+
+        Args:
+            tags (list): The list of tags.
+        """
+        existing = [t['name'] for t in self.get_tags()]
+        for required in tags:
+            if required not in existing:
+                self.create_tag(required)
+
+

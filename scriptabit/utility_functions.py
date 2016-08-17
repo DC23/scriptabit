@@ -148,14 +148,9 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        task = self.__hs.create_task(
-            {'text':'new'},
-            task_type=HabiticaTaskTypes.todos)
-        pprint(task)
-        pprint(self.__hs.get_user())
-        # tasks = self.__hs.get_tasks()
-        # tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.dailies)
-        # for t in tasks:
-            # pprint(t['type'])
+        # pprint(self.__hs.get_tags())
+        # pprint(self.__hs.create_tag('new tag'))
+        self.__hs.create_tags(['a','b','c','new tag'])
+        pprint(self.__hs.get_tags())
         print("--------------------")
         print()

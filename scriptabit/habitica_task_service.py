@@ -18,14 +18,20 @@ from .task_service import TaskService
 class HabiticaTaskService(TaskService):
     """ Implements the Habitica synchronisation task service.
     """
-    def __init__(self, hs):
+    def __init__(self, hs, tags=None):
         """ Initialises the Habitica synchronisation task service.
 
         Args:
             hs (HabiticaService): The Habitica Service.
+            tags (list): The list of tags to be applied to synchronised tasks.
         """
         super().__init__()
+
         self.__hs = hs
+        self.__task_tags = tags
+
+        if tags:
+            self.__hs.create_tags(tags)
 
     def get_all_tasks(self):
         """ Get all tasks.

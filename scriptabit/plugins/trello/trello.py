@@ -119,7 +119,9 @@ If empty, then cards are only marked done when archived.''')
             token_secret=credentials['tokensecret'])
 
         # instantiate the HabiticaTaskService
-        self.__habitica_task_service = HabiticaTaskService(habitica_service)
+        self.__habitica_task_service = HabiticaTaskService(
+            habitica_service,
+            tags=['Trello'])
 
         self.__task_map_file = os.path.join(
             self._data_dir,
