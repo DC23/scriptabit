@@ -24,15 +24,23 @@ class HabiticaTask(Task):
                 HabiticaService.
         """
         super().__init__()
-        if not isinstance(task_dict, dict):
-            raise TypeError
 
         if not task_dict:
             task_dict = {'text': 'scriptabit todo'}
-        task_dict['type'] = 'todo'
+
+        if not isinstance(task_dict, dict):
+            raise TypeError(type(task_dict))
+
         self.__task_dict = task_dict
-        self.__difficulty = Difficulty.from_value(task_dict['priority'])
-        self.__attribute = CharacterAttribute.from_value(task_dict['attribute'])
+
+        # ensure that some required values are defined
+        task_dict['type'] = 'todo'
+
+        if 'priority' not in task_dict:
+            self.__difficulty = Difficulty.default
+
+        if 'attribute' not in task_dict:
+            self.__attribute = CharacterAttribute.default
 
     @property
     def id(self):

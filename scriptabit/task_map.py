@@ -17,17 +17,20 @@ class TaskMap(object):
     """ Persistent 1-1 task mapping.
     """
 
-    def __init__(self, filename=''):
+    def __init__(self, filename=None):
         """ Initialise the TaskMap instance.
 
         Args:
             filename (str): The optional filename to load from.
         """
         super().__init__()
-        if filename:
+
+        # try to load from the file, defaulting to empty bidict if the load
+        # fails for any reason
+        try:
             with open(filename, 'rb') as f:
                 self.__bidict = pickle.load(f)
-        else:
+        except:
             self.__bidict = bidict()
 
     def persist(self, filename):

@@ -30,6 +30,13 @@ class TestTaskMap(object):
         self.dst = TestTask(_id='a')
         self.missing = TestTask(_id='blah')
 
+    def test_create_when_file_doesnt_exist(self):
+        tmpfile = NamedTemporaryFile(suffix='.pickle')
+        name = tmpfile.name
+        tmpfile.close()
+        tm = TaskMap(name)
+        assert tm
+
     def test_persist_task_mapping(self):
         expected = TaskMap()
         tasks = [TestTask(_id=i) for i in range(4)]

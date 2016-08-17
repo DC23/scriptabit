@@ -18,6 +18,7 @@ class Difficulty(Enum):
     easy = 1.0
     medium = 1.5
     hard = 2.0
+    default = 1.0
 
     @staticmethod
     def from_value(value):
@@ -25,7 +26,7 @@ class Difficulty(Enum):
         for e in Difficulty:
             if e.value == value:
                 return e
-        return Difficulty.easy
+        return Difficulty.default
 
 
 class CharacterAttribute(Enum):
@@ -34,6 +35,7 @@ class CharacterAttribute(Enum):
     intelligence = 'int'
     constitution = 'con'
     perception = 'per'
+    default = 'str'
 
     @staticmethod
     def from_value(value):
@@ -41,7 +43,7 @@ class CharacterAttribute(Enum):
         for e in CharacterAttribute:
             if e.value == value:
                 return e
-        return CharacterAttribute.strength
+        return CharacterAttribute.default
 
 
 class SyncStatus(Enum):

@@ -27,6 +27,13 @@ def test_id():
     assert d['_id'] == '432'
     assert task.id == '432'
 
+def test_create_default():
+    task = HabiticaTask()
+    assert task
+    assert task.name == 'scriptabit todo'
+    assert task.difficulty == Difficulty.default
+    assert task.attribute == CharacterAttribute.default
+
 def test_invalid_difficulty():
     task = HabiticaTask(get_fake_task()[0])
     with pytest.raises(TypeError):
