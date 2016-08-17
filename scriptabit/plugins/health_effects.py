@@ -34,14 +34,16 @@ class HealthEffects(scriptabit.IPlugin):
 
         return parser
 
-    def initialise(self, configuration, habitica_service):
+    def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the plugin.
 
         Args:
             configuration (ArgParse.Namespace): The application configuration.
             habitica_service: the Habitica Service instance.
+            data_dir (str): A writeable directory that the plugin can use for
+                persistent data.
         """
-        super().initialise(configuration, habitica_service)
+        super().initialise(configuration, habitica_service, data_dir)
         logging.getLogger(__name__).info('HealthEffects initialising')
 
     def update_interval_minutes(self):

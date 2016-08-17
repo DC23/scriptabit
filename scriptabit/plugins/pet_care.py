@@ -45,7 +45,7 @@ class PetCare(scriptabit.IPlugin):
 
         return parser
 
-    def initialise(self, configuration, habitica_service):
+    def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the plugin.
 
         Generally, any initialisation should be done here rather than in
@@ -54,8 +54,10 @@ class PetCare(scriptabit.IPlugin):
         Args:
             configuration (ArgParse.Namespace): The application configuration.
             habitica_service: the Habitica Service instance.
+            data_dir (str): A writeable directory that the plugin can use for
+                persistent data.
         """
-        super().initialise(configuration, habitica_service)
+        super().initialise(configuration, habitica_service, data_dir)
         logging.getLogger(__name__).info('Scriptabit Pet Care Services: looking'
                                          ' after your pets since yesterday')
 

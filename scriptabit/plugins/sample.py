@@ -54,7 +54,7 @@ class Sample(scriptabit.IPlugin):
         """ Called by the plugin framework when a plugin is deactivated."""
         pass
 
-    def initialise(self, configuration, habitica_service):
+    def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the plugin.
 
         Generally, any initialisation should be done here rather than in
@@ -63,8 +63,10 @@ class Sample(scriptabit.IPlugin):
         Args:
             configuration (ArgParse.Namespace): The application configuration.
             habitica_service: the Habitica Service instance.
+            data_dir (str): A writeable directory that the plugin can use for
+                persistent data.
         """
-        super().initialise(configuration, habitica_service)
+        super().initialise(configuration, habitica_service, data_dir)
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.

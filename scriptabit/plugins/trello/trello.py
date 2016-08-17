@@ -31,13 +31,13 @@ from pprint import pprint
 
 import scriptabit
 from scriptabit import (
-    HabiticaService,
     HabiticaTaskService,
     TaskMap,
     TaskSync)
 
 from trello import TrelloClient
 from trello.util import create_oauth_token
+
 from .trello_task_service import TrelloTaskService
 
 class Trello(scriptabit.IPlugin):
@@ -53,6 +53,7 @@ class Trello(scriptabit.IPlugin):
         """
         super().__init__()
         self.__tc = None
+        self.__habitica_task_service = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -92,7 +93,7 @@ If empty, then cards are only marked done when archived.''')
 
         return parser
 
-    def initialise(self, configuration, habitica_service):
+    def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the Trello plugin.
 
         This involves loading the board and list configuration, confirming the
@@ -101,9 +102,12 @@ If empty, then cards are only marked done when archived.''')
 
         Args:
             configuration (ArgParse.Namespace): The application configuration.
-            habitica_service: the Habitica Service instance.
+            habitica_service (scriptabit.HabiticaService): the Habitica
+                Service instance.
+            data_dir (str): A writeable directory that the plugin can use for
+                persistent data.
         """
-        super().initialise(configuration, habitica_service)
+        super().initialise(configuration, habitica_service, data_dir)
 
         logging.getLogger(__name__).info(
             'Syncing Trello boards %s',

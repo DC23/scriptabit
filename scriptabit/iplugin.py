@@ -33,6 +33,7 @@ class IPlugin(YapsyIPlugin):
         self._config = None
         self._update_count = 0
         self._hs = None
+        self._data_dir = ''
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -57,7 +58,7 @@ class IPlugin(YapsyIPlugin):
         """ Called by the plugin framework when a plugin is deactivated."""
         pass
 
-    def initialise(self, configuration, habitica_service):
+    def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the plugin.
 
         Generally, any initialisation should be done here rather than in
@@ -66,9 +67,12 @@ class IPlugin(YapsyIPlugin):
         Args:
             configuration (ArgParse.Namespace): The application configuration.
             habitica_service: the Habitica Service instance.
+            data_dir (str): A writeable directory that the plugin can use for
+                persistent data.
         """
         self._config = configuration
         self._hs = habitica_service
+        self._data_dir = data_dir
 
     def update_interval_seconds(self):
         """ Indicates the required update interval in integer seconds.

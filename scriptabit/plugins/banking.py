@@ -27,14 +27,16 @@ class Banking(scriptabit.IPlugin):
     """ Implements the banking plugin.
     """
 
-    def initialise(self, configuration, habitica_service):
+    def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the banking plugin.
 
         Args:
             configuration (ArgParse.Namespace): The application configuration.
             habitica_service: the Habitica Service instance.
+            data_dir (str): A writeable directory that the plugin can use for
+                persistent data.
         """
-        super().initialise(configuration, habitica_service)
+        super().initialise(configuration, habitica_service, data_dir)
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.

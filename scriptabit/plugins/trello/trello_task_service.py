@@ -10,7 +10,6 @@ from __future__ import (
 from builtins import *
 
 from scriptabit import SyncStatus, TaskService
-from trello import TrelloClient
 
 from .trello_task import TrelloTask
 

@@ -10,7 +10,6 @@ from __future__ import (
 from builtins import *
 
 from scriptabit import CharacterAttribute, Difficulty, Task
-from trello import Card
 
 
 class TrelloTask(Task):
