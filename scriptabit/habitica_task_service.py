@@ -47,7 +47,6 @@ class HabiticaTaskService(TaskService):
         Returns:
             Task: The new task
         """
-        return
         for task in tasks:
             td = task.task_dict
             if task.completed:

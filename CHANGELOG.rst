@@ -114,3 +114,5 @@ Changelog
 * Implemented Habitica sync task
 * Implemented HabiticaTaskService
 * Updated documentation with sync information
+* Implemented first version of Trello to Habitica sync. Tasks only, no
+  difficulties, attributes, due-dates or checklists.

@@ -118,20 +118,30 @@ class TaskSync(object):
                             'Updating: %s --> %s', src.name, dst.name)
                     dst.copy_fields(src, status=SyncStatus.updated)
                 else:
-                    # dst expected but not found, assume deleted.
-                    # TODO: Ignore, recreate, delete back to source?
-                    logging.getLogger(__name__).info(
-                        'Destination task deleted, ignoring: %s', src.name)
-                    # if recreate_completed_tasks or not src.completed:
-                        # logging.getLogger(__name__).info(
-                            # 'Recreating: %s', src.name)
-                        # self.__map.unmap(src.id)
-                        # dst_tasks.append(self.__create_new_dst(src))
+                    # dst expected but not found
+                    # recreate if src is not complete,
+                    # otherwise ignore
+                    if not src.completed:
+                        logging.getLogger(__name__).info(
+                            'Recreating: %s',
+                            src.name)
+                        self.__map.unmap(src.id)
+                        dst_tasks.append(self.__create_new_dst(src))
+                    else:
+                        logging.getLogger(__name__).info(
+                            'Destination task deleted or complete, ignoring: %s',
+                            src.name)
             else:
                 # mapping not found
                 if sync_completed_new_tasks or not src.completed:
-                    logging.getLogger(__name__).info(
-                        'Creating: %s', src.name)
+                    if src.completed:
+                        logging.getLogger(__name__).info(
+                            'Creating (completed): %s',
+                            src.name)
+                    else:
+                        logging.getLogger(__name__).info(
+                            'Creating: %s',
+                            src.name)
                     dst_tasks.append(self.__create_new_dst(src))
 
         # check for deleted tasks: mappings where we have dst but not src
