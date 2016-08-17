@@ -9,7 +9,7 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 
-from scriptabit import SyncStatus, TaskService
+from scriptabit import TaskService
 
 from .trello_task import TrelloTask
 

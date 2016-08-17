@@ -11,8 +11,6 @@ from builtins import *
 # from abc import ABCMeta, abstractmethod
 from enum import Enum
 from datetime import datetime
-import iso8601
-import pytz
 
 
 class Difficulty(Enum):
@@ -69,13 +67,13 @@ class Task(object):
     Attributes:
         id (str): The task ID.
         name (str): The task name.
+        due_date (datetime): The due date in UTC
         description (str): The description.
         completed (bool): Completion/checked status
         difficulty (Difficulty): task difficulty.
         attribute (CharacterAttribute): habitica character attribute of the task
         status (SyncStatus): Synchronisation status flag.
     """
-    # TODO: logging statements
     # TODO: define and add checklists
 
     def __init__(self):
@@ -157,7 +155,7 @@ class Task(object):
 
     @property
     def due_date(self):
-        """ The due date if there is one, or None. """
+        """ The due date in UTC if there is one, or None. """
         raise NotImplementedError
 
     @due_date.setter

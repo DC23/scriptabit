@@ -9,8 +9,6 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 from datetime import datetime
-import iso8601
-import pytz
 from tzlocal import get_localzone
 
 from .dates import parse_date_utc
@@ -126,7 +124,6 @@ class HabiticaTask(Task):
         """ Sets or clears the due date. """
         if due_date and not isinstance(due_date, datetime):
             raise TypeError
-
         if due_date:
             self.__task_dict['date'] = \
                 due_date.astimezone(get_localzone()).date()

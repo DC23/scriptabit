@@ -9,7 +9,6 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 from datetime import datetime
-import iso8601
 import pytz
 
 from scriptabit import CharacterAttribute, Difficulty, Task
@@ -100,7 +99,7 @@ class TrelloTask(Task):
         if not isinstance(attribute, CharacterAttribute):
             raise TypeError
         raise NotImplementedError
-        # TODO: apply a label
+        # TODO: apply a label to set the attribute
 
     @property
     def due_date(self):
