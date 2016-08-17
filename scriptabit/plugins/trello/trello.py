@@ -174,15 +174,14 @@ If empty, then cards are only marked done when archived.''')
                 elif l.name in self._config.trello_done_lists:
                     done_lists.append(l)
 
-        print('Syncing the following lists')
+        # some additional information on the source boards and lists
+        message = 'Syncing the following lists'
         for l in sync_lists:
-            print('   {0}.{1}'.format(l.board.name, l.name))
-
-        print()
-        print('Treating cards in the following lists as completed')
+            message += '\n   {0}.{1}'.format(l.board.name, l.name)
+        message += 'Treating cards in the following lists as completed'
         for l in done_lists:
-            print('   {0}.{1}'.format(l.board.name, l.name))
-        print()
+            message += '\n   {0}.{1}'.format(l.board.name, l.name)
+        logging.getLogger(__name__).debug(message)
 
         # Load the task map from disk
         task_map = TaskMap(self.__task_map_file)
