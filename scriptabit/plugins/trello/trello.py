@@ -30,8 +30,15 @@ from configparser import ConfigParser, NoOptionError
 from pprint import pprint
 
 import scriptabit
+from scriptabit import (
+    HabiticaService,
+    HabiticaTaskService,
+    TaskMap,
+    TaskSync)
+
 from trello import TrelloClient
 from trello.util import create_oauth_token
+from .trello_task_service import TrelloTaskService
 
 class Trello(scriptabit.IPlugin):
     """ Trello card synchronisation.
@@ -119,6 +126,9 @@ If empty, then cards are only marked done when archived.''')
             token=credentials['token'],
             token_secret=credentials['tokensecret'])
 
+        # instantiate the HabiticaTaskService
+        self.__habitica_task_service = HabiticaTaskService(habitica_service)
+
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
 
@@ -164,6 +174,23 @@ If empty, then cards are only marked done when archived.''')
         for l in done_lists:
             print('   {0}.{1}'.format(l.board.name, l.name))
 
+        # Load the task map from disk
+        task_map = TaskMap(self._config.trello_task_map)
+
+        # Create the services
+        source_service = TrelloTaskService(self.__tc, sync_lists, done_lists)
+        assert self.__habitica_task_service
+
+        # synchronise
+        sync = TaskSync(source_service, self.__habitica_task_service, task_map)
+        sync.synchronise(
+            clean_orphans=False,
+            recreate_completed_tasks=False,
+            sync_completed_new_tasks=False)
+
+        # Persist the updated task map
+        task_map.persist(self._config.trello_task_map)
+
         # debug code follows...
         # for b in sync_boards:
             # labels = b.get_labels()
@@ -175,20 +202,6 @@ If empty, then cards are only marked done when archived.''')
                 # # b.add_label('test', 'black')
             # else:
                 # print('test label found')
-
-        l = sync_lists[1]
-        print(l.name)
-        print('open')
-        for c in l.list_cards(card_filter='open'):
-            print('\t', c.name, c.closed)
-
-        print('all')
-        for c in l.list_cards(card_filter='all'):
-            print('\t', c.name, c.closed)
-
-        print('closed')
-        for c in l.list_cards(card_filter='closed'):
-            print('\t', c.name, c.closed)
 
         # return False if finished, and True to be updated again.
         return False
