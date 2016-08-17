@@ -10,6 +10,9 @@ from __future__ import (
 from builtins import *
 # from abc import ABCMeta, abstractmethod
 from enum import Enum
+from datetime import datetime
+import iso8601
+import pytz
 
 
 class Difficulty(Enum):
@@ -74,7 +77,6 @@ class Task(object):
     """
     # TODO: logging statements
     # TODO: define and add checklists
-    # TODO: define due date
 
     def __init__(self):
         """ Initialise the task.
@@ -153,6 +155,18 @@ class Task(object):
             raise TypeError
         self.__status = status
 
+    @property
+    def due_date(self):
+        """ The due date if there is one, or None. """
+        raise NotImplementedError
+
+    @due_date.setter
+    def due_date(self, due_date):
+        """ Sets or clears the due date. """
+        if not isinstance(due_date, datetime):
+            raise TypeError
+        raise NotImplementedError
+
     def copy_fields(self, src, status=SyncStatus.updated):
         """ Copies fields from src.
 
@@ -168,6 +182,7 @@ class Task(object):
         self.completed = src.completed
         self.difficulty = src.difficulty
         self.attribute = src.attribute
+        self.due_date = src.due_date
         self.status = status
         return self
 # pylint: enable=no-self-use

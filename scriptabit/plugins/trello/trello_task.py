@@ -8,6 +8,9 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+from datetime import datetime
+import iso8601
+import pytz
 
 from scriptabit import CharacterAttribute, Difficulty, Task
 
@@ -98,3 +101,18 @@ class TrelloTask(Task):
             raise TypeError
         raise NotImplementedError
         # TODO: apply a label
+
+    @property
+    def due_date(self):
+        """ The due date if there is one, or None. """
+        due = self.__card.due_date
+        if due:
+            return due.astimezone(tz=pytz.utc)
+        return None
+
+    @due_date.setter
+    def due_date(self, due_date):
+        """ Sets or clears the due date. """
+        if due_date and not isinstance(due_date, datetime):
+            raise TypeError
+        raise NotImplementedError

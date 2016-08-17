@@ -8,7 +8,12 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+from datetime import datetime
+import iso8601
+import pytz
+from tzlocal import get_localzone
 
+from .dates import parse_date_utc
 from .task import CharacterAttribute, Difficulty, Task
 
 
@@ -107,3 +112,23 @@ class HabiticaTask(Task):
             raise TypeError
         self.__task_dict['attribute'] = attribute.value
         self.__attribute = attribute
+
+    @property
+    def due_date(self):
+        """ The due date if there is one, or None. """
+        datestr = self.__task_dict.get('date', None)
+        if datestr:
+            return parse_date_utc(datestr, milliseconds=True)
+        return None
+
+    @due_date.setter
+    def due_date(self, due_date):
+        """ Sets or clears the due date. """
+        if due_date and not isinstance(due_date, datetime):
+            raise TypeError
+
+        if due_date:
+            self.__task_dict['date'] = \
+                due_date.astimezone(get_localzone()).date()
+        elif 'date' in self.__task_dict:
+            del self.__task_dict['date']

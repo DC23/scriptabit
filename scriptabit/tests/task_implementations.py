@@ -12,6 +12,7 @@ import requests
 import requests_mock
 import uuid
 from copy import deepcopy
+from datetime import datetime
 from pkg_resources import resource_filename
 
 from scriptabit import (
@@ -32,7 +33,8 @@ class TestTask(Task):
             completed=False,
             difficulty=Difficulty.easy,
             attribute=CharacterAttribute.strength,
-            status=SyncStatus.new):
+            status=SyncStatus.new,
+            due_date=None):
         super().__init__()
         self.__id = _id
         self.name = name
@@ -41,6 +43,7 @@ class TestTask(Task):
         self.difficulty = difficulty
         self.attribute = attribute
         self.status = status
+        self.due_date = due_date
 
     @property
     def id(self):
@@ -100,6 +103,18 @@ class TestTask(Task):
         if not isinstance(attribute, CharacterAttribute):
             raise TypeError
         self.__attribute = attribute
+
+    @property
+    def due_date(self):
+        """ The due date if there is one, or None. """
+        return self.__due_date
+
+    @due_date.setter
+    def due_date(self, due_date):
+        """ Sets or clears the due date. """
+        if due_date and not isinstance(due_date, datetime):
+            raise TypeError
+        self.__due_date = due_date
 
 
 class TestTaskService(TaskService):

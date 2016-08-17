@@ -10,7 +10,10 @@ import json
 import pytest
 import requests
 import requests_mock
+import pytz
+import time
 from pkg_resources import resource_filename
+from datetime import datetime
 
 from scriptabit import (
     Task,
@@ -94,10 +97,12 @@ def test_copy_fields():
     difficulty = Difficulty.hard
     attribute = CharacterAttribute.intelligence
     status = SyncStatus.updated
+    due_date = datetime(2016, 7, 27, 6, 41, 34, 391000, tzinfo=pytz.utc)
 
     a = TestTask(
         _id, name=name, description=description, completed=completed,
-        difficulty=difficulty, attribute=attribute, status=status)
+        difficulty=difficulty, attribute=attribute, status=status,
+        due_date=due_date)
     b = TestTask('222')
 
     # preconditions
@@ -108,6 +113,7 @@ def test_copy_fields():
     assert a.difficulty != b.difficulty
     assert a.attribute != b.attribute
     assert a.status != b.status
+    assert a.due_date != b.due_date
 
     b.copy_fields(a)
 
@@ -119,3 +125,4 @@ def test_copy_fields():
     assert a.difficulty == b.difficulty
     assert a.attribute == b.attribute
     assert a.status == b.status
+    assert a.due_date == b.due_date
