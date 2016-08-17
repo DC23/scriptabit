@@ -66,7 +66,11 @@ class TrelloTask(Task):
     @property
     def difficulty(self):
         """ Task difficulty """
-        # TODO: parse difficulty from labels
+        card_labels = [x.name for x in self.__card.labels]
+        if card_labels:
+            for dl in Difficulty:
+                if dl.name in card_labels:
+                    return dl
         return Difficulty.easy
 
     @difficulty.setter
@@ -80,7 +84,11 @@ class TrelloTask(Task):
     @property
     def attribute(self):
         """ Task character attribute """
-        # TODO: parse from label
+        card_labels = [x.name for x in self.__card.labels]
+        if card_labels:
+            for al in CharacterAttribute:
+                if al.name in card_labels:
+                    return al
         return CharacterAttribute.strength
 
     @attribute.setter

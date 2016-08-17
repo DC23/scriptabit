@@ -185,7 +185,6 @@ If empty, then cards are only marked done when archived.''')
         # Persist the updated task map
         task_map.persist(self.__task_map_file)
 
-
         # return False if finished, and True to be updated again.
         return False
 

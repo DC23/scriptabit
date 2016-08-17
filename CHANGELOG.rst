@@ -116,3 +116,10 @@ Changelog
 * Updated documentation with sync information
 * Implemented first version of Trello to Habitica sync. Tasks only, no
   difficulties, attributes, due-dates or checklists.
+
+1.1.0 (2016-08-17)
+-----------------------------------------
+
+* Trello sync now uses optional Trello labels to indicate Habitica task
+  difficulty and character attribute (strength, perception, intelligence,
+  constitution)
