@@ -133,3 +133,4 @@ Changelog
   to read and modify.
 * Added last_modified property to Task (and TrelloTask, HabiticaTask)
 * Added modification time check for deciding whether to update tasks
+* Added persistence for last sync time

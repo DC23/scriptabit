@@ -12,7 +12,9 @@ from builtins import *
 import logging
 import os
 import pickle
+import pytz
 from configparser import ConfigParser, NoOptionError
+from datetime import datetime
 
 import scriptabit
 from scriptabit import (
@@ -37,7 +39,7 @@ class Trello(scriptabit.IPlugin):
     class PersistentData(object):
         """ Data that needs to be persisted. """
         def __init__(self):
-            self.last_sync = datetime.min
+            self.last_sync = datetime.min.replace(tzinfo=pytz.utc)
 
 
     def __init__(self):
@@ -154,7 +156,7 @@ If empty, then cards are only marked done when archived.''')
             with open(self.__data_file, 'rb') as f:
                 self.__data = pickle.load(f)
         except:
-            self.__data = PersistentData()
+            self.__data = Trello.PersistentData()
 
     def __save_persistent_data(self):
         """ Saves the persistent data """

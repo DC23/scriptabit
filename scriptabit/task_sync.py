@@ -111,8 +111,6 @@ class TaskSync(object):
             src (Task): the source task
             dst (Task): the destination task
         """
-        print('Src mod date:', src.last_modified)
-        print('Dst mod date:', dst.last_modified)
         if src.last_modified < self.__last_sync:
             logging.getLogger(__name__).info(
                 'Unchanged: %s --> %s', src.name, dst.name)
@@ -210,7 +208,9 @@ class TaskSync(object):
         """
         self.__get_task_data()
 
-        logging.getLogger(__name__).debug('Starting sync')
+        logging.getLogger(__name__).debug(
+            'Starting sync. Last sync at %s',
+            self.last_sync)
 
         # source task checks
         for src in self.__src_tasks:
