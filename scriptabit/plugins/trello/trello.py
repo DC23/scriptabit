@@ -11,6 +11,7 @@ from __future__ import (
 from builtins import *
 import logging
 import os
+import pickle
 from configparser import ConfigParser, NoOptionError
 
 import scriptabit
@@ -33,6 +34,12 @@ class Trello(scriptabit.IPlugin):
         __tc: TrelloClient instance
     """
 
+    class PersistentData(object):
+        """ Data that needs to be persisted. """
+        def __init__(self):
+            self.last_sync = datetime.min
+
+
     def __init__(self):
         """ Initialises the plugin.
         Generally nothing to do here other than initialise any class attributes.
@@ -41,6 +48,7 @@ class Trello(scriptabit.IPlugin):
         self.__tc = None
         self.__habitica_task_service = None
         self.__task_map_file = None
+        self.__data_file = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -134,6 +142,25 @@ If empty, then cards are only marked done when archived.''')
             self._data_dir,
             self._config.trello_data_file)
 
+        self.__data_file = os.path.join(
+            self._data_dir,
+            self._config.trello_data_file+'_sync_data')
+
+        self.__load_persistent_data()
+
+    def __load_persistent_data(self):
+        """ Loads the persistent data """
+        try:
+            with open(self.__data_file, 'rb') as f:
+                self.__data = pickle.load(f)
+        except:
+            self.__data = PersistentData()
+
+    def __save_persistent_data(self):
+        """ Saves the persistent data """
+        with open(self.__data_file, 'wb') as f:
+            pickle.dump(self.__data, f, pickle.HIGHEST_PROTOCOL)
+
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
 
@@ -186,11 +213,18 @@ If empty, then cards are only marked done when archived.''')
         source_service = TrelloTaskService(self.__tc, sync_lists, done_lists)
 
         # synchronise
-        sync = TaskSync(source_service, self.__habitica_task_service, task_map)
+        sync = TaskSync(
+            source_service,
+            self.__habitica_task_service,
+            task_map,
+            last_sync=self.__data.last_sync)
+
         sync.synchronise(clean_orphans=False, sync_completed_new_tasks=False)
 
-        # Persist the updated task map
+        # Checkpoint the sync data
         task_map.persist(self.__task_map_file)
+        self.__data.last_sync = sync.last_sync
+        self.__save_persistent_data()
 
         # return False if finished, and True to be updated again.
         return True

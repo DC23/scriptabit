@@ -40,6 +40,8 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import logging
+import pytz
+from datetime import datetime
 
 from .task import SyncStatus
 
@@ -49,17 +51,19 @@ class TaskSync(object):
     """ Provides synchronisation between two task services.
     """
 
-    def __init__(self, src_service, dst_service, task_map):
+    def __init__(self, src_service, dst_service, task_map, last_sync=None):
         """ Initialise the TaskSync instance.
 
         Args:
             src_service (TaskService): The TaskService for source tasks.
             dst_service (TaskService): The TaskService for destination tasks.
             task_map (TaskMap): The TaskMap.
+            last_sync (datetime): The last known synchronisation datetime (UTC).
         """
         self.__src_service = src_service
         self.__dst_service = dst_service
         self.__map = task_map
+        self.__last_sync = last_sync or datetime.min.replace(tzinfo=pytz.utc)
         self.__src_tasks = None
         self.__dst_tasks = None
         self.__src_index = None
@@ -109,6 +113,11 @@ class TaskSync(object):
         """
         print('Src mod date:', src.last_modified)
         print('Dst mod date:', dst.last_modified)
+        if src.last_modified < self.__last_sync:
+            logging.getLogger(__name__).info(
+                'Unchanged: %s --> %s', src.name, dst.name)
+            return
+
         if src.completed:
             logging.getLogger(__name__).info(
                 'Completing: %s --> %s', src.name, dst.name)
@@ -229,5 +238,11 @@ class TaskSync(object):
 
         self.__dst_service.persist_tasks(self.__dst_tasks)
 
+        self.__last_sync = datetime.now(tz=pytz.utc)
+
         logging.getLogger(__name__).debug('Sync complete.')
+
+    @property
+    def last_sync(self):
+        return self.__last_sync
 # pylint: enable=too-few-public-methods

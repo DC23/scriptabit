@@ -8,10 +8,12 @@ from __future__ import (
 from builtins import *
 import json
 import pytest
+import pytz
 import requests
 import requests_mock
 import uuid
 
+from datetime import datetime, timedelta
 from pkg_resources import resource_filename
 from random import randint, choice
 
@@ -43,8 +45,8 @@ attributes = (
     CharacterAttribute.constitution,
     CharacterAttribute.perception)
 
-def random_task(completed=False):
-    t = TestTask(_id=uuid.uuid4())
+def random_task(completed=False, last_modified=None):
+    t = TestTask(_id=uuid.uuid4(), last_modified=last_modified)
     t.name = uuid.uuid1()
     t.description = 'blah blah tired blah coffee'
     t.completed = completed
@@ -193,6 +195,54 @@ def test_existing_tasks_are_updated():
     assert actual.description == src.description
     assert actual.completed == src.completed
 
+def test_old_existing_tasks_are_not_updated():
+    last_sync = datetime(2016, 8, 15, tzinfo=pytz.utc)
+    # make the src modified date older than the last sync
+    src_mod_date = last_sync - timedelta(days=2)
+    dst_mod_date = last_sync + timedelta(minutes=1)
+    src = random_task(last_modified=src_mod_date)
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+
+    dst = random_task(last_modified=dst_mod_date)
+    dst_tasks = [dst]
+    dst_svc = TestTaskService(dst_tasks)
+
+    map = TaskMap()
+    map.map(src, dst)
+
+    # preconditions
+    assert dst.status == SyncStatus.unchanged
+
+    TaskSync(src_svc, dst_svc, map, last_sync=last_sync).synchronise()
+
+    assert len(dst_svc.persisted_tasks) == 1
+    assert dst.status == SyncStatus.unchanged
+
+def test_new_existing_tasks_are_updated():
+    last_sync = datetime(2016, 8, 15, tzinfo=pytz.utc)
+    # make the src modified date newer than the last sync
+    src_mod_date = last_sync + timedelta(minutes=2)
+    dst_mod_date = last_sync + timedelta(minutes=1)
+    src = random_task(last_modified=src_mod_date)
+    src_tasks = [src]
+    src_svc = TestTaskService(src_tasks)
+
+    dst = random_task(last_modified=dst_mod_date)
+    dst_tasks = [dst]
+    dst_svc = TestTaskService(dst_tasks)
+
+    map = TaskMap()
+    map.map(src, dst)
+
+    # preconditions
+    assert dst.status == SyncStatus.unchanged
+
+    TaskSync(src_svc, dst_svc, map).synchronise()
+
+    assert len(dst_svc.persisted_tasks) == 1
+    assert dst.status == SyncStatus.updated
+
 def test_deleted_src_tasks():
     src_tasks = []
     dst = random_task()
@@ -267,6 +317,7 @@ def test_new_completed_tasks_sync_completed_is_false():
 
 def test_completion_of_existing_mapped_tasks():
     src = random_task(completed=True)
+    # last_modified=datetime.now(tz=pytz.utc) + timedelta(hours=1))
     src_tasks = [src]
     src_svc = TestTaskService(src_tasks)
 
