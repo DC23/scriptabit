@@ -122,6 +122,6 @@ Changelog
 
 * Trello sync now uses optional Trello labels to indicate Habitica task
   difficulty and character attribute (strength, perception, intelligence,
-  constitution)
+  constitution). If they don't exist, the labels are created automatically.
 * Habitica cards are now created with a "Trello" tag.
 * Added due date synchronisation support.
