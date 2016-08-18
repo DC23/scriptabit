@@ -51,6 +51,30 @@ class TaskSync(object):
     """ Provides synchronisation between two task services.
     """
 
+    class Stats(object):
+        """ Simple sync stats """
+        def __init__(self):
+            """ Initialise the stats """
+            self.skipped = 0
+            self.created = 0
+            self.updated = 0
+            self.completed = 0
+            self.deleted = 0
+            self.duration = None
+
+        def __str__(self):
+            """ Get a nicely formatted stats string """
+            return (
+                '\tTasks skipped: {0}\n' +
+                '\tTasks created: {1}\n' +
+                '\tTasks updated: {2}\n' +
+                '\tTasks deleted: {3}\n' +
+                '\tTasks completed: {4}\n' +
+                '\tSync duration: {5}\n').format(
+                self.skipped, self.created, self.updated, self.deleted,
+                self.completed, self.duration)
+
+
     def __init__(self, src_service, dst_service, task_map, last_sync=None):
         """ Initialise the TaskSync instance.
 
@@ -68,6 +92,7 @@ class TaskSync(object):
         self.__dst_tasks = None
         self.__src_index = None
         self.__dst_index = None
+        self.__stats = TaskSync.Stats()
 
     def __create_new_dst(self, src):
         """ Creates and maps a new destination task.
@@ -114,14 +139,17 @@ class TaskSync(object):
         if src.last_modified < self.__last_sync:
             logging.getLogger(__name__).info(
                 'Unchanged: %s --> %s', src.name, dst.name)
+            self.__stats.skipped += 1
             return
 
         if src.completed:
             logging.getLogger(__name__).info(
                 'Completing: %s --> %s', src.name, dst.name)
+            self.__stats.completed += 1
         else:
             logging.getLogger(__name__).info(
                 'Updating: %s --> %s', src.name, dst.name)
+            self.__stats.updated += 1
         dst.copy_fields(src, status=SyncStatus.updated)
 
     def __handle_destination_missing(self, src):
@@ -137,11 +165,13 @@ class TaskSync(object):
                 src.name)
             self.__map.unmap(src.id)
             self.__dst_tasks.append(self.__create_new_dst(src))
+            self.__stats.created += 1
         else:
             # otherwise ignore
             logging.getLogger(__name__).info(
                 'Ignoring deleted/completed destination task: %s',
                 src.name)
+            self.__stats.skipped += 1
 
     def __handle_new_task(self, src, sync_completed_new_tasks=False):
         """ Handle a new source task.
@@ -162,6 +192,7 @@ class TaskSync(object):
                     'Creating: %s',
                     src.name)
             self.__dst_tasks.append(self.__create_new_dst(src))
+            self.__stats.created += 1
 
     def __handle_deleted_source_task(self, src_id, dst):
         """ Handle the case where a mapped destination task exists but the
@@ -174,6 +205,7 @@ class TaskSync(object):
         logging.getLogger(__name__).info(
             'Deleting: %s --> %s', src_id, dst.name)
         dst.status = SyncStatus.deleted
+        self.__stats.deleted += 1
 
     def __clean_orphan_task_mappings(self):
         """ Removes task mappings where neither the source or destination
@@ -208,9 +240,12 @@ class TaskSync(object):
         """
         self.__get_task_data()
 
-        logging.getLogger(__name__).debug(
+        logging.getLogger(__name__).info(
             'Starting sync. Last sync at %s',
             self.last_sync)
+
+        # reset the stats
+        self.__stats = TaskSync.Stats()
 
         # source task checks
         for src in self.__src_tasks:
@@ -238,9 +273,12 @@ class TaskSync(object):
 
         self.__dst_service.persist_tasks(self.__dst_tasks)
 
-        self.__last_sync = datetime.now(tz=pytz.utc)
+        now = datetime.now(tz=pytz.utc)
+        self.__stats.duration = now - self.__last_sync
+        self.__last_sync = now
 
-        logging.getLogger(__name__).debug('Sync complete.')
+        logging.getLogger(__name__).info('Sync complete.')
+        logging.getLogger(__name__).info(self.__stats)
 
     @property
     def last_sync(self):

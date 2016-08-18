@@ -126,7 +126,7 @@ Changelog
 * Habitica cards are now created with a "Trello" tag.
 * Added due date synchronisation support.
 
-1.2.0 (2016-??
+1.2.0 (2016-08-18)
 -----------------------------------------
 * Made sync data file name into a trello plugin argument
 * Refactored task sync class into smaller functions that make the logic easier
@@ -134,3 +134,4 @@ Changelog
 * Added last_modified property to Task (and TrelloTask, HabiticaTask)
 * Added modification time check for deciding whether to update tasks
 * Added persistence for last sync time
+* Improved sync stats reporting
