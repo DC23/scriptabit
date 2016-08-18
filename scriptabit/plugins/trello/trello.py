@@ -249,10 +249,12 @@ If empty, then cards are only marked done when archived.''')
         Args:
             sync_stats (TaskSync.Stats): Stats from the last sync.
         """
-        notes = "{0} updated\n{1} completed\n{2} deleted".format(
+        notes = "{0} updated\n{1} completed\n{2} deleted\n\
+{3} created".format(
             sync_stats.updated,
             sync_stats.completed,
-            sync_stats.deleted)
+            sync_stats.deleted,
+            sync_stats.created)
 
         UtilityFunctions.upsert_notification(
             self._hs,

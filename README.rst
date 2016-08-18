@@ -61,12 +61,12 @@ If you wish to use the Trello plugin, you will need to add your Trello
 credentials to the .auth.cfg file as follows::
 
     [trello]
-    apikey = 
-    apisecret = 
-    token = 
+    apikey =
+    apisecret =
+    token =
     tokensecret =
 
-Your API key and API secret can be 
+Your API key and API secret can be
 `obtained here <https://trello.com/1/appKey/generate>`_.
 
 Your authorisation token and token secret will be obtained through an
@@ -108,8 +108,10 @@ command line arguments so that plugins get a chance to add additional
 arguments). If the `SCRIPTABIT_USER_PLUGIN_DIR` environment variable is defined,
 then this location will be used instead of the default location.
 
+**Note that plugin data files may also be written to the user plugin directory**
+
 All plugins should subclass the `IPlugin` class. Refer to the API
 documentation for details of the available methods.
 
-Also refer to the API documentation (and the view source option) for the 
+Also refer to the API documentation (and the view source option) for the
 sample plugin which can be used as a template for new plugins.
