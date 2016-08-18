@@ -125,3 +125,8 @@ Changelog
   constitution). If they don't exist, the labels are created automatically.
 * Habitica cards are now created with a "Trello" tag.
 * Added due date synchronisation support.
+
+1.2.0 (2016-??
+-----------------------------------------
+* Made sync data file name into a trello plugin argument
+

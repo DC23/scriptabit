@@ -78,6 +78,14 @@ sync all lists on all selected boards''')
             help='''The Trello lists that mark cards as complete.
 If empty, then cards are only marked done when archived.''')
 
+        # Filename to use as for the persistent task map
+        parser.add(
+            '--trello-data-file',
+            required=False,
+            type=str,
+            default='trello_habitica_sync_data',
+            help='''Filename to use for storing the synchronisation data.''')
+
         return parser
 
     def initialise(self, configuration, habitica_service, data_dir):
@@ -124,7 +132,7 @@ If empty, then cards are only marked done when archived.''')
 
         self.__task_map_file = os.path.join(
             self._data_dir,
-            'trello_habitica_task_map')
+            self._config.trello_data_file)
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
@@ -179,15 +187,13 @@ If empty, then cards are only marked done when archived.''')
 
         # synchronise
         sync = TaskSync(source_service, self.__habitica_task_service, task_map)
-        sync.synchronise(
-            clean_orphans=True,
-            sync_completed_new_tasks=False)
+        sync.synchronise(clean_orphans=False, sync_completed_new_tasks=False)
 
         # Persist the updated task map
         task_map.persist(self.__task_map_file)
 
         # return False if finished, and True to be updated again.
-        return False
+        return True
 
     @staticmethod
     def __load_authentication_credentials(
