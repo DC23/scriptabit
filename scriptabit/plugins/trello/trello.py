@@ -34,10 +34,16 @@ class Trello(scriptabit.IPlugin):
 
     Attributes:
         __tc: TrelloClient instance
+        __habitica_task_service: The HabiticaTaskService instance
+        __task_map_file: = Task mapping data file
+        __data_file: Sync data file name
+        __data (Trello.PersistentData): Persistent sync data
     """
 
     class PersistentData(object):
         """ Data that needs to be persisted. """
+        last_sync = None
+
         def __init__(self):
             self.last_sync = datetime.now(tz=pytz.utc) - timedelta(days=2)
 
