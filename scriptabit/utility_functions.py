@@ -144,14 +144,18 @@ class UtilityFunctions(object):
         print("--------------------")
         print()
 
-    def upsert_notification(self, alias, text, notes=''):
+    def upsert_notification(
+            self,
+            text,
+            notes='',
+            alias='scriptabit_notification_panel'):
         """ Creates or updates a notification (currently implemented as a
         scoreless habit).
 
         Args:
-            alias: the notification alias
-            text: the new text
-            notes: the extra text/notes
+            text (str): the new text
+            notes (str): the extra text/notes
+            alias (str): the notification alias
 
         Returns:
             dict: The notification object returned by the Habitica API
@@ -171,9 +175,8 @@ class UtilityFunctions(object):
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
         note = self.upsert_notification(
-            'test_notification2',
-            'Hey there from scriptabit',
-            'some extra text for good measure')
+            text='You are poisoned :skull:',
+            notes='some extra text for good measure')
         pprint(note)
         print("--------------------")
         print()

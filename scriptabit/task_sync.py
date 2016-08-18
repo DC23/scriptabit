@@ -40,8 +40,9 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import logging
-import pytz
 from datetime import datetime
+
+import pytz
 
 from .task import SyncStatus
 
@@ -71,8 +72,8 @@ class TaskSync(object):
                 '\tTasks deleted: {3}\n' +
                 '\tTasks completed: {4}\n' +
                 '\tSync duration: {5}\n').format(
-                self.skipped, self.created, self.updated, self.deleted,
-                self.completed, self.duration)
+                    self.skipped, self.created, self.updated, self.deleted,
+                    self.completed, self.duration)
 
 
     def __init__(self, src_service, dst_service, task_map, last_sync=None):
@@ -282,5 +283,10 @@ class TaskSync(object):
 
     @property
     def last_sync(self):
+        """ Gets the last synchronisation datestamp.
+
+        Returns:
+            datetime: The last synchronisation time.
+        """
         return self.__last_sync
 # pylint: enable=too-few-public-methods

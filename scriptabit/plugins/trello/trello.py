@@ -12,10 +12,10 @@ from builtins import *
 import logging
 import os
 import pickle
-import pytz
 from configparser import ConfigParser, NoOptionError
-from datetime import datetime
+from datetime import datetime, timedelta
 
+import pytz
 import scriptabit
 from scriptabit import (
     CharacterAttribute,
@@ -39,7 +39,7 @@ class Trello(scriptabit.IPlugin):
     class PersistentData(object):
         """ Data that needs to be persisted. """
         def __init__(self):
-            self.last_sync = datetime.min.replace(tzinfo=pytz.utc)
+            self.last_sync = datetime.now(tz=pytz.utc) - timedelta(days=2)
 
 
     def __init__(self):
@@ -51,6 +51,7 @@ class Trello(scriptabit.IPlugin):
         self.__habitica_task_service = None
         self.__task_map_file = None
         self.__data_file = None
+        self.__data = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
