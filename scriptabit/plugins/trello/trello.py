@@ -146,7 +146,7 @@ If empty, then cards are only marked done when archived.''')
 
         self.__data_file = os.path.join(
             self._data_dir,
-            self._config.trello_data_file+'_sync_data')
+            self._config.trello_data_file+'_extra')
 
         self.__load_persistent_data()
 
@@ -229,7 +229,7 @@ If empty, then cards are only marked done when archived.''')
         self.__save_persistent_data()
 
         # return False if finished, and True to be updated again.
-        return True
+        return False
 
     @staticmethod
     def __load_authentication_credentials(
