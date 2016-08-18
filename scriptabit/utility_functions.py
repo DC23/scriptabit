@@ -15,6 +15,7 @@ from pprint import pprint
 import configargparse
 from .dates import parse_date_local
 from .habitica_service import HabiticaTaskTypes
+from .habitica_task import HabiticaTask
 
 class UtilityFunctions(object):
     """scriptabit utility functions.
@@ -148,6 +149,5 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        pprint(self.__hs.get_tasks(HabiticaTaskTypes.todos))
         print("--------------------")
         print()

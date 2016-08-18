@@ -129,3 +129,10 @@ class HabiticaTask(Task):
                 due_date.astimezone(get_localzone()).date()
         elif 'date' in self.__task_dict:
             del self.__task_dict['date']
+
+    @property
+    def last_modified(self):
+        """ The last modified timestamp in UTC. """
+        timestamp = self.__task_dict['updatedAt']
+        if timestamp:
+            return parse_date_utc(timestamp)

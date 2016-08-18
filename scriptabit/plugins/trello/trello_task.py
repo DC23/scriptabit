@@ -115,3 +115,8 @@ class TrelloTask(Task):
         if due_date and not isinstance(due_date, datetime):
             raise TypeError
         raise NotImplementedError
+
+    @property
+    def last_modified(self):
+        """ The last modified timestamp in UTC. """
+        return self.__card.dateLastActivity.astimezone(tz=pytz.utc)

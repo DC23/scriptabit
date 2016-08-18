@@ -131,3 +131,4 @@ Changelog
 * Made sync data file name into a trello plugin argument
 * Refactored task sync class into smaller functions that make the logic easier
   to read and modify.
+* Added last_modified property to Task (and TrelloTask, HabiticaTask)

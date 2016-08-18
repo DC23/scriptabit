@@ -107,6 +107,8 @@ class TaskSync(object):
             src (Task): the source task
             dst (Task): the destination task
         """
+        print('Src mod date:', src.last_modified)
+        print('Dst mod date:', dst.last_modified)
         if src.completed:
             logging.getLogger(__name__).info(
                 'Completing: %s --> %s', src.name, dst.name)

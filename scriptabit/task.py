@@ -165,6 +165,11 @@ class Task(object):
             raise TypeError
         raise NotImplementedError
 
+    @property
+    def last_modified(self):
+        """ The last modified timestamp in UTC. """
+        raise NotImplementedError
+
     def copy_fields(self, src, status=SyncStatus.updated):
         """ Copies fields from src.
 
@@ -182,5 +187,8 @@ class Task(object):
         self.attribute = src.attribute
         self.due_date = src.due_date
         self.status = status
+        # don't copy the last_modified property. It should only be changed by
+        # the task services
+        # self.last_modified = src.last_modified
         return self
 # pylint: enable=no-self-use

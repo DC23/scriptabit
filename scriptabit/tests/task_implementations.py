@@ -8,6 +8,7 @@ from __future__ import (
 from builtins import *
 import json
 import pytest
+import pytz
 import requests
 import requests_mock
 import uuid
@@ -34,7 +35,8 @@ class TestTask(Task):
             difficulty=Difficulty.easy,
             attribute=CharacterAttribute.strength,
             status=SyncStatus.new,
-            due_date=None):
+            due_date=None,
+            last_modified=None):
         super().__init__()
         self.__id = _id
         self.name = name
@@ -44,6 +46,7 @@ class TestTask(Task):
         self.attribute = attribute
         self.status = status
         self.due_date = due_date
+        self.__last_modified = last_modified or datetime.now(tz=pytz.utc)
 
     @property
     def id(self):
@@ -115,6 +118,11 @@ class TestTask(Task):
         if due_date and not isinstance(due_date, datetime):
             raise TypeError
         self.__due_date = due_date
+
+    @property
+    def last_modified(self):
+        """ The last modified timestamp in UTC. """
+        return self.__last_modified
 
 
 class TestTaskService(TaskService):
