@@ -262,7 +262,7 @@ class HabiticaService(object):
         else:
             logging.getLogger(__name__).debug(
                 'task %s not found, creating', key)
-            self.create_task(task, task_type)
+            return self.create_task(task, task_type)
 
     # I don't think the API lets me set partial user objects in this way.
     # So I could get the entire user structure, swap the stats for the argument

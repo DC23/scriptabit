@@ -144,10 +144,36 @@ class UtilityFunctions(object):
         print("--------------------")
         print()
 
+    def upsert_notification(self, alias, text, notes=''):
+        """ Creates or updates a notification (currently implemented as a
+        scoreless habit).
+
+        Args:
+            alias: the notification alias
+            text: the new text
+            notes: the extra text/notes
+
+        Returns:
+            dict: The notification object returned by the Habitica API
+        """
+        task = {
+            'alias': alias,
+            'up': 'false',
+            'down': 'false',
+            'text': text,
+            'notes': notes,
+            }
+        return self.__hs.upsert_task(task, task_type=HabiticaTaskTypes.habits)
+
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
+        note = self.upsert_notification(
+            'test_notification2',
+            'Hey there from scriptabit',
+            'some extra text for good measure')
+        pprint(note)
         print("--------------------")
         print()
