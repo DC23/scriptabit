@@ -60,6 +60,10 @@ class TaskSync(object):
         self.__src_service = src_service
         self.__dst_service = dst_service
         self.__map = task_map
+        self.__src_tasks = None
+        self.__dst_tasks = None
+        self.__src_index = None
+        self.__dst_index = None
 
     def __create_new_dst(self, src):
         """ Creates and maps a new destination task.
@@ -75,6 +79,110 @@ class TaskSync(object):
         self.__map.map(src, dst)
         return dst
 
+    def __get_src_by_id(self, _id):
+        """ Looks up a cached source task by ID """
+        return self.__src_index.get(_id, None)
+
+    def __get_dst_by_id(self, _id):
+        """ Looks up a cached destination task by ID """
+        return self.__dst_index.get(_id, None)
+
+    def __get_task_data(self):
+        """ Gets, caches, and indexes task data from the source and destination
+        services.
+        """
+        logging.getLogger(__name__).debug('Fetching source tasks')
+        self.__src_tasks = self.__src_service.get_all_tasks()
+
+        logging.getLogger(__name__).debug('Fetching destination tasks')
+        self.__dst_tasks = self.__dst_service.get_all_tasks()
+
+        self.__src_index = {s.id:s for s in self.__src_tasks}
+        self.__dst_index = {d.id:d for d in self.__dst_tasks}
+
+    def __handle_destination_found(self, src, dst):
+        """ Handle the case where a pair of mapped tasks exist.
+
+        Args:
+            src (Task): the source task
+            dst (Task): the destination task
+        """
+        if src.completed:
+            logging.getLogger(__name__).info(
+                'Completing: %s --> %s', src.name, dst.name)
+        else:
+            logging.getLogger(__name__).info(
+                'Updating: %s --> %s', src.name, dst.name)
+        dst.copy_fields(src, status=SyncStatus.updated)
+
+    def __handle_destination_missing(self, src):
+        """ Handle the case where a mapped destination task cannot be found.
+
+        Args:
+            src (Task): the source task
+        """
+        if not src.completed:
+            # recreate if src is not complete,
+            logging.getLogger(__name__).info(
+                'Recreating: %s',
+                src.name)
+            self.__map.unmap(src.id)
+            self.__dst_tasks.append(self.__create_new_dst(src))
+        else:
+            # otherwise ignore
+            logging.getLogger(__name__).info(
+                'Ignoring deleted/completed destination task: %s',
+                src.name)
+
+    def __handle_new_task(self, src, sync_completed_new_tasks=False):
+        """ Handle a new source task.
+
+        Args:
+            src (Task): the source task
+            sync_completed_new_tasks (bool): If True, new source tasks that are
+                already completed are synced. The default is to ignore such
+                tasks.
+        """
+        if sync_completed_new_tasks or not src.completed:
+            if src.completed:
+                logging.getLogger(__name__).info(
+                    'Creating (completed): %s',
+                    src.name)
+            else:
+                logging.getLogger(__name__).info(
+                    'Creating: %s',
+                    src.name)
+            self.__dst_tasks.append(self.__create_new_dst(src))
+
+    def __handle_deleted_source_task(self, src_id, dst):
+        """ Handle the case where a mapped destination task exists but the
+        source task cannot be located.
+
+        Args:
+            src_id (str): the source task ID
+            dst (Task): the destination task
+        """
+        logging.getLogger(__name__).info(
+            'Deleting: %s --> %s', src_id, dst.name)
+        dst.status = SyncStatus.deleted
+
+    def __clean_orphan_task_mappings(self):
+        """ Removes task mappings where neither the source or destination
+        tasks exist.
+        """
+        # this may be bad for large maps, but we can't delete entries
+        # while iterating
+        all_src_keys = list(self.__map.get_all_src_keys())
+        for src_key in all_src_keys:
+            dst_key = self.__map.get_dst_id(src_key)
+            if not self.__get_src_by_id(src_key) \
+                and not self.__get_dst_by_id(dst_key):
+                logging.getLogger(__name__).info(
+                    'Found orphan relationship: %s --> %s',
+                    src_key,
+                    dst_key)
+                self.__map.unmap(src_key)
+
     def synchronise(
             self,
             clean_orphans=False,
@@ -89,93 +197,35 @@ class TaskSync(object):
                 already completed are synced. The default is to ignore such
                 tasks.
         """
-        logging.getLogger(__name__).debug('Fetching source tasks')
-        src_tasks = self.__src_service.get_all_tasks()
-
-        logging.getLogger(__name__).debug('Fetching destination tasks')
-        dst_tasks = self.__dst_service.get_all_tasks()
-
-        src_index = {s.id:s for s in src_tasks}
-        dst_index = {d.id:d for d in dst_tasks}
-
-        def get_src_by_id(_id):
-            """ Looks up a cached source task by ID """
-            return src_index.get(_id, None)
-
-        def get_dst_by_id(_id):
-            """ Looks up a cached destination task by ID """
-            return dst_index.get(_id, None)
+        self.__get_task_data()
 
         logging.getLogger(__name__).debug('Starting sync')
 
-        # run through the source tasks, checking for existing mappings
-        task_count = 0
-        for src in src_tasks:
-            task_count += 1
+        # source task checks
+        for src in self.__src_tasks:
             dst_id = self.__map.try_get_dst_id(src.id)
             if dst_id:
-                dst = get_dst_by_id(dst_id)
+                dst = self.__get_dst_by_id(dst_id)
                 if dst:
-                    # dst found, so this is an existing mapping
-                    if src.completed:
-                        logging.getLogger(__name__).info(
-                            'Completing: %s --> %s', src.name, dst.name)
-                    else:
-                        logging.getLogger(__name__).info(
-                            'Updating: %s --> %s', src.name, dst.name)
-                    dst.copy_fields(src, status=SyncStatus.updated)
+                    self.__handle_destination_found(src, dst)
                 else:
-                    # dst expected but not found
-                    # recreate if src is not complete,
-                    # otherwise ignore
-                    if not src.completed:
-                        logging.getLogger(__name__).info(
-                            'Recreating: %s',
-                            src.name)
-                        self.__map.unmap(src.id)
-                        dst_tasks.append(self.__create_new_dst(src))
-                    else:
-                        logging.getLogger(__name__).info(
-                            'Ignoring deleted/completed destination task: %s',
-                            src.name)
+                    self.__handle_destination_missing(src)
             else:
-                # mapping not found
-                if sync_completed_new_tasks or not src.completed:
-                    if src.completed:
-                        logging.getLogger(__name__).info(
-                            'Creating (completed): %s',
-                            src.name)
-                    else:
-                        logging.getLogger(__name__).info(
-                            'Creating: %s',
-                            src.name)
-                    dst_tasks.append(self.__create_new_dst(src))
+                self.__handle_new_task(src, sync_completed_new_tasks)
 
-        # check for deleted tasks: mappings where we have dst but not src
-        for dst in dst_tasks:
-            task_count += 1
+        # destination task checks. Only need to look for cases involving missing
+        # source tasks. All other sync conditions can be handled during the
+        # source task loop (above).
+        for dst in self.__dst_tasks:
             src_id = self.__map.try_get_src_id(dst.id)
-            if src_id and not get_src_by_id(src_id):
-                # source deleted for existing mapping
-                logging.getLogger(__name__).info(
-                    'Deleting: %s --> %s', src_id, dst.name)
-                dst.status = SyncStatus.deleted
+            if src_id and not self.__get_src_by_id(src_id):
+                self.__handle_deleted_source_task(src_id, dst)
 
         # check for orphans: mappings that have neither a src or dst task
         if clean_orphans:
-            # this may be bad for large maps, but we can't delete entries
-            # while iterating
-            all_src_keys = list(self.__map.get_all_src_keys())
-            for src_key in all_src_keys:
-                dst_key = self.__map.get_dst_id(src_key)
-                if not get_src_by_id(src_key) and not get_dst_by_id(dst_key):
-                    logging.getLogger(__name__).info(
-                        'Found orphan relationship: %s --> %s',
-                        src_key,
-                        dst_key)
-                    self.__map.unmap(src_key)
+            self.__clean_orphan_task_mappings()
 
-        self.__dst_service.persist_tasks(dst_tasks)
-        logging.getLogger(__name__).debug(
-            'sync complete. Processed %d tasks', task_count)
+        self.__dst_service.persist_tasks(self.__dst_tasks)
+
+        logging.getLogger(__name__).debug('Sync complete.')
 # pylint: enable=too-few-public-methods

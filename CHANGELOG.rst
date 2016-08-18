@@ -129,4 +129,5 @@ Changelog
 1.2.0 (2016-??
 -----------------------------------------
 * Made sync data file name into a trello plugin argument
-
+* Refactored task sync class into smaller functions that make the logic easier
+  to read and modify.
