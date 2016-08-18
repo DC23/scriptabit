@@ -26,6 +26,12 @@ import scriptabit
 class Banking(scriptabit.IPlugin):
     """ Implements the banking plugin.
     """
+    def __init__(self):
+        """ Initialises the Banking instance. """
+        super().__init__()
+        self.__bank = None
+        self.__bank_balance = 0
+        self.__user_balance = 0
 
     def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the banking plugin.
@@ -87,10 +93,10 @@ class Banking(scriptabit.IPlugin):
         super().update()
 
         # Get or create the banking task
-        bank = self._hs.get_task(alias='scriptabit_banking')
-        if not bank:
+        self.__bank = self._hs.get_task(alias='scriptabit_banking')
+        if not self.__bank:
             logging.getLogger(__name__).info('Creating new bank task')
-            bank = self._hs.create_task({
+            self.__bank = self._hs.create_task({
                 'alias': 'scriptabit_banking',
                 'attribute': 'per',
                 'priority': 1,
@@ -99,44 +105,67 @@ class Banking(scriptabit.IPlugin):
                 'value': 0})
 
         # Get the user and bank balances
-        bank_balance = Banking.get_balance_from_string(bank['notes'])
-        user_balance = self._hs.get_stats()['gp'] # note this is a float!
+        self.__bank_balance = Banking.get_balance_from_string(
+            self.__bank['notes'])
+        self.__user_balance = self._hs.get_stats()['gp']
 
-        logging.getLogger(__name__).info('Bank balance: %f', bank_balance)
-        logging.getLogger(__name__).info('User balance: %f', user_balance)
+        logging.getLogger(__name__).info(
+            'Bank balance: %f',
+            self.__bank_balance)
+        logging.getLogger(__name__).info(
+            'User balance: %f',
+            self.__user_balance)
 
         # Do the banking thing
         if self._config.bank_deposit > 0:
-            # Don't deposit more money than the user has
-            amount = min(
-                math.trunc(user_balance),
-                self._config.bank_deposit)
-            logging.getLogger(__name__).info('Deposit: %d', amount)
-
-            # update the bank balance
-            bank['notes'] = Banking.get_balance_string(bank_balance + amount)
-            self._hs.upsert_task(bank)
-
-            # subtract the gold from user balance
-            self._hs.set_gp(max(0, user_balance - amount))
-
-            # avoid being able to do a deposit and withdrawal at once,
-            # as this would introduce gold balance bugs
-            return False
-
-        if self._config.bank_withdraw > 0:
-            # Don't withdraw more money than the bank has
-            amount = min(bank_balance, self._config.bank_withdraw)
-            logging.getLogger(__name__).info('Withdraw: %d', amount)
-
-            # update the bank balance
-            new_balance = max(0, bank_balance - amount)
-            bank['notes'] = Banking.get_balance_string(new_balance)
-            self._hs.upsert_task(bank)
-
-            # add the gold to user balance
-            self._hs.set_gp(user_balance + amount)
-
-            return False
+            self.__deposit()
+        elif self._config.bank_withdraw > 0:
+            self.__withdraw()
 
         return False
+
+    def __deposit(self):
+        """ Deposit money to the bank.
+        """
+        # Don't deposit more money than the user has
+        amount = min(
+            math.trunc(self.__user_balance),
+            self._config.bank_deposit)
+        logging.getLogger(__name__).info('Deposit: %d', amount)
+
+        # update the bank balance
+        self.__bank['notes'] = Banking.get_balance_string(
+            self.__bank_balance + amount)
+        self._hs.upsert_task(self.__bank)
+
+        # subtract the gold from user balance
+        self._hs.set_gp(max(0, self.__user_balance - amount))
+
+        message = 'Deposited: {0}'.format(amount)
+        logging.getLogger(__name__).info(message)
+        scriptabit.UtilityFunctions.upsert_notification(
+            self._hs,
+            heading_level=5,
+            text=':moneybag:' + message)
+
+    def __withdraw(self):
+        """ Withdraw money from the bank.
+        """
+        # Don't withdraw more money than the bank has
+        amount = min(self.__bank_balance, self._config.bank_withdraw)
+        logging.getLogger(__name__).info('Withdraw: %d', amount)
+
+        # update the bank balance
+        new_balance = max(0, self.__bank_balance - amount)
+        self.__bank['notes'] = Banking.get_balance_string(new_balance)
+        self._hs.upsert_task(self.__bank)
+
+        # add the gold to user balance
+        self._hs.set_gp(self.__user_balance + amount)
+
+        message = 'Withdrew: {0}'.format(amount)
+        logging.getLogger(__name__).info(message)
+        scriptabit.UtilityFunctions.upsert_notification(
+            self._hs,
+            heading_level=5,
+            text=':moneybag:' + message)

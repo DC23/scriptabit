@@ -141,3 +141,6 @@ Changelog
 -----------------------------------------
 
 * Refined sync log message levels to reduce the spam at info levels
+* Added notification ability by using a scoreless habit whose text can be
+  updated by scriptabit functions.
+* Added notifications to banking and trello plugins.

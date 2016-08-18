@@ -144,22 +144,31 @@ class UtilityFunctions(object):
         print("--------------------")
         print()
 
+    @staticmethod
     def upsert_notification(
-            self,
+            habitica_service,
             text,
             notes='',
+            heading_level=0,
             alias='scriptabit_notification_panel'):
         """ Creates or updates a notification (currently implemented as a
         scoreless habit).
 
         Args:
-            text (str): the new text
-            notes (str): the extra text/notes
-            alias (str): the notification alias
+            habitica_service (HabiticaService): The habitica service to use.
+            text (str): the new text.
+            notes (str): the extra text/notes.
+            heading_level (int): If > 0, Markdown heading syntax is
+                prepended to the message text.
+            alias (str): the notification alias.
 
         Returns:
             dict: The notification object returned by the Habitica API
         """
+        heading_level = min(heading_level, 6)
+        if heading_level > 0:
+            text = ''.join(['#' for x in range(heading_level)]) + ' ' + text
+
         task = {
             'alias': alias,
             'up': 'false',
@@ -167,7 +176,9 @@ class UtilityFunctions(object):
             'text': text,
             'notes': notes,
             }
-        return self.__hs.upsert_task(task, task_type=HabiticaTaskTypes.habits)
+        return habitica_service.upsert_task(
+            task,
+            task_type=HabiticaTaskTypes.habits)
 
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""
@@ -175,6 +186,7 @@ class UtilityFunctions(object):
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
         note = self.upsert_notification(
+            self.__hs,
             text='You are poisoned :skull:',
             notes='some extra text for good measure')
         pprint(note)

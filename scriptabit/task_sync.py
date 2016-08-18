@@ -238,6 +238,9 @@ class TaskSync(object):
             sync_completed_new_tasks (bool): If True, new source tasks that are
                 already completed are synced. The default is to ignore such
                 tasks.
+
+        Returns:
+            TaskSync.Stats: Summary statistics of the sync.
         """
         self.__get_task_data()
 
@@ -280,6 +283,8 @@ class TaskSync(object):
 
         logging.getLogger(__name__).info('Sync complete.')
         logging.getLogger(__name__).info(self.__stats)
+
+        return self.__stats
 
     @property
     def last_sync(self):

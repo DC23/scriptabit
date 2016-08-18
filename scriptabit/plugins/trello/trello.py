@@ -22,7 +22,8 @@ from scriptabit import (
     Difficulty,
     HabiticaTaskService,
     TaskMap,
-    TaskSync)
+    TaskSync,
+    UtilityFunctions)
 
 from trello import TrelloClient
 from trello.util import create_oauth_token
@@ -228,7 +229,11 @@ If empty, then cards are only marked done when archived.''')
             task_map,
             last_sync=self.__data.last_sync)
 
-        sync.synchronise(clean_orphans=False, sync_completed_new_tasks=False)
+        stats = sync.synchronise(
+            clean_orphans=False,
+            sync_completed_new_tasks=False)
+
+        self.__notify(stats)
 
         # Checkpoint the sync data
         task_map.persist(self.__task_map_file)
@@ -237,6 +242,23 @@ If empty, then cards are only marked done when archived.''')
 
         # return False if finished, and True to be updated again.
         return False
+
+    def __notify(self, sync_stats):
+        """ notify the user about the sync stats.
+
+        Args:
+            sync_stats (TaskSync.Stats): Stats from the last sync.
+        """
+        notes = "{0} updated\n{1} completed\n{2} deleted".format(
+            sync_stats.updated,
+            sync_stats.completed,
+            sync_stats.deleted)
+
+        UtilityFunctions.upsert_notification(
+            self._hs,
+            text='Trello Sync Completed',
+            notes=notes,
+            heading_level=4)
 
     @staticmethod
     def __load_authentication_credentials(
@@ -270,8 +292,7 @@ If empty, then cards are only marked done when archived.''')
             'apikey': config.get(section, 'apikey'),
             'apisecret': config.get(section, 'apisecret'),
             'token': '',
-            'tokensecret': '',
-        }
+            'tokensecret': ''}
 
         try:
             credentials['token'] = config.get(section, 'token')
@@ -337,14 +358,3 @@ If empty, then cards are only marked done when archived.''')
                         b.name,
                         rl)
                     b.add_label(rl, color=None)
-
-        # for b in sync_boards:
-            # labels = b.get_labels()
-            # l = labels[0]
-            # print(l.name, l.id, l.color)
-            # found = (l for l in labels if l.name == 'test')
-            # if not found:
-                # print('test label not found, adding')
-                # # b.add_label('test', 'black')
-            # else:
-                # print('test label found')
