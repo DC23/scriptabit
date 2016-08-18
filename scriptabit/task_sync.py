@@ -137,18 +137,18 @@ class TaskSync(object):
             dst (Task): the destination task
         """
         if src.last_modified < self.__last_sync:
-            logging.getLogger(__name__).info(
-                'Unchanged: %s --> %s', src.name, dst.name)
+            logging.getLogger(__name__).debug(
+                'Unchanged: %s', src.name)
             self.__stats.skipped += 1
             return
 
         if src.completed:
-            logging.getLogger(__name__).info(
-                'Completing: %s --> %s', src.name, dst.name)
+            logging.getLogger(__name__).debug(
+                'Completing: %s', src.name)
             self.__stats.completed += 1
         else:
-            logging.getLogger(__name__).info(
-                'Updating: %s --> %s', src.name, dst.name)
+            logging.getLogger(__name__).debug(
+                'Updating: %s', src.name)
             self.__stats.updated += 1
         dst.copy_fields(src, status=SyncStatus.updated)
 
@@ -160,7 +160,7 @@ class TaskSync(object):
         """
         if not src.completed:
             # recreate if src is not complete,
-            logging.getLogger(__name__).info(
+            logging.getLogger(__name__).debug(
                 'Recreating: %s',
                 src.name)
             self.__map.unmap(src.id)
@@ -168,7 +168,7 @@ class TaskSync(object):
             self.__stats.created += 1
         else:
             # otherwise ignore
-            logging.getLogger(__name__).info(
+            logging.getLogger(__name__).debug(
                 'Ignoring deleted/completed destination task: %s',
                 src.name)
             self.__stats.skipped += 1
@@ -184,11 +184,11 @@ class TaskSync(object):
         """
         if sync_completed_new_tasks or not src.completed:
             if src.completed:
-                logging.getLogger(__name__).info(
+                logging.getLogger(__name__).debug(
                     'Creating (completed): %s',
                     src.name)
             else:
-                logging.getLogger(__name__).info(
+                logging.getLogger(__name__).debug(
                     'Creating: %s',
                     src.name)
             self.__dst_tasks.append(self.__create_new_dst(src))
@@ -202,7 +202,7 @@ class TaskSync(object):
             src_id (str): the source task ID
             dst (Task): the destination task
         """
-        logging.getLogger(__name__).info(
+        logging.getLogger(__name__).debug(
             'Deleting: %s --> %s', src_id, dst.name)
         dst.status = SyncStatus.deleted
         self.__stats.deleted += 1
@@ -218,7 +218,7 @@ class TaskSync(object):
             dst_key = self.__map.get_dst_id(src_key)
             if not self.__get_src_by_id(src_key) \
                 and not self.__get_dst_by_id(dst_key):
-                logging.getLogger(__name__).info(
+                logging.getLogger(__name__).debug(
                     'Found orphan relationship: %s --> %s',
                     src_key,
                     dst_key)

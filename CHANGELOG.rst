@@ -128,6 +128,7 @@ Changelog
 
 1.2.0 (2016-08-18)
 -----------------------------------------
+
 * Made sync data file name into a trello plugin argument
 * Refactored task sync class into smaller functions that make the logic easier
   to read and modify.
@@ -135,3 +136,8 @@ Changelog
 * Added modification time check for deciding whether to update tasks
 * Added persistence for last sync time
 * Improved sync stats reporting
+
+1.3.0 (2016-08????
+-----------------------------------------
+
+* Refined sync log message levels to reduce the spam at info levels
