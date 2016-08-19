@@ -141,12 +141,7 @@ class Banking(scriptabit.IPlugin):
         # subtract the gold from user balance
         self._hs.set_gp(max(0, self.__user_balance - amount))
 
-        message = 'Deposited: {0}'.format(amount)
-        logging.getLogger(__name__).info(message)
-        scriptabit.UtilityFunctions.upsert_notification(
-            self._hs,
-            heading_level=5,
-            text=':moneybag:' + message)
+        self.__notify('Deposited: {0}'.format(amount))
 
     def __withdraw(self):
         """ Withdraw money from the bank.
@@ -163,9 +158,12 @@ class Banking(scriptabit.IPlugin):
         # add the gold to user balance
         self._hs.set_gp(self.__user_balance + amount)
 
-        message = 'Withdrew: {0}'.format(amount)
+        self.__notify('Withdrew: {0}'.format(amount))
+
+    def __notify(self, message):
+        """ Notify the Habitica user """
         logging.getLogger(__name__).info(message)
         scriptabit.UtilityFunctions.upsert_notification(
             self._hs,
-            heading_level=5,
-            text=':moneybag:' + message)
+            alias='scriptabit_banking_notify',
+            text=':moneybag: ' + message)
