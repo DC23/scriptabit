@@ -254,7 +254,7 @@ If empty, then cards are only marked done when archived.''')
         self.__save_persistent_data()
 
         # return False if finished, and True to be updated again.
-        return False
+        return True
 
     def __notify(self, sync_stats):
         """ notify the user about the sync stats.
