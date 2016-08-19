@@ -22,6 +22,7 @@ Contents
     :maxdepth: 1
 
     readme
+    usage/index
     contributing
     authors
     changelog

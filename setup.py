@@ -80,7 +80,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='Habitica, HabitRPG',
+    keywords='Habitica, HabitRPG, Trello',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().

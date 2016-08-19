@@ -151,3 +151,8 @@ Changelog
 * Implemented ability to sync all cards on a board, or just those assigned to
   the current user.
 * Minor bug fixes, and lint warning cleanups.
+
+1.3.1 (2016-08-??
+-----------------------------------------
+
+* Updated documentation with plugin usage information.

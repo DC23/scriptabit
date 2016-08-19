@@ -82,20 +82,21 @@ be obtained by running::
 
     $ scriptabit --help
 
-Functionality is of two major types: single operations (utility functions)
-that complete quickly, and scenarios that will cause scriptabit to run until
-killed. Currently only a few operations are available, and no scenarios.
 Operations include:
 
 - `-sud`: Show user data.
 - `-hp n`: Set the user health to n
 - `-mp n`: Set the user's mana points to n
 - `-xp n`: Set experience points to n
+- `-ls`: List available plugins.
 
 After running `scriptabit` at least once, configuration files will be created in
 `~/.config/scriptabit/`. These can be edited to change the default options. You
 can revert to the installation defaults by deleting the files (they will be
 recreated on the next run).
+
+See the `Detailed Usage` section for detailed instructions on specific
+functionality.
 
 Writing Plugins
 ---------------
