@@ -18,7 +18,6 @@ import scriptabit
 class Sample(scriptabit.IPlugin):
     """ Scriptabit sample plugin.
     """
-
     def __init__(self):
         """ Initialises the plugin.
         Generally nothing to do here other than initialise any class attributes.

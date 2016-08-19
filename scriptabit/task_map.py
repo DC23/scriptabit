@@ -16,7 +16,6 @@ from bidict import bidict, DuplicationBehavior
 class TaskMap(object):
     """ Persistent 1-1 task mapping.
     """
-
     def __init__(self, filename=None):
         """ Initialise the TaskMap instance.
 

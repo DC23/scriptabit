@@ -18,7 +18,6 @@ import scriptabit
 class PetCare(scriptabit.IPlugin):
     """ Habitica pet care
     """
-
     def __init__(self):
         """ Initialises the plugin.
         Generally nothing to do here other than initialise any class attributes.

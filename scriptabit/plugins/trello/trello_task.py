@@ -17,7 +17,6 @@ from scriptabit import CharacterAttribute, Difficulty, Task
 class TrelloTask(Task):
     """ Defines a Trello synchronisation task.
     """
-
     def __init__(self, card, force_completed=False):
         """ Initialise the task.
 

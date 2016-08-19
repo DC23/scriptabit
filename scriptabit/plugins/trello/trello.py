@@ -43,10 +43,40 @@ class Trello(scriptabit.IPlugin):
 
     class PersistentData(object):
         """ Data that needs to be persisted. """
-        last_sync = None
-
         def __init__(self):
             self.last_sync = datetime.now(tz=pytz.utc) - timedelta(days=2)
+
+    class BoardConfig(object):
+        """ Board configuration details, parsed from the command line arguments.
+
+        Attributes:
+            name (str): the board name.
+            all_cards (bool): If True, all cards should be used; otherwise only
+                cards assigned to the current user should be used.
+            difficulty (scriptabit.Difficulty): the default difficulty for this
+                board.
+            attribute (scriptabit.CharacterAttribute): The default character
+                attribute for this board.
+        """
+        def __init__(self, board_config_string, delimiter='|'):
+            """ Initialises the BoardConfig instance.
+
+            Args:
+                board_config_string (str): The board configuration string. This
+                    is a packed string containing up to four options, delimited
+                    by `delimiter`. E.G.::
+
+                        'board_name|difficulty|attribute|user'
+
+                    If the user field is not specified, then it defaults to
+                    `all_cards` = True
+
+                delimiter (str): The delimiter character to use.
+            """
+            self.name = ''
+            self.all_cards = True
+            self.difficulty = Difficulty.default
+            self.attribute = CharacterAttribute.default
 
 
     def __init__(self):
@@ -77,7 +107,7 @@ class Trello(scriptabit.IPlugin):
             '--trello-boards',
             required=False,
             action='append',
-            help='''The list of Trello boards to sync. Leave empty to
+            help='''The name of a Trello board to sync. Leave empty to
 sync all active boards''')
 
         # Lists to sync (empty list for all lists in all selected boards)

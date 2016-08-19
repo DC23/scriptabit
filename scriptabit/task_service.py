@@ -21,7 +21,6 @@ from .task import SyncStatus
 class TaskService(object):
     """ Defines an abstract Task Service.
     """
-
     def get_all_tasks(self):
         """ Get all tasks.
 

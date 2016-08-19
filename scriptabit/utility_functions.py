@@ -26,10 +26,6 @@ class UtilityFunctions(object):
         __config (lookupdict): Configuration object returned from argparse.
         __hs (scriptabit.HabiticaService): The HabiticaService instance.
     """
-
-    __config = None
-    __hs = None
-
     def __init__(self, config, habitica_service):
         """Initialises the utility functions"""
         self.__config = config

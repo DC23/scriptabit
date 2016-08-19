@@ -19,7 +19,6 @@ import scriptabit
 class HealthEffects(scriptabit.IPlugin):
     """ Implements the health effects plugin.
     """
-
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
         """

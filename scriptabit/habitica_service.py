@@ -28,10 +28,6 @@ class HabiticaTaskTypes(Enum):
 
 class HabiticaService(object):
     """ Habitica API service interface. """
-
-    __headers = {}
-    __base_url = ''
-
     def __init__(self, headers, base_url):
         """
         Args:

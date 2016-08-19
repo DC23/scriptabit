@@ -18,7 +18,6 @@ from .task import CharacterAttribute, Difficulty, Task
 class HabiticaTask(Task):
     """ Defines a Habitica synchronisation task.
     """
-
     def __init__(self, task_dict=None):
         """ Initialise the task.
 
