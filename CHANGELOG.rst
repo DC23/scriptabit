@@ -137,7 +137,7 @@ Changelog
 * Added persistence for last sync time
 * Improved sync stats reporting
 
-1.3.0 (2016-08????
+1.3.0 (2016-08-19)
 -----------------------------------------
 
 * Refined sync log message levels to reduce the spam at info levels
@@ -146,3 +146,8 @@ Changelog
 * Added notifications to banking and trello plugins.
 * Added global command-line argument for specifing the update interval of
   looping plugins.
+* Implemented ability to set default difficulty and character attribute for
+  cards on a Trello board.
+* Implemented ability to sync all cards on a board, or just those assigned to
+  the current user.
+* Minor bug fixes, and lint warning cleanups.
