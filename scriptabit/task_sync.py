@@ -144,11 +144,11 @@ class TaskSync(object):
             return
 
         if src.completed:
-            logging.getLogger(__name__).debug(
+            logging.getLogger(__name__).info(
                 'Completing: %s', src.name)
             self.__stats.completed += 1
         else:
-            logging.getLogger(__name__).debug(
+            logging.getLogger(__name__).info(
                 'Updating: %s', src.name)
             self.__stats.updated += 1
         dst.copy_fields(src, status=SyncStatus.updated)
@@ -161,7 +161,7 @@ class TaskSync(object):
         """
         if not src.completed:
             # recreate if src is not complete,
-            logging.getLogger(__name__).debug(
+            logging.getLogger(__name__).info(
                 'Recreating: %s',
                 src.name)
             self.__map.unmap(src.id)
@@ -185,11 +185,11 @@ class TaskSync(object):
         """
         if sync_completed_new_tasks or not src.completed:
             if src.completed:
-                logging.getLogger(__name__).debug(
+                logging.getLogger(__name__).info(
                     'Creating (completed): %s',
                     src.name)
             else:
-                logging.getLogger(__name__).debug(
+                logging.getLogger(__name__).info(
                     'Creating: %s',
                     src.name)
             self.__dst_tasks.append(self.__create_new_dst(src))
