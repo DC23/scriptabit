@@ -63,3 +63,11 @@ def test_board_config_no_board_name():
 def test_board_config_empty_string():
     with pytest.raises(ValueError):
         bc = BC('')
+
+def test_board_config_invalid_difficulty():
+    bc = BC('my board|bogus value')
+    assert bc.difficulty == Difficulty.default
+
+def test_board_config_invalid_attribute():
+    bc = BC('my board||bogus value')
+    assert bc.attribute == CharacterAttribute.default

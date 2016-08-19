@@ -48,6 +48,16 @@ class BoardConfig(object):
             raise ValueError('board_config_string')
 
         self.name = values[0]
+
+        try:
+            self.difficulty = Difficulty[values[1]]
+        except:
+            self.difficulty = Difficulty.default
+
+        try:
+            self.attribute = CharacterAttribute[values[2]]
+        except:
+            self.attribute = CharacterAttribute.default
+
         self.all_cards = False if count > 3 else True
-        self.difficulty = Difficulty.default
-        self.attribute = CharacterAttribute.default
+
