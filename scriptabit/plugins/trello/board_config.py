@@ -61,3 +61,19 @@ class BoardConfig(object):
 
         self.all_cards = False if count > 3 else True
 
+    def __str__(self):
+        """ Gets a string representation of the board configuration """
+        labels = (
+            '',
+            'default difficulty:',
+            'default attribute:',
+            'all cards:')
+        values = (
+            self.name,
+            self.difficulty.name,
+            self.attribute.name,
+            self.all_cards)
+        s = ''
+        for l,v in zip(labels, values):
+            s += '{0}{1} '.format(l,v)
+        return s

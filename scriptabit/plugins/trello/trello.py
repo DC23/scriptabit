@@ -28,6 +28,7 @@ from scriptabit import (
 from trello import TrelloClient
 from trello.util import create_oauth_token
 
+from .board_config import BoardConfig
 from .trello_task_service import TrelloTaskService
 
 class Trello(scriptabit.IPlugin):
@@ -56,6 +57,15 @@ class Trello(scriptabit.IPlugin):
         self.__task_map_file = None
         self.__data_file = None
         self.__data = None
+        self.__boards = None
+
+    def __parse_board_configuration(self):
+        """ Parses the board configuration from the command line arguments
+        """
+        self.__boards = {}
+        for b in self._config.trello_boards:
+            bc = BoardConfig(b)
+            self.__boards[bc.name] = bc
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -119,9 +129,12 @@ If empty, then cards are only marked done when archived.''')
         """
         super().initialise(configuration, habitica_service, data_dir)
 
-        logging.getLogger(__name__).info(
-            'Syncing Trello boards %s',
-            configuration.trello_boards)
+        self.__parse_board_configuration()
+
+        for name,config in self.__boards.items():
+            logging.getLogger(__name__).info(
+                'Syncing board: %s',
+                config)
 
         logging.getLogger(__name__).info(
             'Syncing Trello lists %s',
@@ -132,6 +145,7 @@ If empty, then cards are only marked done when archived.''')
             configuration.trello_done_lists)
 
         credentials = self.__load_authentication_credentials()
+
 
         # Instantiate the Trello Client
         self.__tc = TrelloClient(
@@ -189,7 +203,7 @@ If empty, then cards are only marked done when archived.''')
         # retrieve the boards to sync
         boards = self.__tc.list_boards(board_filter='open')
         sync_boards = [
-            b for b in boards if b.name in self._config.trello_boards]
+            b for b in boards if b.name in self.__boards]
 
         self.__ensure_labels_exist(sync_boards)
 
