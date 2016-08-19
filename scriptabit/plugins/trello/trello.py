@@ -249,18 +249,24 @@ If empty, then cards are only marked done when archived.''')
         Args:
             sync_stats (TaskSync.Stats): Stats from the last sync.
         """
-        notes = "{0} updated\n{1} completed\n{2} deleted\n\
-{3} created".format(
+        notes = "{0} updated\n{1} completed\n{2} deleted\n{3} created\n{4} skipped".format(
             sync_stats.updated,
             sync_stats.completed,
             sync_stats.deleted,
-            sync_stats.created)
+            sync_stats.created,
+            sync_stats.skipped)
+
+        total = sync_stats.total_changed
+
+        text = '{0} {1} Trello Tasks Updated'.format(
+            ':mailbox_with_mail:' if total else ':mailbox_with_no_mail:',
+            sync_stats.updated)
 
         UtilityFunctions.upsert_notification(
             self._hs,
-            text='Trello Sync Completed',
+            text=text,
             notes=notes,
-            heading_level=4)
+            heading_level=0)
 
     @staticmethod
     def __load_authentication_credentials(

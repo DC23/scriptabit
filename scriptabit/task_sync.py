@@ -75,6 +75,13 @@ class TaskSync(object):
                     self.skipped, self.created, self.updated, self.deleted,
                     self.completed, self.duration)
 
+        @property
+        def total_changed(self):
+            """ Get the total number of changed tasks. """
+            return self.created +\
+                self.updated +\
+                self.completed +\
+                self.deleted
 
     def __init__(self, src_service, dst_service, task_map, last_sync=None):
         """ Initialise the TaskSync instance.
