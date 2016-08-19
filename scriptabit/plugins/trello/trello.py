@@ -14,7 +14,7 @@ import os
 import pickle
 from configparser import ConfigParser, NoOptionError
 from datetime import datetime, timedelta
-
+from pprint import pprint
 import pytz
 import scriptabit
 from scriptabit import (
@@ -231,7 +231,11 @@ If empty, then cards are only marked done when archived.''')
         task_map = TaskMap(self.__task_map_file)
 
         # Create the services
-        source_service = TrelloTaskService(self.__tc, sync_lists, done_lists)
+        source_service = TrelloTaskService(
+            self.__tc,
+            sync_lists,
+            done_lists,
+            self.__boards)
 
         # synchronise
         sync = TaskSync(

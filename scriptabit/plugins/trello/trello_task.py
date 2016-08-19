@@ -17,16 +17,27 @@ from scriptabit import CharacterAttribute, Difficulty, Task
 class TrelloTask(Task):
     """ Defines a Trello synchronisation task.
     """
-    def __init__(self, card, force_completed=False):
-        """ Initialise the task.
+    def __init__(
+        self,
+        card,
+        default_difficulty=Difficulty.default,
+        default_attribute=CharacterAttribute.default,
+        force_completed=False):
+        """ Initialise the Trello task.
 
         Args:
             card (Trello.Card): The underlying Trello card.
+            default_difficulty (scriptabit.Difficulty): The difficulty to use if
+                the card does not have a difficulty label applied.
+            default_attribute (scriptabit.CharacterAttribute): The attribute
+                to use if the card does not have an attribute label applied.
             force_completed (bool): If True, the task will report as completed
                 even if card.closed is False.
         """
         super().__init__()
         self.__card = card
+        self.__default_difficulty = default_difficulty
+        self.__default_attribute = default_attribute
         self.__force_completed = force_completed
 
     @property
@@ -72,7 +83,7 @@ class TrelloTask(Task):
             for dl in Difficulty:
                 if dl.name in card_labels:
                     return dl
-        return Difficulty.easy
+        return self.__default_difficulty
 
     @difficulty.setter
     def difficulty(self, difficulty):
@@ -90,7 +101,7 @@ class TrelloTask(Task):
             for al in CharacterAttribute:
                 if al.name in card_labels:
                     return al
-        return CharacterAttribute.strength
+        return self.__default_attribute
 
     @attribute.setter
     def attribute(self, attribute):

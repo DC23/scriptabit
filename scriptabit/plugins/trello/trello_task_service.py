@@ -20,7 +20,8 @@ class TrelloTaskService(TaskService):
             self,
             trello_client,
             lists,
-            done_lists):
+            done_lists,
+            board_config):
         """ Initialises the Trello synchronisation task service.
 
         Args:
@@ -28,14 +29,16 @@ class TrelloTaskService(TaskService):
             lists (list): The list of Trello lists to sync from.
             done_lists (list): The list of Trello boards containing
                 completed tasks.
+            board_config (dict): The dictionary of board configuration data.
         """
         super().__init__()
         self.__tc = trello_client
         self.__lists = lists
         self.__done_lists = done_lists
+        self.__board_config = board_config
+        self.__current_user = trello_client.get_member('me')
 
-    @staticmethod
-    def __get_tasks_from_lists(lists, force_completed):
+    def __get_tasks_from_lists(self, lists, force_completed):
         """ Gets all tasks from a list of Trello lists.
 
         Args:
@@ -46,11 +49,27 @@ class TrelloTaskService(TaskService):
             list: The list of TrelloTask instances.
         """
         tasks = []
+
         for l in lists:
+            board_defaults = self.__board_config[l.board.name]
             for card in l.list_cards(card_filter='open'):
-                # card.fetch()  # force load most card data
-                task = TrelloTask(card, force_completed=force_completed)
-                tasks.append(task)
+
+                # Check whether we can use this card or not based on the board
+                # settings: all cards or only those assigned to the current user
+                use_card = False
+                if board_defaults.all_cards:
+                    use_card = True
+                else:
+                    card.fetch()  # we need the fetch to get the user ID
+                    use_card = self.__current_user.id in card.member_id
+
+                if use_card:
+                    task = TrelloTask(
+                        card,
+                        default_difficulty=board_defaults.difficulty,
+                        default_attribute=board_defaults.attribute,
+                        force_completed=force_completed)
+                    tasks.append(task)
         return tasks
 
     def get_all_tasks(self):
