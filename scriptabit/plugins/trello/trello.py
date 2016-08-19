@@ -27,6 +27,7 @@ from scriptabit import (
 
 from trello import TrelloClient
 from trello.util import create_oauth_token
+from tzlocal import get_localzone
 
 from .board_config import BoardConfig
 from .trello_task_service import TrelloTaskService
@@ -272,10 +273,15 @@ If empty, then cards are only marked done when archived.''')
             sync_stats.skipped)
 
         total = sync_stats.total_changed
+        now = datetime.now()
 
-        text = '{0} {1} Trello Tasks Updated'.format(
+        text = '{0} {1} Trello Tasks Updated @ {2}:{3} {4}/{5}'.format(
             ':mailbox_with_mail:' if total else ':mailbox_with_no_mail:',
-            sync_stats.updated)
+            total,
+            now.hour,
+            now.minute,
+            now.day,
+            now.month)
 
         UtilityFunctions.upsert_notification(
             self._hs,
