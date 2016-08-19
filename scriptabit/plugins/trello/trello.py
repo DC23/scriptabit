@@ -176,7 +176,7 @@ If empty, then cards are only marked done when archived.''')
 
         Returns: float: The required update interval in minutes.
         """
-        return 30
+        return max(20, self._config.update_frequency)
 
     def update(self):
         """ This update method will be called once on every update cycle,

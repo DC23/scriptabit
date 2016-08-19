@@ -51,8 +51,7 @@ class HealthEffects(scriptabit.IPlugin):
 
         Returns: float: The required update interval in minutes.
         """
-        # For testing only. Actual use will be at 30 or 60 minutes
-        return 0.02
+        return max(0.02, self._config.update_frequency)
 
     def update(self):
         """ Update the health effects plugin.

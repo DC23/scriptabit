@@ -144,3 +144,5 @@ Changelog
 * Added notification ability by using a scoreless habit whose text can be
   updated by scriptabit functions.
 * Added notifications to banking and trello plugins.
+* Added global command-line argument for specifing the update interval of
+  looping plugins.

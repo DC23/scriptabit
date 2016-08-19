@@ -206,4 +206,14 @@ new plugin that combines the effects as required.''')
         help='''If > 0, this sets a limit on the number of plugin updates.
 Note that plugins can still exit before the limit is reached.''')
 
+    parser.add(
+        '-uf',
+        '--update-frequency',
+        required=False,
+        type=int,
+        default=-1,
+        help='''If > 0, this specifies the preferred update frequency in minutes
+for plugins that run in the update loop. Note that plugins may ignore or limit
+this setting if the value is inappropriate for the specific plugin.''')
+
     return parser.parse_args(), parser.print_help

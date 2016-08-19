@@ -216,6 +216,9 @@ def start_cli():
 
                     # Only sleep if we have another update pending
                     if keep_updating():
+                        logging.getLogger(__name__).info(
+                            "Sleeping for %f minutes",
+                            plugin.update_interval_minutes())
                         sleep(plugin.update_interval_seconds())
 
                 print()

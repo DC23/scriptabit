@@ -73,7 +73,9 @@ class Sample(scriptabit.IPlugin):
 
         Returns: float: The required update interval in minutes.
         """
-        return 60
+        # minimum update frequency of once every 1 minute, or whatever the
+        # user specified
+        return max(1, self._config.update_frequency)
 
     def update(self):
         """ This update method will be called once on every update cycle,
