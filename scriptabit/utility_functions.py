@@ -167,7 +167,7 @@ class UtilityFunctions(object):
         """
         heading_level = min(heading_level, 6)
         if heading_level > 0:
-            text = ''.join(['#' for x in range(heading_level)]) + ' ' + text
+            text = '#' * heading_level + ' ' + text
 
         task = {
             'alias': alias,
@@ -187,6 +187,8 @@ class UtilityFunctions(object):
         print("--------------------")
         note = self.upsert_notification(
             self.__hs,
+            heading_level=3,
+            alias='test_panel',
             text='You are poisoned :skull:',
             notes='some extra text for good measure')
         pprint(note)
