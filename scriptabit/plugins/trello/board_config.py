@@ -9,7 +9,6 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-import logging
 
 from scriptabit import CharacterAttribute, Difficulty
 
@@ -74,6 +73,6 @@ class BoardConfig(object):
             self.attribute.name,
             self.all_cards)
         s = ''
-        for l,v in zip(labels, values):
-            s += '{0}{1} '.format(l,v)
+        for l, v in zip(labels, values):
+            s += '{0}{1} '.format(l, v)
         return s

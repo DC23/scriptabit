@@ -9,7 +9,7 @@
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
-ignore=CVS,tests,.git
+ignore=CVS,tests,.git,test_board_config.py
 
 # Pickle collected data for later comparisons.
 persistent=yes

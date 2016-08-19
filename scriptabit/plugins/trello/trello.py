@@ -132,10 +132,8 @@ If empty, then cards are only marked done when archived.''')
 
         self.__parse_board_configuration()
 
-        for name,config in self.__boards.items():
-            logging.getLogger(__name__).info(
-                'Syncing board: %s',
-                config)
+        for b in self.__boards.values():
+            logging.getLogger(__name__).info('Syncing board: %s', b)
 
         logging.getLogger(__name__).info(
             'Syncing Trello lists %s',
@@ -146,7 +144,6 @@ If empty, then cards are only marked done when archived.''')
             configuration.trello_done_lists)
 
         credentials = self.__load_authentication_credentials()
-
 
         # Instantiate the Trello Client
         self.__tc = TrelloClient(

@@ -18,11 +18,11 @@ class TrelloTask(Task):
     """ Defines a Trello synchronisation task.
     """
     def __init__(
-        self,
-        card,
-        default_difficulty=Difficulty.default,
-        default_attribute=CharacterAttribute.default,
-        force_completed=False):
+            self,
+            card,
+            default_difficulty=Difficulty.default,
+            default_attribute=CharacterAttribute.default,
+            force_completed=False):
         """ Initialise the Trello task.
 
         Args:
