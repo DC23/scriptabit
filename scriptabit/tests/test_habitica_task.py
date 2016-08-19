@@ -39,6 +39,13 @@ def test_invalid_difficulty():
     with pytest.raises(TypeError):
         task.difficulty = 'really hard'
 
+def test_existing_difficulty():
+    task = get_fake_task()[0]
+    expected = Difficulty.hard
+    task['priority'] = expected.value
+    ht = HabiticaTask(task)
+    assert ht.difficulty == expected
+
 def test_invalid_attribute():
     task = HabiticaTask(get_fake_task()[0])
     with pytest.raises(TypeError):
@@ -53,6 +60,13 @@ def test_valid_attribute():
     task = HabiticaTask(get_fake_task()[0])
     task.attribute = CharacterAttribute.intelligence
     assert task.attribute == CharacterAttribute.intelligence
+
+def test_existing_attribute():
+    task = get_fake_task()[0]
+    expected = CharacterAttribute.constitution
+    task['attribute'] = expected.value
+    ht = HabiticaTask(task)
+    assert ht.attribute == expected
 
 def test_id_readonly():
     task = HabiticaTask(get_fake_task()[0])

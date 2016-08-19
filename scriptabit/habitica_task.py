@@ -39,10 +39,10 @@ class HabiticaTask(Task):
         task_dict['type'] = 'todo'
 
         if 'priority' not in task_dict:
-            self.__difficulty = Difficulty.default
+            task_dict['priority'] = Difficulty.default.value
 
         if 'attribute' not in task_dict:
-            self.__attribute = CharacterAttribute.default
+            task_dict['attribute'] = CharacterAttribute.default.value
 
     @property
     def task_dict(self):
@@ -87,7 +87,7 @@ class HabiticaTask(Task):
     @property
     def difficulty(self):
         """ Task difficulty """
-        return self.__difficulty
+        return Difficulty.from_value(self.__task_dict['priority'])
 
     @difficulty.setter
     def difficulty(self, difficulty):
@@ -95,12 +95,11 @@ class HabiticaTask(Task):
         if not isinstance(difficulty, Difficulty):
             raise TypeError
         self.__task_dict['priority'] = difficulty.value
-        self.__difficulty = difficulty
 
     @property
     def attribute(self):
         """ Task character attribute """
-        return self.__attribute
+        return CharacterAttribute.from_value(self.__task_dict['attribute'])
 
     @attribute.setter
     def attribute(self, attribute):
@@ -108,7 +107,6 @@ class HabiticaTask(Task):
         if not isinstance(attribute, CharacterAttribute):
             raise TypeError
         self.__task_dict['attribute'] = attribute.value
-        self.__attribute = attribute
 
     @property
     def due_date(self):
