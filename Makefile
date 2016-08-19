@@ -40,7 +40,7 @@ tests-slow:
 .PHONY: clean
 clean:
 	echo Cleaning ...
-	rm -rf build/ .tox/ ./setuptools-* .cache/
+	rm -rf build/ .tox/ ./setuptools-* .cache/ ./scriptabit.log
 	find . -name "__pycache__" -nowarn -exec rm -rf {} \;
 	find . -name "*.pyc" -nowarn -exec rm -rf {} \;
 	echo ... done
