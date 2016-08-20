@@ -181,12 +181,7 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        note = self.upsert_notification(
-            self.__hs,
-            heading_level=3,
-            alias='test_panel',
-            text='You are poisoned :skull:',
-            notes='some extra text for good measure')
-        pprint(note)
+        tasks = self.__hs.get_tasks()
+        pprint(tasks)
         print("--------------------")
         print()

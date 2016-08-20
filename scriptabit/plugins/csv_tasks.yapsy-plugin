@@ -1,0 +1,9 @@
+[Core]
+Name = csv_tasks
+Module = csv_tasks
+   
+[Documentation]
+Description = Bulk creation of Habitica tasks from CSV files.
+Author = DC23
+Version = 1.0.0
+Website = https://github.com/DC23/scriptabit

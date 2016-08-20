@@ -8,6 +8,13 @@ Banking
     :members:
     :private-members:
 
+CSV Bulk Importer
++++++++++++++++++
+.. automodule:: scriptabit.plugins.csv_tasks
+    :special-members:
+    :members:
+    :private-members:
+
 Health Effects
 ++++++++++++++
 .. automodule:: scriptabit.plugins.health_effects
