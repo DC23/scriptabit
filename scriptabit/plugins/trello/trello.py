@@ -272,7 +272,7 @@ If empty, then cards are only marked done when archived.''')
         total = sync_stats.total_changed
         now = datetime.now()
 
-        text = '{0} {1} Trello Tasks Updated @ {2}:{3} {4}/{5}'.format(
+        text = '{0} {1} Trello Tasks Updated @ {2}:{3:02d} {4}/{5}'.format(
             ':mailbox_with_mail:' if total else ':mailbox_with_no_mail:',
             total,
             now.hour,
