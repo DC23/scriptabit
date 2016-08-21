@@ -102,8 +102,6 @@ class CsvTasks(scriptabit.IPlugin):
                         'notes': row['description'],
                         'type': row['type'],
                         # TODO: due_date
-                        # TODO: up if habit
-                        # TODO: down if habit
                     }
 
                     task['priority'] = self.__parse_enum(
@@ -113,6 +111,10 @@ class CsvTasks(scriptabit.IPlugin):
                     task['attribute'] = self.__parse_enum(
                         CharacterAttribute,
                         row['attribute'])
+
+                    if task['type'] == 'habit':
+                        task['up'] = self.__parse_bool(row['up'])
+                        task['down'] = self.__parse_bool(row['down'])
 
                     # TODO: tags are harder than might be apparent, but I have
                     # code to help
@@ -127,6 +129,12 @@ class CsvTasks(scriptabit.IPlugin):
 
         # return False if finished, and True to be updated again.
         return False
+
+    def __parse_bool(self, csv_value):
+        """parse a bool from a string value"""
+        if not csv_value or csv_value.lower() == 'false':
+            return 'false'
+        return 'true'
 
     def __parse_enum(self, enum, name):
         """ Parse an enum, trying both lookup by name and value.
