@@ -156,3 +156,4 @@ Changelog
 -----------------------------------------
 
 * Updated documentation with plugin usage information.
+* Added CSV batch task creation plugin.

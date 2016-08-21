@@ -31,8 +31,8 @@ class HabiticaService(object):
     def __init__(self, headers, base_url):
         """
         Args:
-            headers: HTTP headers.
-            base_url: The base URL for requests.
+            headers (dict): HTTP headers.
+            base_url (str): The base URL for requests.
             """
         self.__headers = headers
         self.__base_url = base_url

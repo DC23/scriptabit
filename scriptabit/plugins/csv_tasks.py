@@ -94,33 +94,50 @@ class CsvTasks(scriptabit.IPlugin):
         with open(self._config.csv_file) as f:
             reader = csv.DictReader(f)
             for row in reader:
+                print()
                 pprint(row)
-
                 try:
                     task = {
                         'text': row['name'],
                         'notes': row['description'],
                         'type': row['type'],
-                        # TODO: attribute
                         # TODO: due_date
                         # TODO: up if habit
                         # TODO: down if habit
                     }
 
-                    difficulty = row['difficulty']
-                    if difficulty:
-                        try:
-                            task['priority'] = Difficulty[difficulty].value
-                        except:
-                            task['priority'] = Difficulty.default
+                    task['priority'] = self.__parse_enum(
+                        Difficulty,
+                        row['difficulty'])
+
+                    task['attribute'] = self.__parse_enum(
+                        CharacterAttribute,
+                        row['attribute'])
 
                     # TODO: tags are harder than might be apparent, but I have
                     # code to help
 
-                    self._hs.create_task(task)
+                    if self._config.dry_run:
+                        pprint(task)
+                    else:
+                        self._hs.create_task(task)
 
                 except Exception as exception:
                     logging.getLogger(__name__).error(exception, exc_info=True)
 
         # return False if finished, and True to be updated again.
         return False
+
+    def __parse_enum(self, enum, name):
+        """ Parse an enum, trying both lookup by name and value.
+            Returns the default if neither lookup succeeds.
+        """
+        value = enum.default.value
+        try:
+            value = enum[name].value
+        except:
+            try:
+                value = enum.from_value(name).value
+            except:
+                pass
+        return value

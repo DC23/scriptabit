@@ -198,6 +198,13 @@ new plugin that combines the effects as required.''')
         help='''Display scriptabit version''')
 
     parser.add(
+        '-dr',
+        '--dry-run',
+        required=False,
+        action='store_true',
+        help='''Conduct a dry run. No changes are written to online services''')
+
+    parser.add(
         '-mup',
         '--max-updates',
         required=False,
