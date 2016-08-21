@@ -60,7 +60,7 @@ class HabiticaService(object):
         """Utility wrapper around a HTTP POST"""
         url = self.__base_url + command
         logging.getLogger(__name__).debug('PUT %s', url)
-        return requests.post(url, headers=self.__headers, data=data)
+        return requests.post(url, headers=self.__headers, json=data)
 
     @staticmethod
     def __get_key(task):
@@ -139,7 +139,6 @@ class HabiticaService(object):
         Returns:
             dict: The new task as returned from the server.
         """
-
         if not task.get('type', None):
             _type = 'todo'
             if task_type == HabiticaTaskTypes.dailies:
@@ -151,6 +150,22 @@ class HabiticaService(object):
             task['type'] = _type
 
         response = self.__post('tasks/user', task)
+        response.raise_for_status()
+        return response.json()['data']
+
+    def create_tasks(self, tasks):
+        """ Creates multiple tasks.
+
+        Note that unlike HabiticaService.create_task, this method
+        **does not** check that the task type is valid.
+
+        Args:
+            task (list): The list of tasks.
+
+        Returns:
+            list: The new tasks as returned from the server.
+        """
+        response = self.__post('tasks/user', tasks)
         response.raise_for_status()
         return response.json()['data']
 

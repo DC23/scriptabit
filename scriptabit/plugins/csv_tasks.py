@@ -91,12 +91,15 @@ class CsvTasks(scriptabit.IPlugin):
             'Importing tasks from %s',
             self._config.csv_file)
 
+        tasks = []
+        tag_names = []
+        row_count = 0
+
         with open(self._config.csv_file) as f:
             reader = csv.DictReader(f)
             for row in reader:
-                print()
-                pprint(row)
                 try:
+                    row_count += 1  # OK to do this first, as we skip the header
                     task = {
                         'text': row['name'],
                         'notes': row['description'],
@@ -116,16 +119,42 @@ class CsvTasks(scriptabit.IPlugin):
                         task['up'] = self.__parse_bool(row['up'])
                         task['down'] = self.__parse_bool(row['down'])
 
-                    # TODO: tags are harder than might be apparent, but I have
-                    # code to help
+                    if row['tags']:
+                        tags = row['tags'].split(',')
+                        tag_names += tags
+                        task['tags'] = tags  # placeholder, filled in later
 
-                    if self._config.dry_run:
-                        pprint(task)
+                    if task['type'] in ['habit', 'daily', 'todo', 'reward']:
+                        tasks.append(task)
                     else:
-                        self._hs.create_task(task)
+                        logging.getLogger(__name__).warn(
+                            'Skipping task on row %d: type not specified',
+                            row_count)
 
                 except Exception as exception:
                     logging.getLogger(__name__).error(exception, exc_info=True)
+
+        if tag_names:
+            tag_names = list(set(tag_names))  # remove duplicates
+
+            if self._config.dry_run:
+                print()
+                pprint(tag_names)
+            else:
+                tags = self._hs.create_tags(tag_names)
+                for task in tasks:
+                    # replace the placeholder names with tag IDs
+                    n = task.get('tags', None)
+                    if n:
+                        task['tags'] = [t['id'] for t in tags if t['name'] in n]
+
+        logging.getLogger(__name__).info('Processed %d rows', row_count)
+
+        if self._config.dry_run:
+            pprint(tasks)
+        else:
+            result = self._hs.create_tasks(tasks)
+            pprint(result)
 
         # return False if finished, and True to be updated again.
         return False
