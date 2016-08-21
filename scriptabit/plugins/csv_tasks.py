@@ -150,11 +150,8 @@ class CsvTasks(scriptabit.IPlugin):
                 'No tasks created. Check your CSV file format')
             return False
 
-        if self._config.dry_run:
-            pprint(self.tasks)
-        else:
+        if not self._config.dry_run:
             result = self._hs.create_tasks(self.tasks)
-            pprint(result)
 
         # return False if finished, and True to be updated again.
         return False
