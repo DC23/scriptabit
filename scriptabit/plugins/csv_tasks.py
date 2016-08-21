@@ -24,6 +24,8 @@ class CsvTasks(scriptabit.IPlugin):
         Generally nothing to do here other than initialise any class attributes.
         """
         super().__init__()
+        self.tasks = []
+        self.tag_names = []
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -91,8 +93,6 @@ class CsvTasks(scriptabit.IPlugin):
             'Importing tasks from %s',
             self._config.csv_file)
 
-        tasks = []
-        tag_names = []
         row_count = 0
 
         with open(self._config.csv_file) as f:
@@ -102,70 +102,88 @@ class CsvTasks(scriptabit.IPlugin):
                     row_count += 1  # OK to do this first, as we skip the header
                     task = {
                         'text': row['name'],
-                        'notes': row['description'],
                         'type': row['type'],
-                        # TODO: due_date
                     }
+                    # TODO: due_date
 
-                    task['priority'] = self.__parse_enum(
-                        Difficulty,
-                        row['difficulty'])
+                    if 'description' in row.keys():
+                        task['notes'] = row['description']
 
-                    task['attribute'] = self.__parse_enum(
-                        CharacterAttribute,
-                        row['attribute'])
+                    if 'priority' in row.keys():
+                        task['priority'] = self.__parse_enum(
+                            Difficulty,
+                            row['difficulty'])
+
+                    if 'attribute' in row.keys():
+                        task['attribute'] = self.__parse_enum(
+                            CharacterAttribute,
+                            row['attribute'])
 
                     if task['type'] == 'habit':
                         task['up'] = self.__parse_bool(row['up'])
                         task['down'] = self.__parse_bool(row['down'])
 
-                    if row['tags']:
-                        tags = row['tags'].split(',')
-                        tag_names += tags
-                        task['tags'] = tags  # placeholder, filled in later
+                    if 'tags' in row.keys():
+                        if row['tags']:
+                            tags = row['tags'].split(',')
+                            self.tag_names += tags
+                            task['tags'] = tags  # placeholder, filled in later
 
                     if task['type'] in ['habit', 'daily', 'todo', 'reward']:
-                        tasks.append(task)
+                        self.tasks.append(task)
                     else:
-                        logging.getLogger(__name__).warn(
+                        logging.getLogger(__name__).warning(
                             'Skipping task on row %d: type not specified',
                             row_count)
 
-                except Exception as exception:
-                    logging.getLogger(__name__).error(exception, exc_info=True)
+                except KeyError as ex:
+                    logging.getLogger(__name__).error(ex, exc_info=True)
+                except Exception as ex:
+                    logging.getLogger(__name__).error(ex, exc_info=True)
 
-        if tag_names:
-            tag_names = list(set(tag_names))  # remove duplicates
-
-            if self._config.dry_run:
-                print()
-                pprint(tag_names)
-            else:
-                tags = self._hs.create_tags(tag_names)
-                for task in tasks:
-                    # replace the placeholder names with tag IDs
-                    n = task.get('tags', None)
-                    if n:
-                        task['tags'] = [t['id'] for t in tags if t['name'] in n]
+        self.__fill_tag_placeholders()
 
         logging.getLogger(__name__).info('Processed %d rows', row_count)
 
+        if not self.tasks:
+            logging.getLogger(__name__).warning(
+                'No tasks created. Check your CSV file format')
+            return False
+
         if self._config.dry_run:
-            pprint(tasks)
+            pprint(self.tasks)
         else:
-            result = self._hs.create_tasks(tasks)
+            result = self._hs.create_tasks(self.tasks)
             pprint(result)
 
         # return False if finished, and True to be updated again.
         return False
 
-    def __parse_bool(self, csv_value):
+    def __fill_tag_placeholders(self):
+        """Replace tag name placeholders with tag IDs"""
+        if self.tag_names:
+            self.tag_names = list(set(self.tag_names))  # remove duplicates
+
+            if self._config.dry_run:
+                print()
+                pprint(self.tag_names)
+            else:
+                tags = self._hs.create_tags(self.tag_names)
+                for task in self.tasks:
+                    # replace the placeholder names with tag IDs
+                    n = task.get('tags', None)
+                    if n:
+                        task['tags'] = [t['id'] for t in tags if t['name'] in n]
+
+    @staticmethod
+    def __parse_bool(csv_value):
         """parse a bool from a string value"""
         if not csv_value or csv_value.lower() == 'false':
             return 'false'
         return 'true'
 
-    def __parse_enum(self, enum, name):
+    @staticmethod
+    def __parse_enum(enum, name):
         """ Parse an enum, trying both lookup by name and value.
             Returns the default if neither lookup succeeds.
         """
