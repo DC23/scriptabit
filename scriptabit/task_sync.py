@@ -264,13 +264,13 @@ class TaskSync(object):
         Returns:
             TaskSync.Stats: Summary statistics of the sync.
         """
+        start_sync = datetime.now(tz=pytz.utc)
+
         self.__get_task_data()
 
         logging.getLogger(__name__).info(
             'Starting sync. Last sync at %s',
             self.last_sync)
-
-        start_sync = datetime.now(tz=pytz.utc)
 
         # reset the stats
         self.__stats = TaskSync.Stats()

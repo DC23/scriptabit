@@ -56,6 +56,25 @@ class SyncStatus(Enum):
     unchanged = 4
 
 
+class ChecklistItem(object):
+    """Simple implementation of a checklist item."""
+    def __init__(self, name, checked=False):
+        """ Initialise the checklist item.
+
+        Args:
+            name (str): The item name.
+            checked (bool): The item check-status.
+        """
+        self.name = name
+        self.checked = checked
+
+    def __repr__(self):
+        """ Gets a string representation of the checklist item. """
+        return '{0}: {1}'.format(
+            self.name,
+            'checked' if self.checked else 'unchecked')
+
+
 # pylint: disable=no-self-use
 class Task(object):
     """ Defines a Habitica task data transfer object.
@@ -73,6 +92,8 @@ class Task(object):
         difficulty (Difficulty): task difficulty.
         attribute (CharacterAttribute): habitica character attribute of the task
         status (SyncStatus): Synchronisation status flag.
+        checklist (list): The task checklist, or None if the task does not have
+            a checklist.
     """
     # TODO: define and add checklists
 
@@ -170,6 +191,21 @@ class Task(object):
         """ The last modified timestamp in UTC. """
         raise NotImplementedError
 
+    @property
+    def checklist(self):
+        """ The checklist.
+
+        Returns:
+            list: The checklist, or an empty list if there are no
+                checklist items.
+        """
+        raise NotImplementedError
+
+    @checklist.setter
+    def checklist(self, checklist):
+        """ Sets, or clears the checklist. """
+        raise NotImplementedError
+
     def copy_fields(self, src, status=SyncStatus.updated):
         """ Copies fields from src.
 
@@ -187,6 +223,7 @@ class Task(object):
         self.attribute = src.attribute
         self.due_date = src.due_date
         self.status = status
+        self.checklist = src.checklist
         # don't copy the last_modified property. It should only be changed by
         # the task services
         # self.last_modified = src.last_modified

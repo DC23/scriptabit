@@ -182,6 +182,11 @@ class UtilityFunctions(object):
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
         tasks = self.__hs.get_tasks()
-        pprint(tasks)
+        for t in tasks:
+            if t['type'] == 'todo':
+                pprint(t)
+                del t['checklist']
+                # t['checklist'][0]['completed'] = False
+                self.__hs.update_task(t)
         print("--------------------")
         print()
