@@ -85,7 +85,13 @@ class TaskSync(object):
                 self.completed +\
                 self.deleted
 
-    def __init__(self, src_service, dst_service, task_map, last_sync=None):
+    def __init__(
+        self,
+        src_service,
+        dst_service,
+        task_map,
+        last_sync=None,
+        sync_description=True):
         """ Initialise the TaskSync instance.
 
         Args:
@@ -93,6 +99,8 @@ class TaskSync(object):
             dst_service (TaskService): The TaskService for destination tasks.
             task_map (TaskMap): The TaskMap.
             last_sync (datetime): The last known synchronisation datetime (UTC).
+            sync_description (bool): Controls whether the task description will
+                be synchronised.
         """
         self.__src_service = src_service
         self.__dst_service = dst_service
@@ -102,6 +110,7 @@ class TaskSync(object):
         self.__dst_tasks = None
         self.__src_index = None
         self.__dst_index = None
+        self.__sync_description = sync_description
         self.__stats = TaskSync.Stats()
 
     def __create_new_dst(self, src):
@@ -115,6 +124,8 @@ class TaskSync(object):
         """
         # factory method as we don't know the concrete task type
         dst = self.__dst_service.create(src)
+        if not self.__sync_description:
+            dst.description = ''
         self.__map.map(src, dst)
         return dst
 
@@ -161,6 +172,8 @@ class TaskSync(object):
                 'Updating: %s', src.name)
             self.__stats.updated += 1
         dst.copy_fields(src, status=SyncStatus.updated)
+        if not self.__sync_description:
+            dst.description = ''
 
     def __handle_destination_missing(self, src):
         """ Handle the case where a mapped destination task cannot be found.

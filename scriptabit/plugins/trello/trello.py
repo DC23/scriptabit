@@ -112,6 +112,13 @@ If empty, then cards are only marked done when archived.''')
             default='trello_habitica_sync_data',
             help='''Filename to use for storing the synchronisation data.''')
 
+        parser.add(
+            '--trello-sync-description',
+            required=False,
+            action='store_true',
+            help='''Synchronises task description/extra text field.
+The default is to only synchronise the task names.''')
+
         return parser
 
     def initialise(self, configuration, habitica_service, data_dir):
@@ -240,7 +247,8 @@ If empty, then cards are only marked done when archived.''')
             source_service,
             self.__habitica_task_service,
             task_map,
-            last_sync=self.__data.last_sync)
+            last_sync=self.__data.last_sync,
+            sync_description=self._config.trello_sync_description)
 
         stats = sync.synchronise(
             clean_orphans=False,
