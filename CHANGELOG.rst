@@ -152,13 +152,12 @@ Changelog
   the current user.
 * Minor bug fixes, and lint warning cleanups.
 
-1.4.0 (2016-08-??
+1.4.0 (2016-08-22)
 -----------------------------------------
 
-* Updated documentation with plugin usage information.
+* Added checklist support to Trello sync
 * Added CSV batch task creation plugin.
 * Slightly improved error handling during task sync. Now an error in a task
   doesn't bring the whole sync down. Instead it logs the error and skips to the
   next task.
 * Made sync of task description/extra text optional, with default to False.
-* Added checklist support to Trello sync
