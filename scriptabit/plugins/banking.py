@@ -165,5 +165,4 @@ class Banking(scriptabit.IPlugin):
         logging.getLogger(__name__).info(message)
         scriptabit.UtilityFunctions.upsert_notification(
             self._hs,
-            alias='scriptabit_banking_notify',
             text=':moneybag: ' + message)

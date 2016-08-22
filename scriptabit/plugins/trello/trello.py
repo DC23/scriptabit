@@ -284,7 +284,6 @@ If empty, then cards are only marked done when archived.''')
             self._hs,
             text=text,
             notes=notes,
-            alias='scriptabit_trello_plugin',
             heading_level=0)
 
     @staticmethod

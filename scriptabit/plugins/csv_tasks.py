@@ -143,15 +143,15 @@ class CsvTasks(scriptabit.IPlugin):
 
         self.__fill_tag_placeholders()
 
-        logging.getLogger(__name__).info('Processed %d rows', row_count)
-
         if not self.tasks:
             logging.getLogger(__name__).warning(
                 'No tasks created. Check your CSV file format')
             return False
 
-        if not self._config.dry_run:
+        if not self._config.dry_run and self.tasks:
             result = self._hs.create_tasks(self.tasks)
+
+        self.__notify('Uploaded {0} rows from CSV'.format(row_count))
 
         # return False if finished, and True to be updated again.
         return False
@@ -193,3 +193,10 @@ class CsvTasks(scriptabit.IPlugin):
             except:
                 pass
         return value
+
+    def __notify(self, message):
+        """ Notify the Habitica user """
+        logging.getLogger(__name__).info(message)
+        scriptabit.UtilityFunctions.upsert_notification(
+            self._hs,
+            text=message)
