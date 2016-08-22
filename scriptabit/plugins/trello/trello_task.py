@@ -9,9 +9,10 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 from datetime import datetime
+from pprint import pprint
 import pytz
 
-from scriptabit import CharacterAttribute, Difficulty, Task
+from scriptabit import CharacterAttribute, ChecklistItem, Difficulty, Task
 
 
 class TrelloTask(Task):
@@ -91,7 +92,6 @@ class TrelloTask(Task):
         if not isinstance(difficulty, Difficulty):
             raise TypeError
         raise NotImplementedError
-        # TODO: apply a label to set the difficulty
 
     @property
     def attribute(self):
@@ -109,7 +109,6 @@ class TrelloTask(Task):
         if not isinstance(attribute, CharacterAttribute):
             raise TypeError
         raise NotImplementedError
-        # TODO: apply a label to set the attribute
 
     @property
     def due_date(self):
@@ -130,3 +129,24 @@ class TrelloTask(Task):
     def last_modified(self):
         """ The last modified timestamp in UTC. """
         return self.__card.dateLastActivity.astimezone(tz=pytz.utc)
+
+    @property
+    def checklist(self):
+        """ The checklist, or None if there is no checklist."""
+        # merge all trello checklists into a single list
+        checklist = []
+        self.__card.fetch()
+        if self.__card.checklists:
+            for cl in self.__card.checklists:
+                for i in cl.items:
+                    checklist.append(ChecklistItem(i['name'], i['checked']))
+        else:
+            print('trello checklist missing for', self.name)
+
+        pprint(checklist)
+        return checklist
+
+    @checklist.setter
+    def checklist(self, checklist):
+        """ Sets, or clears the checklist. """
+        raise NotImplementedError

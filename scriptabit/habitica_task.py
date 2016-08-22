@@ -133,3 +133,21 @@ class HabiticaTask(Task):
         timestamp = self.__task_dict['updatedAt']
         if timestamp:
             return parse_date_utc(timestamp)
+
+    @property
+    def checklist(self):
+        """ The checklist.
+
+        Returns:
+            list: The checklist, or an empty list if there are no
+                checklist items.
+        """
+        # TODO: implement
+        return []
+
+    @checklist.setter
+    def checklist(self, checklist):
+        """ Sets, or clears the checklist. """
+        # TODO: implement
+        pass
+
