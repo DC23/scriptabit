@@ -157,11 +157,13 @@ class TaskSync(object):
             src (Task): the source task
             dst (Task): the destination task
         """
-        if src.last_modified < self.__last_sync:
-            logging.getLogger(__name__).debug(
-                'Unchanged: %s', src.name)
-            self.__stats.skipped += 1
-            return
+        # Temp: force all tasks to sync so checklists can be updated for
+        # existing tasks
+        # if src.last_modified < self.__last_sync:
+            # logging.getLogger(__name__).debug(
+                # 'Unchanged: %s', src.name)
+            # self.__stats.skipped += 1
+            # return
 
         if src.completed:
             logging.getLogger(__name__).info(

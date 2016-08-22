@@ -144,8 +144,6 @@ class TrelloTask(Task):
             for cl in self.__card.checklists:
                 for i in cl.items:
                     checklist.append(ChecklistItem(i['name'], i['checked']))
-        else:
-            print('trello checklist missing for', self.name)
 
         return checklist
 
