@@ -30,7 +30,7 @@ from scriptabit import (
     Difficulty,
     CharacterAttribute)
 
-from .task_implementations import TestTaskService, TestTask
+from .task_implementations import MockTaskService, MockTask
 
 
 difficulties = (
@@ -46,7 +46,7 @@ attributes = (
     CharacterAttribute.perception)
 
 def random_task(completed=False, last_modified=None):
-    t = TestTask(_id=uuid.uuid4(), last_modified=last_modified)
+    t = MockTask(_id=uuid.uuid4(), last_modified=last_modified)
     t.name = uuid.uuid1()
     t.description = 'blah blah tired blah coffee'
     t.completed = completed
@@ -58,8 +58,8 @@ def random_task(completed=False, last_modified=None):
 def test_new_tasks():
     src_tasks = [random_task() for x in range(3)]
     dst_tasks = []
-    src = TestTaskService(src_tasks)
-    dst = TestTaskService(dst_tasks)
+    src = MockTaskService(src_tasks)
+    dst = MockTaskService(dst_tasks)
     map = TaskMap()
     sync = TaskSync(src, dst, map)
     sync.synchronise()
@@ -83,8 +83,8 @@ def test_new_tasks():
 def test_new_tasks_are_mapped():
     src_tasks = [random_task()]
     dst_tasks = []
-    src = TestTaskService(src_tasks)
-    dst = TestTaskService(dst_tasks)
+    src = MockTaskService(src_tasks)
+    dst = MockTaskService(dst_tasks)
     map = TaskMap()
     sync = TaskSync(src, dst, map)
 
@@ -104,11 +104,11 @@ def test_missing_mapped_destination_tasks_src_complete():
     src = random_task()
     src.completed = True
     src_tasks = [src]
-    src_svc = TestTaskService(src_tasks)
+    src_svc = MockTaskService(src_tasks)
 
     dst = random_task()
     dst_tasks = []
-    dst_svc = TestTaskService(dst_tasks)
+    dst_svc = MockTaskService(dst_tasks)
 
     map = TaskMap()
 
@@ -131,11 +131,11 @@ def test_missing_mapped_destination_tasks_src_not_complete():
     src = random_task()
     src.completed = False
     src_tasks = [src]
-    src_svc = TestTaskService(src_tasks)
+    src_svc = MockTaskService(src_tasks)
 
     dst = random_task()
     dst_tasks = []
-    dst_svc = TestTaskService(dst_tasks)
+    dst_svc = MockTaskService(dst_tasks)
 
     map = TaskMap()
 
@@ -161,13 +161,13 @@ def test_existing_tasks_are_updated():
     src.difficulty = Difficulty.hard
     src.attribute = CharacterAttribute.strength
     src_tasks = [src]
-    src_svc = TestTaskService(src_tasks)
+    src_svc = MockTaskService(src_tasks)
     dst = random_task()
     dst.description = 'something different'
     dst.difficulty = Difficulty.medium
     dst.attribute = CharacterAttribute.constitution
     dst_tasks = [dst]
-    dst_svc = TestTaskService(dst_tasks)
+    dst_svc = MockTaskService(dst_tasks)
 
     # precondition tests
     assert src.id != dst.id
@@ -202,11 +202,11 @@ def test_old_existing_tasks_are_not_updated():
     dst_mod_date = last_sync + timedelta(minutes=1)
     src = random_task(last_modified=src_mod_date)
     src_tasks = [src]
-    src_svc = TestTaskService(src_tasks)
+    src_svc = MockTaskService(src_tasks)
 
     dst = random_task(last_modified=dst_mod_date)
     dst_tasks = [dst]
-    dst_svc = TestTaskService(dst_tasks)
+    dst_svc = MockTaskService(dst_tasks)
 
     map = TaskMap()
     map.map(src, dst)
@@ -226,11 +226,11 @@ def test_new_existing_tasks_are_updated():
     dst_mod_date = last_sync + timedelta(minutes=1)
     src = random_task(last_modified=src_mod_date)
     src_tasks = [src]
-    src_svc = TestTaskService(src_tasks)
+    src_svc = MockTaskService(src_tasks)
 
     dst = random_task(last_modified=dst_mod_date)
     dst_tasks = [dst]
-    dst_svc = TestTaskService(dst_tasks)
+    dst_svc = MockTaskService(dst_tasks)
 
     map = TaskMap()
     map.map(src, dst)
@@ -247,8 +247,8 @@ def test_deleted_src_tasks():
     src_tasks = []
     dst = random_task()
     dst_tasks = [dst]
-    ss = TestTaskService(src_tasks)
-    ds = TestTaskService(dst_tasks)
+    ss = MockTaskService(src_tasks)
+    ds = MockTaskService(dst_tasks)
     map = TaskMap()
 
     # we need to create a mapping between a src task and dst, but leave
@@ -275,8 +275,8 @@ def test_deleted_src_tasks():
 def test_remove_orphan_mappings():
     src_tasks = [random_task()]
     dst_tasks = []
-    ss = TestTaskService(src_tasks)
-    ds = TestTaskService(dst_tasks)
+    ss = MockTaskService(src_tasks)
+    ds = MockTaskService(dst_tasks)
     map = TaskMap()
 
     # add a few task mappings that won't exist in either source or destination
@@ -294,9 +294,9 @@ def test_remove_orphan_mappings():
 def test_new_completed_tasks_sync_completed_is_true():
     src = random_task(completed=True)
     src_tasks = [src]
-    src_svc = TestTaskService(src_tasks)
+    src_svc = MockTaskService(src_tasks)
     dst_tasks = []
-    dst_svc = TestTaskService(dst_tasks)
+    dst_svc = MockTaskService(dst_tasks)
     map = TaskMap()
     TaskSync(src_svc, dst_svc, map).synchronise(sync_completed_new_tasks=True)
 
@@ -307,9 +307,9 @@ def test_new_completed_tasks_sync_completed_is_true():
 def test_new_completed_tasks_sync_completed_is_false():
     src = random_task(completed=True)
     src_tasks = [src]
-    src_svc = TestTaskService(src_tasks)
+    src_svc = MockTaskService(src_tasks)
     dst_tasks = []
-    dst_svc = TestTaskService(dst_tasks)
+    dst_svc = MockTaskService(dst_tasks)
     map = TaskMap()
     TaskSync(src_svc, dst_svc, map).synchronise(sync_completed_new_tasks=False)
 
@@ -319,14 +319,14 @@ def test_completion_of_existing_mapped_tasks():
     src = random_task(completed=True)
     # last_modified=datetime.now(tz=pytz.utc) + timedelta(hours=1))
     src_tasks = [src]
-    src_svc = TestTaskService(src_tasks)
+    src_svc = MockTaskService(src_tasks)
 
     dst = random_task()
     # make dst the same in all but the completed flag
     dst.copy_fields(dst)
     dst.completed = False
     dst_tasks = [dst]
-    dst_svc = TestTaskService(dst_tasks)
+    dst_svc = MockTaskService(dst_tasks)
 
     map = TaskMap()
     map.map(src, dst)

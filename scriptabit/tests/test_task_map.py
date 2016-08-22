@@ -26,9 +26,9 @@ class TestTaskMap(object):
 
     def setup(self):
         self.tm = TaskMap()
-        self.src = TestTask(_id='1')
-        self.dst = TestTask(_id='a')
-        self.missing = TestTask(_id='blah')
+        self.src = MockTask(_id='1')
+        self.dst = MockTask(_id='a')
+        self.missing = MockTask(_id='blah')
 
     def test_create_when_file_doesnt_exist(self):
         tmpfile = NamedTemporaryFile(suffix='.pickle')
@@ -39,7 +39,7 @@ class TestTaskMap(object):
 
     def test_persist_task_mapping(self):
         expected = TaskMap()
-        tasks = [TestTask(_id=i) for i in range(4)]
+        tasks = [MockTask(_id=i) for i in range(4)]
         expected.map(tasks[0], tasks[1])
         expected.map(tasks[2], tasks[3])
         filename = NamedTemporaryFile(suffix='.pickle')
@@ -52,21 +52,21 @@ class TestTaskMap(object):
         assert actual.get_src_id(tasks[3].id) == tasks[2].id
 
     def test_duplicate_src(self):
-        s = TestTask('1')
-        d = TestTask('a')
-        dd = TestTask('aa')
+        s = MockTask('1')
+        d = MockTask('a')
+        dd = MockTask('aa')
         self.tm.map(s, d)
         with pytest.raises(KeyDuplicationError):
             self.tm.map(s, dd)
 
     def test_duplicate_dst(self):
-        src2 = TestTask(_id='9')
+        src2 = MockTask(_id='9')
         self.tm.map(self.src, self.dst)
         with pytest.raises(ValueDuplicationError):
             self.tm.map(src2, self.dst)
 
     def test_duplicate_src_dst(self):
-        tasks = [TestTask(_id=i) for i in range(4)]
+        tasks = [MockTask(_id=i) for i in range(4)]
         self.tm.map(tasks[0], tasks[1])
         self.tm.map(tasks[2], tasks[3])
         with pytest.raises(KeyAndValueDuplicationError):
@@ -105,8 +105,8 @@ class TestTaskMap(object):
 
     def test_get_all_src_keys(self):
         src_keys = (1,2,3,4)
-        src_tasks = [TestTask(_id=i) for i in src_keys]
-        dst_tasks = [TestTask(_id=i+20) for i in range(4)]
+        src_tasks = [MockTask(_id=i) for i in src_keys]
+        dst_tasks = [MockTask(_id=i+20) for i in range(4)]
         map = TaskMap()
         for s,d in zip(src_tasks, dst_tasks):
             map.map(s,d)
@@ -115,9 +115,9 @@ class TestTaskMap(object):
             assert actual in src_keys
 
     def test_get_all_dst_keys(self):
-        src_tasks = [TestTask(_id=i+20) for i in range(4)]
+        src_tasks = [MockTask(_id=i+20) for i in range(4)]
         dst_keys = (1,2,3,4)
-        dst_tasks = [TestTask(_id=i) for i in dst_keys]
+        dst_tasks = [MockTask(_id=i) for i in dst_keys]
         map = TaskMap()
         for s,d in zip(src_tasks, dst_tasks):
             map.map(s,d)

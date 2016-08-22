@@ -25,7 +25,7 @@ from scriptabit import (
     TaskMap)
 
 
-class TestTask(Task):
+class MockTask(Task):
     def __init__(
             self,
             _id,
@@ -125,7 +125,7 @@ class TestTask(Task):
         return self.__last_modified
 
 
-class TestTaskService(TaskService):
+class MockTaskService(TaskService):
     def __init__(self, tasks):
         super().__init__()
         self.tasks = tasks
@@ -147,4 +147,4 @@ class TestTaskService(TaskService):
         self.persisted_tasks = tasks
 
     def _create_task(self, src=None):
-        return TestTask(_id=uuid.uuid4())
+        return MockTask(_id=uuid.uuid4())
