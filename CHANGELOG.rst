@@ -152,7 +152,7 @@ Changelog
   the current user.
 * Minor bug fixes, and lint warning cleanups.
 
-1.3.1 (2016-08-??
+1.4.0 (2016-08-??
 -----------------------------------------
 
 * Updated documentation with plugin usage information.
@@ -161,3 +161,4 @@ Changelog
   doesn't bring the whole sync down. Instead it logs the error and skips to the
   next task.
 * Made sync of task description/extra text optional, with default to False.
+* Added checklist support to Trello sync
