@@ -68,6 +68,12 @@ class ChecklistItem(object):
         self.name = name
         self.checked = checked
 
+    def __repr__(self):
+        """ Gets a string representation of the checklist item. """
+        return '{0}: {1}'.format(
+            self.name,
+            'checked' if self.checked else 'unchecked')
+
 
 # pylint: disable=no-self-use
 class Task(object):
@@ -187,7 +193,12 @@ class Task(object):
 
     @property
     def checklist(self):
-        """ The checklist, or None if there is no checklist."""
+        """ The checklist.
+
+        Returns:
+            list: The checklist, or an empty list if there are no
+                checklist items.
+        """
         raise NotImplementedError
 
     @checklist.setter

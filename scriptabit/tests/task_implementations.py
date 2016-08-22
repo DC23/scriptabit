@@ -48,7 +48,7 @@ class MockTask(Task):
         self.status = status
         self.due_date = due_date
         self.__last_modified = last_modified or datetime.now(tz=pytz.utc)
-        self.__checklist = None
+        self.__checklist = []
 
     @property
     def id(self):
