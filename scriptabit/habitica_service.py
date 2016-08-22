@@ -41,7 +41,7 @@ class HabiticaService(object):
     def __delete(self, command, params=None):
         """Utility wrapper around a HTTP DELETE"""
         url = self.__base_url + command
-        logging.getLogger(__name__).debug('GET %s', url)
+        logging.getLogger(__name__).debug('DELETE %s', url)
         return requests.delete(url, params=params, headers=self.__headers)
 
     def __get(self, command, params=None):
@@ -409,3 +409,26 @@ class HabiticaService(object):
                 return_tags.append(self.create_tag(required))
 
         return return_tags
+
+    def delete_checklist_item(self, task_id, item_id):
+        """ Delete a checklist item.
+
+        Args:
+            task_id (str): The task ID.
+            item_id (str): The checklist item ID.
+        """
+        response = self.__delete(
+            'tasks/{0}/checklist/{1}'.format(task_id, item_id))
+        response.raise_for_status()
+
+    def create_checklist_item(self, task_id, item):
+        """ Add a checklist item to the task.
+
+        Args:
+            task_id (str): The task ID.
+            item (dict): The new checklist item.
+        """
+        response = self.__post(
+            'tasks/{0}/checklist'.format(task_id),
+            data=item)
+        response.raise_for_status()

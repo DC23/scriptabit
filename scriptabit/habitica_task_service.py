@@ -55,14 +55,35 @@ class HabiticaTaskService(TaskService):
                 # We need to update the task first, as scoring a todo does not
                 # update the data, and the task may have changed upstream
                 # in ways that affect the Habitica score for completing it.
-                self.__hs.update_task(td)
+                self.__update_task(task)
                 self.__hs.score_task(td)
             elif task.status in (SyncStatus.updated, SyncStatus.new):
                 # new tasks have already been created in _create_task,
                 # so we just need an update.
-                self.__hs.update_task(td)
+                self.__update_task(task)
             elif task.status == SyncStatus.deleted:
                 self.__hs.delete_task(td)
+
+    def __update_task(self, task):
+        """ Updates a task. This is required as checklists require tedious
+        handling.
+
+        Args:
+            task (scriptabit.HabiticaTask): The task to update.
+        """
+        td = task.task_dict
+
+        # delete existing checklist items
+        for i in task.existing_checklist_items:
+            self.__hs.delete_checklist_item(td['_id'], i['id'])
+
+        # recreate the new set of checklist items
+        for i in task.new_checklist_items:
+            self.__hs.create_checklist_item(td['_id'], i)
+            # do I need to score checked items separately?
+
+        # update the rest of the task
+        self.__hs.update_task(td)
 
     def _create_task(self, src=None):
         """ Task factory method.

@@ -47,12 +47,14 @@ class HabiticaTask(Task):
         # The Habitica API chokes if you attempt to update a task with a
         # checklist in the request data. To work around this we move the
         # checklist (if any) out of task_dict so it can be handled separately.
-        self.__delete_checklist_items = {}
+        # We also need separate API calls for deleted, added, and updated
+        # checklist items items
+        self.new_checklist_items = []
         if 'checklist' in task_dict.keys():
-            self.__checklist = task_dict['checklist']
+            self.existing_checklist_items = task_dict['checklist']
             del task_dict['checklist']
         else:
-            self.__checklist = []
+            self.existing_checklist_items = []
 
     @property
     def task_dict(self):
@@ -163,33 +165,8 @@ class HabiticaTask(Task):
     @checklist.setter
     def checklist(self, checklist):
         """ Sets, or clears the checklist. """
-        new_names = []
-        existing_items = { i['text']: i for i in self.__checklist }
-
-        # check the input list for new and updated items
         for i in checklist:
-            new_names.append(i.name)
-            if i.name in existing_items:
-                # update existing entry
-                existing_items[i.name]['text'] = i.name
-                existing_items[i.name]['completed'] = i.checked
-            else:
-                # create new item
-                self.__checklist.append({
-                    'text': i.name,
-                    'completed': i.checked })
-
-        # check for deleted items
-        for k,v in existing_items.items():
-            if k not in new_names:
-                self.__delete_checklist_items[k] = v
-
-    @property
-    def raw_checklist(self):
-        """ Gets the raw checklist (JSON dictionary) """
-        return self.__checklist
-
-    @property
-    def checklist_items_to_delete(self):
-        """ Gets the dictionary of checklist items to delete. """
-        return self.__delete_checklist_items
+            # create new item
+            self.new_checklist_items.append({
+                'text': i.name,
+                'completed': i.checked })
