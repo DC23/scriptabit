@@ -52,6 +52,10 @@ class HabiticaTaskService(TaskService):
         for task in tasks:
             td = task.task_dict
             if task.completed:
+                # We need to update the task first, as scoring a todo does not
+                # update the data, and the task may have changed upstream
+                # in ways that affect the Habitica score for completing it.
+                self.__hs.update_task(td)
                 self.__hs.score_task(td)
             elif task.status in (SyncStatus.updated, SyncStatus.new):
                 # new tasks have already been created in _create_task,
