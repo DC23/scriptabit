@@ -58,13 +58,10 @@ class TrelloTaskService(TaskService):
                 # settings: all cards or only those assigned to the current user
                 use_card = False
 
-                # unfortunately the py-trello lazy checklist load only works
-                # if all card data is fetched first.
-                card.fetch()
-
                 if board_defaults.all_cards:
                     use_card = True
                 else:
+                    card.fetch()  # we need the fetch to get the user ID
                     use_card = self.__current_user.id in card.member_id
 
                 if use_card:

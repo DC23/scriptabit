@@ -157,13 +157,11 @@ class TaskSync(object):
             src (Task): the source task
             dst (Task): the destination task
         """
-        # Temp: force all tasks to sync so checklists can be updated for
-        # existing tasks
-        # if src.last_modified < self.__last_sync:
-            # logging.getLogger(__name__).debug(
-                # 'Unchanged: %s', src.name)
-            # self.__stats.skipped += 1
-            # return
+        if src.last_modified < self.__last_sync:
+            logging.getLogger(__name__).debug(
+                'Unchanged: %s', src.name)
+            self.__stats.skipped += 1
+            return
 
         if src.completed:
             logging.getLogger(__name__).info(
@@ -266,13 +264,13 @@ class TaskSync(object):
         Returns:
             TaskSync.Stats: Summary statistics of the sync.
         """
+        start_sync = datetime.now(tz=pytz.utc)
+
         self.__get_task_data()
 
         logging.getLogger(__name__).info(
             'Starting sync. Last sync at %s',
             self.last_sync)
-
-        start_sync = datetime.now(tz=pytz.utc)
 
         # reset the stats
         self.__stats = TaskSync.Stats()

@@ -136,6 +136,10 @@ class TrelloTask(Task):
         # merge all trello checklists into a single list
         checklist = []
 
+        # unfortunately the py-trello lazy checklist load only works if all
+        # card data is fetched first.
+        self.__card.fetch()
+
         if self.__card.checklists:
             for cl in self.__card.checklists:
                 for i in cl.items:
