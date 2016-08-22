@@ -32,6 +32,7 @@ class Banking(scriptabit.IPlugin):
         self.__bank = None
         self.__bank_balance = 0
         self.__user_balance = 0
+        self.__transaction_fee = 0
 
     def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the banking plugin.
@@ -69,6 +70,14 @@ class Banking(scriptabit.IPlugin):
             default=':moneybag: The Scriptabit Bank',
             type=str,
             help='Banking: Sets the bank name.')
+
+        parser.add(
+            '--bank-fee-percentage',
+            required=False,
+            default=0,
+            type=float,
+            help='''Banking: Bank fee percentage. This percentage is deducted
+from each transaction''')
 
         return parser
 
@@ -109,56 +118,71 @@ class Banking(scriptabit.IPlugin):
             self.__bank['notes'])
         self.__user_balance = self._hs.get_stats()['gp']
 
+        fee_rate = min(max(0, self._config.bank_fee_percentage), 1)
+
         logging.getLogger(__name__).info(
             'Bank balance: %f',
             self.__bank_balance)
         logging.getLogger(__name__).info(
             'User balance: %f',
             self.__user_balance)
+        logging.getLogger(__name__).info(
+            'Transaction fee percentage: %f',
+            fee_rate)
 
         # Do the banking thing
         if self._config.bank_deposit > 0:
-            self.__deposit()
+            self.__deposit(fee_rate)
         elif self._config.bank_withdraw > 0:
-            self.__withdraw()
+            self.__withdraw(fee_rate)
 
         return False
 
-    def __deposit(self):
+    def __deposit(self, fee_rate):
         """ Deposit money to the bank.
+
+        Args:
+            fee_rate (float): The percentage transaction fee
         """
         # Don't deposit more money than the user has
-        amount = min(
+        gross_amount = min(
             math.trunc(self.__user_balance),
             self._config.bank_deposit)
-        logging.getLogger(__name__).info('Deposit: %d', amount)
+        fee = math.trunc(gross_amount * fee_rate)
+        nett_amount = gross_amount - fee
 
         # update the bank balance
         self.__bank['notes'] = Banking.get_balance_string(
-            self.__bank_balance + amount)
+            self.__bank_balance + nett_amount)
         self._hs.upsert_task(self.__bank)
 
         # subtract the gold from user balance
-        self._hs.set_gp(max(0, self.__user_balance - amount))
+        self._hs.set_gp(max(0, self.__user_balance - gross_amount))
 
-        self.__notify('Deposited: {0}'.format(amount))
+        message = 'Deposit: {0}, Transaction fee: {1}'.format(nett_amount, fee)
+        self.__notify(message)
 
-    def __withdraw(self):
+    def __withdraw(self, fee_rate):
         """ Withdraw money from the bank.
+
+        Args:
+            fee_rate (float): The percentage transaction fee
         """
         # Don't withdraw more money than the bank has
-        amount = min(self.__bank_balance, self._config.bank_withdraw)
-        logging.getLogger(__name__).info('Withdraw: %d', amount)
+        gross_amount = min(self.__bank_balance, self._config.bank_withdraw)
+        fee = math.trunc(gross_amount * fee_rate)
+        nett_amount = gross_amount - fee
 
         # update the bank balance
-        new_balance = max(0, self.__bank_balance - amount)
+        new_balance = max(0, self.__bank_balance - gross_amount)
         self.__bank['notes'] = Banking.get_balance_string(new_balance)
         self._hs.upsert_task(self.__bank)
 
         # add the gold to user balance
-        self._hs.set_gp(self.__user_balance + amount)
+        self._hs.set_gp(self.__user_balance + nett_amount)
 
-        self.__notify('Withdrew: {0}'.format(amount))
+        message = 'Withdrew: {0}, Transaction fee: {1}'.format(nett_amount, fee)
+        self.__notify(message)
 
     def __notify(self, message):
         """ Notify the Habitica user """
