@@ -61,6 +61,7 @@ class TaskSync(object):
             self.updated = 0
             self.completed = 0
             self.deleted = 0
+            self.errors = 0
             self.duration = None
 
         def __str__(self):
@@ -71,9 +72,10 @@ class TaskSync(object):
                 '\tTasks updated: {2}\n' +
                 '\tTasks deleted: {3}\n' +
                 '\tTasks completed: {4}\n' +
+                '\tTasks errored: {6}\n' +
                 '\tSync duration: {5}\n').format(
                     self.skipped, self.created, self.updated, self.deleted,
-                    self.completed, self.duration)
+                    self.completed, self.duration, self.errors)
 
         @property
         def total_changed(self):
@@ -255,38 +257,63 @@ class TaskSync(object):
             'Starting sync. Last sync at %s',
             self.last_sync)
 
+        start_sync = datetime.now(tz=pytz.utc)
+
         # reset the stats
         self.__stats = TaskSync.Stats()
 
         # source task checks
         for src in self.__src_tasks:
-            dst_id = self.__map.try_get_dst_id(src.id)
-            if dst_id:
-                dst = self.__get_dst_by_id(dst_id)
-                if dst:
-                    self.__handle_destination_found(src, dst)
+            try:
+                dst_id = self.__map.try_get_dst_id(src.id)
+                if dst_id:
+                    dst = self.__get_dst_by_id(dst_id)
+                    if dst:
+                        self.__handle_destination_found(src, dst)
+                    else:
+                        self.__handle_destination_missing(src)
                 else:
-                    self.__handle_destination_missing(src)
-            else:
-                self.__handle_new_task(src, sync_completed_new_tasks)
+                    self.__handle_new_task(src, sync_completed_new_tasks)
+            except Exception as e:
+                self.__stats.errors += 1
+                logging.getLogger(__name__).warning(
+                    "Error syncing task '%s':\n%s",
+                    src.name,
+                    e,
+                    exc_info=True)
 
         # destination task checks. Only need to look for cases involving missing
         # source tasks. All other sync conditions can be handled during the
         # source task loop (above).
         for dst in self.__dst_tasks:
-            src_id = self.__map.try_get_src_id(dst.id)
-            if src_id and not self.__get_src_by_id(src_id):
-                self.__handle_deleted_source_task(src_id, dst)
+            try:
+                src_id = self.__map.try_get_src_id(dst.id)
+                if src_id and not self.__get_src_by_id(src_id):
+                    self.__handle_deleted_source_task(src_id, dst)
+            except Exception as e:
+                self.__stats.errors += 1
+                logging.getLogger(__name__).warning(
+                    "Error syncing task '%s':\n%s",
+                    src.name,
+                    e,
+                    exc_info=True)
 
         # check for orphans: mappings that have neither a src or dst task
         if clean_orphans:
             self.__clean_orphan_task_mappings()
 
-        self.__dst_service.persist_tasks(self.__dst_tasks)
+        try:
+            self.__dst_service.persist_tasks(self.__dst_tasks)
+        except Exception as e:
+            self.__stats.errors += 1
+            logging.getLogger(__name__).warning(
+                'Error writing task changes.\n%s',
+                e,
+                exc_info=True)
 
-        now = datetime.now(tz=pytz.utc)
-        self.__stats.duration = now - self.__last_sync
-        self.__last_sync = now
+        end_sync = datetime.now(tz=pytz.utc)
+        self.__stats.duration = end_sync - start_sync
+        self.__last_sync = end_sync
 
         logging.getLogger(__name__).info('Sync complete.')
         logging.getLogger(__name__).info(self.__stats)
