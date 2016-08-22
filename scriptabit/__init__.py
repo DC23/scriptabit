@@ -17,11 +17,16 @@ from .habitica_task import HabiticaTask
 from .habitica_task_service import HabiticaTaskService
 from .iplugin import IPlugin
 from .scriptabit import start_cli
-from .task import Task, Difficulty, CharacterAttribute, SyncStatus
+from .task import (
+    Task,
+    Difficulty,
+    CharacterAttribute,
+    ChecklistItem,
+    SyncStatus
+)
 from .task_map import TaskMap
 from .task_service import TaskService
 from .task_sync import TaskSync
 from .utility_functions import UtilityFunctions
-
 
 from .metadata import __author__, __email__, __version__

@@ -19,6 +19,7 @@ from scriptabit import (
     Task,
     Difficulty,
     CharacterAttribute,
+    ChecklistItem,
     TaskService,
     TaskMap)
 
@@ -98,11 +99,16 @@ def test_copy_fields():
     attribute = CharacterAttribute.intelligence
     status = SyncStatus.updated
     due_date = datetime(2016, 7, 27, 6, 41, 34, 391000, tzinfo=pytz.utc)
+    checklist = [
+        ChecklistItem('item 1', False),
+        ChecklistItem('item 2', True),
+        ChecklistItem('item 3', False)]
 
     a = MockTask(
         _id, name=name, description=description, completed=completed,
         difficulty=difficulty, attribute=attribute, status=status,
         due_date=due_date)
+    a.checklist = checklist
     b = MockTask('222')
 
     # preconditions
@@ -114,6 +120,8 @@ def test_copy_fields():
     assert a.attribute != b.attribute
     assert a.status != b.status
     assert a.due_date != b.due_date
+    assert a.checklist == checklist
+    assert not b.checklist
 
     b.copy_fields(a)
 
@@ -126,3 +134,4 @@ def test_copy_fields():
     assert a.attribute == b.attribute
     assert a.status == b.status
     assert a.due_date == b.due_date
+    assert a.checklist == b.checklist

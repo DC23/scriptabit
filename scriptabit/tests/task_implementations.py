@@ -20,6 +20,7 @@ from scriptabit import (
     Task,
     Difficulty,
     CharacterAttribute,
+    ChecklistItem,
     SyncStatus,
     TaskService,
     TaskMap)
@@ -47,6 +48,7 @@ class MockTask(Task):
         self.status = status
         self.due_date = due_date
         self.__last_modified = last_modified or datetime.now(tz=pytz.utc)
+        self.__checklist = None
 
     @property
     def id(self):
@@ -123,6 +125,16 @@ class MockTask(Task):
     def last_modified(self):
         """ The last modified timestamp in UTC. """
         return self.__last_modified
+
+    @property
+    def checklist(self):
+        """ The checklist, or None if there is no checklist."""
+        return self.__checklist
+
+    @checklist.setter
+    def checklist(self, checklist):
+        """ Sets, or clears the checklist. """
+        self.__checklist = checklist
 
 
 class MockTaskService(TaskService):
