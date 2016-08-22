@@ -161,3 +161,9 @@ Changelog
   doesn't bring the whole sync down. Instead it logs the error and skips to the
   next task.
 * Made sync of task description/extra text optional, with default to False.
+
+1.4.1 (2016-08-??
+-----------------------------------------
+
+* Updated usage documentation for plugins.
+
