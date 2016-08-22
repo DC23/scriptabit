@@ -166,4 +166,4 @@ Changelog
 -----------------------------------------
 
 * Updated usage documentation for plugins.
-
+* Added transaction fee option to banking functions.

@@ -74,7 +74,7 @@ class Banking(scriptabit.IPlugin):
         parser.add(
             '--bank-fee-percentage',
             required=False,
-            default=0,
+            default=0.02,
             type=float,
             help='''Banking: Bank fee percentage. This percentage is deducted
 from each transaction''')
