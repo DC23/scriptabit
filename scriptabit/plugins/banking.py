@@ -165,8 +165,7 @@ from each transaction''')
             # deduct balance from bank if we can
             bank_amount = min(self.__bank_balance, tax)
             new_balance = max(0, self.__bank_balance - bank_amount)
-            self.__bank['notes'] = Banking.get_balance_string(new_balance)
-            self._hs.upsert_task(self.__bank)
+            self.__update_bank_balance(new_balance)
             total_paid += bank_amount
 
         message = ':smiling_imp: Taxes paid: {0}'.format(total_paid)
@@ -186,9 +185,7 @@ from each transaction''')
         nett_amount = gross_amount - fee
 
         # update the bank balance
-        self.__bank['notes'] = Banking.get_balance_string(
-            self.__bank_balance + nett_amount)
-        self._hs.upsert_task(self.__bank)
+        self.__update_bank_balance(self.__bank_balance + nett_amount)
 
         # subtract the gold from user balance
         self._hs.set_gp(max(0, self.__user_balance - gross_amount))
@@ -209,8 +206,7 @@ from each transaction''')
 
         # update the bank balance
         new_balance = max(0, self.__bank_balance - gross_amount)
-        self.__bank['notes'] = Banking.get_balance_string(new_balance)
-        self._hs.upsert_task(self.__bank)
+        self.__update_bank_balance(new_balance)
 
         # add the gold to user balance
         self._hs.set_gp(self.__user_balance + nett_amount)
@@ -224,3 +220,14 @@ from each transaction''')
         scriptabit.UtilityFunctions.upsert_notification(
             self._hs,
             text=':moneybag: ' + message)
+
+    def __update_bank_balance(self, new_balance):
+        """ Updates the bank balance.
+
+        Args:
+            new_balance (float): The new balance.
+        """
+        new_balance = math.trunc(new_balance)
+        self.__bank['notes'] = Banking.get_balance_string(new_balance)
+        self.__bank['value'] = new_balance
+        self._hs.upsert_task(self.__bank)
