@@ -88,6 +88,7 @@ Operations include:
 - `-hp n`: Set the user health to n
 - `-mp n`: Set the user's mana points to n
 - `-xp n`: Set experience points to n
+- `-gp n`: Set gold to n
 - `-ls`: List available plugins.
 
 After running `scriptabit` at least once, configuration files will be created in

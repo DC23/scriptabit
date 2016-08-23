@@ -82,7 +82,7 @@ If there is not enough gold in your main balance, it tries the bank.''')
         parser.add(
             '--bank-fee-percentage',
             required=False,
-            default=0.02,
+            default=0.05,
             type=float,
             help='''Banking: Bank fee percentage. This percentage is deducted
 from each transaction''')

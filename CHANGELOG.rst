@@ -165,7 +165,7 @@ Changelog
 1.5.0 (2016-08-??
 -----------------------------------------
 
-* Updated usage documentation for plugins.
+* Updated usage documentation for banking.
 * Added transaction fee option to banking functions.
 * Added tax feature to banking plugin.
 * Added direct gold amount setting to utility functions (-gp X)
