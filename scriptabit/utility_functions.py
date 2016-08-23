@@ -72,6 +72,14 @@ class UtilityFunctions(object):
             help='''If > 0, set the user's current XP (experience points)''')
 
         parser.add(
+            '-gp',
+            '--set-gp',
+            type=float,
+            default=-1.0,
+            required=False,
+            help='''If > 0, set the user's current gold (gold points)''')
+
+        parser.add(
             '-t',
             '--test',
             required=False,
@@ -97,6 +105,9 @@ class UtilityFunctions(object):
 
         if self.__config.set_xp >= 0:
             self.set_xp(self.__config.set_xp)
+
+        if self.__config.set_gp >= 0:
+            self.set_gold(self.__config.set_gp)
 
     def set_health(self, hp):
         """Sets the user health to the specified value"""
@@ -124,6 +135,15 @@ class UtilityFunctions(object):
             'MP changed from %f to %f',
             old_mp,
             new_mp)
+
+    def set_gold(self, gp):
+        """Sets the user gold to the specified value"""
+        old = self.__hs.get_stats()['gp']
+        new = self.__hs.set_gp(gp)
+        logging.getLogger(__name__).info(
+            'Gold changed from %f to %f',
+            old,
+            new)
 
     def show_user_data(self):
         """Shows the user data"""

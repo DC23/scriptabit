@@ -162,9 +162,10 @@ Changelog
   next task.
 * Made sync of task description/extra text optional, with default to False.
 
-1.4.1 (2016-08-??
+1.5.0 (2016-08-??
 -----------------------------------------
 
 * Updated usage documentation for plugins.
 * Added transaction fee option to banking functions.
 * Added tax feature to banking plugin.
+* Added direct gold amount setting to utility functions (-gp X)
