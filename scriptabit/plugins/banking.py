@@ -65,6 +65,14 @@ class Banking(scriptabit.IPlugin):
             help='Banking: Withdraw gold')
 
         parser.add(
+            '--bank-tax',
+            required=False,
+            default=0,
+            type=int,
+            help='''Banking: Pay your taxes. Deducts the specified gold amount.
+If there is not enough gold in your main balance, it tries the bank.''')
+
+        parser.add(
             '--bank-name',
             required=False,
             default=':moneybag: The Scriptabit Bank',
@@ -84,7 +92,7 @@ from each transaction''')
     @staticmethod
     def get_balance_string(amount):
         """Gets the formatted bank balance string for a given amount"""
-        return 'Balance: {0}'.format(amount)
+        return 'Balance: {0}'.format(math.trunc(amount))
 
     @staticmethod
     def get_balance_from_string(s):
@@ -135,8 +143,34 @@ from each transaction''')
             self.__deposit(fee_rate)
         elif self._config.bank_withdraw > 0:
             self.__withdraw(fee_rate)
+        elif self._config.bank_tax > 0:
+            self.__pay_tax()
 
         return False
+
+    def __pay_tax(self):
+        """ Pays taxes, trying first from the main balance, and then from the
+        bank.
+        """
+        tax = self._config.bank_tax
+
+        # subtract from user balance
+        user_amount = min(self.__user_balance, tax)
+        self._hs.set_gp(max(0, self.__user_balance - user_amount))
+        total_paid = user_amount
+
+        # tax still owing?
+        tax -= user_amount
+        if tax > 0:
+            # deduct balance from bank if we can
+            bank_amount = min(self.__bank_balance, tax)
+            new_balance = max(0, self.__bank_balance - bank_amount)
+            self.__bank['notes'] = Banking.get_balance_string(new_balance)
+            self._hs.upsert_task(self.__bank)
+            total_paid += bank_amount
+
+        message = ':smiling_imp: Taxes paid: {0}'.format(total_paid)
+        self.__notify(message)
 
     def __deposit(self, fee_rate):
         """ Deposit money to the bank.
