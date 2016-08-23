@@ -158,8 +158,10 @@ class TaskSync(object):
             dst (Task): the destination task
         """
         if src.last_modified < self.__last_sync:
-            logging.getLogger(__name__).debug(
-                'Unchanged: %s', src.name)
+            # It seems that I don't care about unchanged messages even with
+            # debug level logging enabled.
+            # logging.getLogger(__name__).debug(
+                # 'Unchanged: %s', src.name)
             self.__stats.skipped += 1
             return
 

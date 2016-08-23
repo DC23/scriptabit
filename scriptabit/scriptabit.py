@@ -13,6 +13,7 @@ from builtins import *
 import logging
 import logging.config
 import os
+from datetime import datetime
 from time import sleep
 
 from pkg_resources import Requirement, resource_filename
@@ -208,9 +209,9 @@ def start_cli():
                          count >= config.max_updates))
 
                 while keep_updating():
-                    logging.getLogger(__name__).debug("%s update %d",
-                                                      config.run,
-                                                      count)
+                    logging.getLogger(__name__).info(
+                        "%s update %d @ %s",
+                        config.run, count, datetime.now())
                     updating = plugin.update()
                     count += 1
 
