@@ -123,6 +123,9 @@ class CsvTasks(scriptabit.IPlugin):
                         task['up'] = self.__parse_bool(row['up'])
                         task['down'] = self.__parse_bool(row['down'])
 
+                    if task['type'] == 'reward' and 'value' in row.keys():
+                        task['value'] = max(0, int(row['value']))
+
                     if 'tags' in row.keys():
                         if row['tags']:
                             tags = row['tags'].split(',')
@@ -133,9 +136,11 @@ class CsvTasks(scriptabit.IPlugin):
                         self.tasks.append(task)
                     else:
                         logging.getLogger(__name__).warning(
-                            'Skipping task on row %d: type not specified',
+                            'Skipping task on row %d: invalid task type',
                             row_count)
 
+                except ValueError as ex:
+                    logging.getLogger(__name__).error(ex, exc_info=True)
                 except KeyError as ex:
                     logging.getLogger(__name__).error(ex, exc_info=True)
                 except Exception as ex:
