@@ -1,3 +1,5 @@
+.. _detailed-usage:
+
 Detailed Usage
 --------------
 

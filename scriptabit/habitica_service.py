@@ -398,8 +398,8 @@ class HabiticaService(object):
             tags (list): The list of tag names.
 
         Returns:
-            tags (list): The list of Habitica Tag objects corresponding to
-                the tags argument.
+            list: The list of Habitica Tag objects corresponding to
+            the tags argument.
         """
         current_tags = self.get_tags()
         current_tag_names = [t['name'] for t in current_tags]

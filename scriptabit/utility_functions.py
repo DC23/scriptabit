@@ -35,7 +35,8 @@ class UtilityFunctions(object):
     def get_arg_parser(cls):
         """Gets the argument parser containing Utility function CLI arguments.
 
-        Returns: argparse.ArgParser:  The ArgParser containing the argument
+        Returns:
+            argparse.ArgParser:  The ArgParser containing the argument
             definitions.
         """
         parser = configargparse.ArgParser(add_help=False)

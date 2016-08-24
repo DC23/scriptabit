@@ -96,7 +96,7 @@ After running `scriptabit` at least once, configuration files will be created in
 can revert to the installation defaults by deleting the files (they will be
 recreated on the next run).
 
-See the `Detailed Usage` section for detailed instructions on specific
+See the :ref:`detailed-usage` section for detailed instructions on specific
 functionality.
 
 Writing Plugins
