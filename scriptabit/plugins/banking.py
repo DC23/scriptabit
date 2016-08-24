@@ -113,12 +113,14 @@ from each transaction''')
         self.__bank = self._hs.get_task(alias='scriptabit_banking')
         if not self.__bank:
             logging.getLogger(__name__).info('Creating new bank task')
+            tag = self._hs.create_tags(['scriptabit'])
             self.__bank = self._hs.create_task({
                 'alias': 'scriptabit_banking',
                 'attribute': 'per',
                 'priority': 1,
                 'text': self._config.bank_name,
                 'type': 'reward',
+                'tags': [tag[0]['id']],
                 'value': 0})
 
         # Get the user and bank balances
@@ -140,15 +142,15 @@ from each transaction''')
 
         # Do the banking thing
         if self._config.bank_deposit > 0:
-            self.__deposit(fee_rate)
+            self.deposit(fee_rate)
         elif self._config.bank_withdraw > 0:
-            self.__withdraw(fee_rate)
+            self.withdraw(fee_rate)
         elif self._config.bank_tax > 0:
-            self.__pay_tax()
+            self.pay_tax()
 
         return False
 
-    def __pay_tax(self):
+    def pay_tax(self):
         """ Pays taxes, trying first from the main balance, and then from the
         bank.
         """
@@ -165,13 +167,13 @@ from each transaction''')
             # deduct balance from bank if we can
             bank_amount = min(self.__bank_balance, tax)
             new_balance = max(0, self.__bank_balance - bank_amount)
-            self.__update_bank_balance(new_balance)
+            self.update_bank_balance(new_balance)
             total_paid += bank_amount
 
         message = ':smiling_imp: Taxes paid: {0}'.format(total_paid)
-        self.__notify(message)
+        self.notify(message)
 
-    def __deposit(self, fee_rate):
+    def deposit(self, fee_rate):
         """ Deposit money to the bank.
 
         Args:
@@ -185,15 +187,15 @@ from each transaction''')
         nett_amount = gross_amount - fee
 
         # update the bank balance
-        self.__update_bank_balance(self.__bank_balance + nett_amount)
+        self.update_bank_balance(self.__bank_balance + nett_amount)
 
         # subtract the gold from user balance
         self._hs.set_gp(max(0, self.__user_balance - gross_amount))
 
         message = 'Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
-        self.__notify(message)
+        self.notify(message)
 
-    def __withdraw(self, fee_rate):
+    def withdraw(self, fee_rate):
         """ Withdraw money from the bank.
 
         Args:
@@ -206,22 +208,22 @@ from each transaction''')
 
         # update the bank balance
         new_balance = max(0, self.__bank_balance - gross_amount)
-        self.__update_bank_balance(new_balance)
+        self.update_bank_balance(new_balance)
 
         # add the gold to user balance
         self._hs.set_gp(self.__user_balance + nett_amount)
 
         message = 'Withdrew: {0}, Fee: {1}'.format(nett_amount, fee)
-        self.__notify(message)
+        self.notify(message)
 
-    def __notify(self, message):
+    def notify(self, message):
         """ Notify the Habitica user """
         logging.getLogger(__name__).info(message)
         scriptabit.UtilityFunctions.upsert_notification(
             self._hs,
             text=':moneybag: ' + message)
 
-    def __update_bank_balance(self, new_balance):
+    def update_bank_balance(self, new_balance):
         """ Updates the bank balance.
 
         Args:

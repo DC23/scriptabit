@@ -162,7 +162,7 @@ The default is to only synchronise the task names.''')
         # instantiate the HabiticaTaskService
         self.__habitica_task_service = HabiticaTaskService(
             habitica_service,
-            tags=['Trello'])
+            tags=['Trello', 'scriptabit'])
 
         self.__task_map_file = os.path.join(
             self._data_dir,
