@@ -165,7 +165,9 @@ Changelog
 1.5.0 (2016-08-??
 -----------------------------------------
 
-* Updated usage documentation for banking.
+* Updated usage documentation for banking, and CSV upload.
 * Added transaction fee option to banking functions.
 * Added tax feature to banking plugin.
 * Added direct gold amount setting to utility functions (-gp X)
+* Changed bank fees to use a diminishing returns function, to reward the larger
+  risk of saving longer to deposit larger amounts.

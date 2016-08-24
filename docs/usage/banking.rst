@@ -70,11 +70,21 @@ players seeking an extra challenge::
 Bank Fees
 +++++++++
 
-Extra realism is available through bank fees. The fee is charged
-as a percentage of each transaction. By default the fee is 5%, which means that
-every 100 gold that is deposited or withdrawn will cost 5 gold. The fee can be
-adjusted through the `--bank-fee-percentage` option. Once you have a value you
-like (it can be 0), consider setting it in the scriptabit.cfg file::
+Extra realism is available through bank fees. Fees are charged for deposits and
+withdrawals. Small transactions are expensive, with larger transactions becoming
+better value for money. The fees level off significantly after 1000 gold.
+This means that the most cost effective way to use the bank is to save at least 
+1000 gold first, however this increases the risk of losing your gold due to
+death. It is up to you to balance the transaction cost with the risk of death.
 
+The command line argument `--bank-max-fee` sets the upper limit on fees. 
+Values up to 600 will make transactions very expensive, while going beyond
+600 will start to make small transactions cost more than the transaction
+amount.
+
+Fees can be disabled by setting `bank-max-fee` to zero.
+This can be on the command line, or permanently by adding the following 
+to the scriptabit.cfg file::
+    
     [banking]
-    bank-fee-percentage = 0.15
+    bank-max-fee = 0

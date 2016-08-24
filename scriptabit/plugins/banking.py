@@ -80,12 +80,14 @@ If there is not enough gold in your main balance, it tries the bank.''')
             help='Banking: Sets the bank name.')
 
         parser.add(
-            '--bank-fee-percentage',
+            '--bank-max-fee',
             required=False,
-            default=0.05,
-            type=float,
-            help='''Banking: Bank fee percentage. This percentage is deducted
-from each transaction''')
+            type=int,
+            default=100,
+            help='''Banking: The maximum fee limit. Set to 0 to disable fees.
+Values up to 600 will make transactions very expensive, while going beyond
+600 will start to make small transactions cost more than the transaction
+amount.''')
 
         return parser
 
@@ -128,23 +130,18 @@ from each transaction''')
             self.__bank['notes'])
         self.__user_balance = self._hs.get_stats()['gp']
 
-        fee_rate = min(max(0, self._config.bank_fee_percentage), 1)
-
         logging.getLogger(__name__).info(
             'Bank balance: %f',
             self.__bank_balance)
         logging.getLogger(__name__).info(
             'User balance: %f',
             self.__user_balance)
-        logging.getLogger(__name__).info(
-            'Transaction fee percentage: %f',
-            fee_rate)
 
         # Do the banking thing
         if self._config.bank_deposit > 0:
-            self.deposit(fee_rate)
+            self.deposit()
         elif self._config.bank_withdraw > 0:
-            self.withdraw(fee_rate)
+            self.withdraw()
         elif self._config.bank_tax > 0:
             self.pay_tax()
 
@@ -173,18 +170,15 @@ from each transaction''')
         message = ':smiling_imp: Taxes paid: {0}'.format(total_paid)
         self.notify(message)
 
-    def deposit(self, fee_rate):
+    def deposit(self):
         """ Deposit money to the bank.
-
-        Args:
-            fee_rate (float): The percentage transaction fee
         """
         # Don't deposit more money than the user has
         gross_amount = min(
             math.trunc(self.__user_balance),
             self._config.bank_deposit)
-        fee = math.trunc(gross_amount * fee_rate)
-        nett_amount = gross_amount - fee
+        fee = math.trunc(self.calculate_fee(gross_amount))
+        nett_amount = max(0, gross_amount - fee)
 
         # update the bank balance
         self.update_bank_balance(self.__bank_balance + nett_amount)
@@ -195,16 +189,13 @@ from each transaction''')
         message = 'Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
         self.notify(message)
 
-    def withdraw(self, fee_rate):
+    def withdraw(self):
         """ Withdraw money from the bank.
-
-        Args:
-            fee_rate (float): The percentage transaction fee
         """
         # Don't withdraw more money than the bank has
         gross_amount = min(self.__bank_balance, self._config.bank_withdraw)
-        fee = math.trunc(gross_amount * fee_rate)
-        nett_amount = gross_amount - fee
+        fee = math.trunc(self.calculate_fee(gross_amount))
+        nett_amount = max(0, gross_amount - fee)
 
         # update the bank balance
         new_balance = max(0, self.__bank_balance - gross_amount)
@@ -233,3 +224,17 @@ from each transaction''')
         self.__bank['notes'] = Banking.get_balance_string(new_balance)
         self.__bank['value'] = new_balance
         self._hs.upsert_task(self.__bank)
+
+    def calculate_fee(self, amount):
+        """ Calculates the fee for a given transaction amount.
+
+        Args:
+            amount (float): The transaction amount.
+
+        Returns:
+            float: the transaction fee.
+        """
+        # Diminishing returns exponential function, tuned to be expensive at
+        # amounts < 1000 gold, but to flatten quickly for amounts > 1000
+        limit = max(0, self._config.bank_max_fee)
+        return limit * (1 - math.exp(-0.0015 * amount))
