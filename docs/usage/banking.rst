@@ -10,7 +10,8 @@ The first time the banking plugin runs it will create a custom reward called
 command line argument, or by simply editing the name of the custom reward in
 Habitica once it has been created.
 
-Do not delete the custom reward without first withdrawing all the gold.
+Do not delete the custom reward without first withdrawing all the gold, or your
+gold will be lost.
 
 Also, don't purchase the bank reward in Habitica. The current balance is shown
 as the reward value for convenience. Actually purchasing the reward in-game will
@@ -77,7 +78,7 @@ This means that the most cost effective way to use the bank is to save at least
 1000 gold first, however this increases the risk of losing your gold due to
 death. It is up to you to balance the transaction cost with the risk of death.
 
-The command line argument `--bank-max-fee` sets the upper limit on fees. 
+The command line argument `bank-max-fee` sets the upper limit on fees. 
 Values up to 600 will make transactions very expensive, while going beyond
 600 will start to make small transactions cost more than the transaction
 amount.
