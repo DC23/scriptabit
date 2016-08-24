@@ -252,7 +252,7 @@ The default is to only synchronise the task names.''')
 
         stats = sync.synchronise(
             clean_orphans=False,
-            sync_completed_new_tasks=False)
+            sync_completed_new_tasks=True)
 
         self.__notify(stats)
 
