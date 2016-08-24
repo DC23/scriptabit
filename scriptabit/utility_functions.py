@@ -167,7 +167,7 @@ class UtilityFunctions(object):
             text,
             notes='',
             heading_level=0,
-            tags=['scriptabit'],
+            tags=None,
             alias='scriptabit_notification_panel'):
         """ Creates or updates a notification (currently implemented as a
         scoreless habit).
@@ -178,7 +178,8 @@ class UtilityFunctions(object):
             notes (str): the extra text/notes.
             heading_level (int): If > 0, Markdown heading syntax is
                 prepended to the message text.
-            tags (list): Optional list of tags to be applied to the notification.
+            tags (list): Optional list of tags to be applied to
+                the notification.
             alias (str): the notification alias.
 
         Returns:
@@ -197,9 +198,9 @@ class UtilityFunctions(object):
             'notes': notes,
             }
 
-        if tags:
-            tags = habitica_service.create_tags(tags)
-            task['tags'] = [t['id'] for t in tags]
+        tags = tags or ['scriptabit']
+        tags = habitica_service.create_tags(tags)
+        task['tags'] = [t['id'] for t in tags]
 
         return habitica_service.upsert_task(
             task,

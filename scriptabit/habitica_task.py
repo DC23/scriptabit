@@ -155,7 +155,13 @@ class HabiticaTask(Task):
                 checklist items.
         """
         checklist = []
-        for i in self.__checklist:
+
+        for i in self.new_checklist_items:
+            checklist.append(ChecklistItem(
+                name=i['text'],
+                checked=i['completed']))
+
+        for i in self.existing_checklist_items:
             checklist.append(ChecklistItem(
                 name=i['text'],
                 checked=i['completed']))
@@ -169,4 +175,4 @@ class HabiticaTask(Task):
             # create new item
             self.new_checklist_items.append({
                 'text': i.name,
-                'completed': i.checked })
+                'completed': i.checked})

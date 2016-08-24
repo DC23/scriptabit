@@ -154,7 +154,7 @@ class CsvTasks(scriptabit.IPlugin):
             return False
 
         if not self._config.dry_run and self.tasks:
-            result = self._hs.create_tasks(self.tasks)
+            self._hs.create_tasks(self.tasks)
 
         self.__notify('Uploaded {0} rows from CSV'.format(row_count))
 

@@ -86,12 +86,12 @@ class TaskSync(object):
                 self.deleted
 
     def __init__(
-        self,
-        src_service,
-        dst_service,
-        task_map,
-        last_sync=None,
-        sync_description=True):
+            self,
+            src_service,
+            dst_service,
+            task_map,
+            last_sync=None,
+            sync_description=True):
         """ Initialise the TaskSync instance.
 
         Args:
@@ -309,7 +309,7 @@ class TaskSync(object):
                 self.__stats.errors += 1
                 logging.getLogger(__name__).warning(
                     "Error syncing task '%s':\n%s",
-                    src.name,
+                    dst.name,
                     e,
                     exc_info=True)
 
