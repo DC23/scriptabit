@@ -25,6 +25,17 @@ class PetCare(scriptabit.IPlugin):
         super().__init__()
         self.__items = None
         self.__print_help = None
+        self.__good_food = {
+            'Base': ['Meat'],
+            'CottonCandyBlue': ['CottonCandyBlue'],
+            'CottonCandyPink': ['CottonCandyPink'],
+            'Desert': ['Potatoe'],
+            'Golden': ['Honey'],
+            'Red': ['Strawberry'],
+            'Skeleton': ['Fish'],
+            'White': ['Milk'],
+            'Zombie': ['RottenMeat'],
+        }
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -39,6 +50,18 @@ class PetCare(scriptabit.IPlugin):
             required=False,
             action='store_true',
             help='Lists all pet-related items')
+
+        parser.add(
+            '--pets-feed',
+            required=False,
+            action='store_true',
+            help='Feed all pets')
+
+        parser.add(
+            '--pets-non-preferred-food',
+            required=False,
+            action='store_true',
+            help='When feeding pets, allows the use of non-preferred food')
 
         self.__print_help = parser.print_help
 
@@ -67,7 +90,7 @@ class PetCare(scriptabit.IPlugin):
 
         Returns: float: The required update interval in minutes.
         """
-        return 2.0 / 60.0  # 2 seconds
+        return 30
 
     def update(self):
         """ This update method will be called once on every update cycle,
@@ -83,30 +106,101 @@ class PetCare(scriptabit.IPlugin):
 
         # do work here
         if self._config.pets_list_items:
-            self.__list_pet_items(self.__items)
+            self.list_pet_items(self.__items)
             return False
 
+        if self._config.pets_feed:
+            self.feed_pets(self._config.pets_non_preferred_food)
+            # self.feed_pets(True)
+            return False
+
+        # if no other options selected, print plugin specific help and exit
         self.__print_help()
 
         # return False if finished, and True to be updated again.
         return False
 
+    def feed_pets(self, any_food=False):
+        """ Feeds all current pets.
+
+        Args:
+            any_food (bool): If true, any food items will be used; otherwise
+                only preferred food items will be offered to a pet.
+        """
+        # TODO: filter pets by normal and special pets.
+        # Probably want an option to only feed normal pets
+        pets = self.__items['pets']
+        for pet, growth in pets.items():
+            food = self.get_food_for_pet(pet, any_food)
+            if food:
+                logging.getLogger(__name__).info(
+                    '%s (%d): %s', pet, growth, food)
+            else:
+                logging.getLogger(__name__).info(
+                    '%s (%d): no food :(', pet, growth)
+
+    def get_food_for_pet(self, pet, any_food=False):
+        """ Gets a food item for a pet """
+        # split the pet name
+        animal, potion = pet.split('-')
+
+        if any_food:
+            # just iterate all food until we find one in stock
+            all_food = self.__items['food']
+            for k, v in all_food.items():
+                if v > 0:
+                    # consume a piece of food
+                    all_food[k] = v - 1
+                    return k
+        else:
+            # get a list of candidate preferred foods
+            pantry = self.get_good_food_for_potion(potion)
+            # then iterate
+            for cf in pantry:
+                food = self.get_if_has_food(cf)
+                if food:
+                    return food
+        return None
+
+    def get_if_has_food(self, food):
+        """ Returns the food if it is in stock, otherwise returns None """
+        quantity = self.__items['food'].get(food, 0)
+        if quantity > 0:
+            self.__items['food'][food] = quantity - 1
+            return food
+        return None
+
+    def get_good_food_for_potion(self, potion):
+        """ Gets a list of known good foods for a given potion type """
+        foods = []
+
+        # standard foods
+        if potion in self.__good_food:
+            foods.extend(self.__good_food[potion])
+
+        # special foods
+        foods.append('Cake_{0}'.format(potion))
+
+        # TODO: special potions that like all foods
+
+        return foods
+
     @staticmethod
-    def __list_pet_items(items):
+    def list_pet_items(items):
         """ Lists all pet-related inventory items.
 
         Args:
             items (dict): The Habitica user.items dictionary.
         """
         print()
+        print('Food:')
+        pprint(items['food'])
+        print()
         print('Eggs:')
         pprint(items['eggs'])
         print()
         print('Hatching potions:')
         pprint(items['hatchingPotions'])
-        print()
-        print('Food:')
-        pprint(items['food'])
         print()
         print('Pets:')
         pprint(items['pets'])
