@@ -28,7 +28,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 project = 'scriptabit'
 copyright = '2016, DC23'
-version = release = '1.4.0'
+version = release = '1.5.0'
 pygments_style = 'perldoc'
 templates_path = ['.']
 html_use_smartypants = True
