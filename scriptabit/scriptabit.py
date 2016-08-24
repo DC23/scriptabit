@@ -211,7 +211,7 @@ def start_cli():
                 while keep_updating():
                     logging.getLogger(__name__).info(
                         "%s update %d @ %s",
-                        config.run, count, datetime.now())
+                        config.run, count, datetime.now().strftime("%c"))
                     updating = plugin.update()
                     count += 1
 

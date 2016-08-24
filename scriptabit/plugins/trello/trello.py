@@ -280,13 +280,10 @@ The default is to only synchronise the task names.''')
         total = sync_stats.total_changed
         now = datetime.now()
 
-        text = '{0} {1} Trello Tasks Updated @ {2}:{3:02d} {4}/{5}'.format(
+        text = '{0} {1} Trello Tasks Updated @ {2}'.format(
             ':mailbox_with_mail:' if total else ':mailbox_with_no_mail:',
             total,
-            now.hour,
-            now.minute,
-            now.day,
-            now.month)
+            now.strftime('%X %x'))
 
         UtilityFunctions.upsert_notification(
             self._hs,

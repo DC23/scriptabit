@@ -190,7 +190,7 @@ from each transaction''')
         # subtract the gold from user balance
         self._hs.set_gp(max(0, self.__user_balance - gross_amount))
 
-        message = 'Deposit: {0}, Transaction fee: {1}'.format(nett_amount, fee)
+        message = 'Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
         self.__notify(message)
 
     def __withdraw(self, fee_rate):
@@ -211,7 +211,7 @@ from each transaction''')
         # add the gold to user balance
         self._hs.set_gp(self.__user_balance + nett_amount)
 
-        message = 'Withdrew: {0}, Transaction fee: {1}'.format(nett_amount, fee)
+        message = 'Withdrew: {0}, Fee: {1}'.format(nett_amount, fee)
         self.__notify(message)
 
     def __notify(self, message):
