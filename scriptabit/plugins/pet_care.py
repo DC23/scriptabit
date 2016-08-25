@@ -332,8 +332,9 @@ class PetCare(scriptabit.IPlugin):
             except Exception as e:
                 logging.getLogger(__name__).warning(e)
 
-        message = '{1} pets ate {0} pieces of food. Raised {2} mounts'.format(
-            food_count, pet_count, mounts_raised)
+        message = \
+            'Checked {1} pets, fed {0} pieces of food, raised {2} mounts'.\
+            format(food_count, pet_count, mounts_raised)
         self.notify(message)
 
     def get_food_for_pet(self, pet):
