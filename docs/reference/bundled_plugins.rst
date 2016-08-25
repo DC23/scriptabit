@@ -22,6 +22,13 @@ Health Effects
     :members:
     :private-members:
 
+Pet Care
+++++++++
+.. automodule:: scriptabit.plugins.pet_care
+    :special-members:
+    :members:
+    :private-members:
+
 Sample
 ++++++
 .. automodule:: scriptabit.plugins.sample
