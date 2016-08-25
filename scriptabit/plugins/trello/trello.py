@@ -14,7 +14,6 @@ import os
 import pickle
 from configparser import ConfigParser, NoOptionError
 from datetime import datetime, timedelta
-from pprint import pprint
 import pytz
 import scriptabit
 from scriptabit import (
@@ -27,7 +26,6 @@ from scriptabit import (
 
 from trello import TrelloClient
 from trello.util import create_oauth_token
-from tzlocal import get_localzone
 
 from .board_config import BoardConfig
 from .trello_task_service import TrelloTaskService
@@ -46,6 +44,8 @@ class Trello(scriptabit.IPlugin):
     class PersistentData(object):
         """ Data that needs to be persisted. """
         def __init__(self):
+            # If we have no stored last sync time, then use a two day window
+            # for catching new & completed tasks
             self.last_sync = datetime.now(tz=pytz.utc) - timedelta(days=2)
 
     def __init__(self):
@@ -270,12 +270,17 @@ The default is to only synchronise the task names.''')
         Args:
             sync_stats (TaskSync.Stats): Stats from the last sync.
         """
+
+        # Ahh, pylint - so useful but so pedantic. Yes this line is longer than
+        # 80 characters, but any other rearrangment is much uglier!
+        # pylint: disable=line-too-long
         notes = "{0} updated\n{1} completed\n{2} deleted\n{3} created\n{4} skipped".format(
             sync_stats.updated,
             sync_stats.completed,
             sync_stats.deleted,
             sync_stats.created,
             sync_stats.skipped)
+        # pylint: enable=line-too-long
 
         total = sync_stats.total_changed
         now = datetime.now()

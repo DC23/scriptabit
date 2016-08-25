@@ -9,7 +9,6 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 from datetime import datetime
-from pprint import pprint
 import pytz
 
 from scriptabit import CharacterAttribute, ChecklistItem, Difficulty, Task

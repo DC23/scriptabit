@@ -143,9 +143,6 @@ def start_cli():
     if config.version:
         return
 
-    # Disabling the broad exception warning as catching
-    # everything is *exactly* the intent here.
-    # pylint: disable=broad-except
     try:
         if config.list_plugins:
             logging.getLogger(__name__).debug('Listing available plugins')
@@ -227,7 +224,6 @@ def start_cli():
 
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)
-        # pylint: enable=broad-except
 
     logging.getLogger(__name__).info("Exiting")
 

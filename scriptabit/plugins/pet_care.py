@@ -142,7 +142,7 @@ class PetCare(scriptabit.IPlugin):
     def get_food_for_pet(self, pet, any_food=False):
         """ Gets a food item for a pet """
         # split the pet name
-        animal, potion = pet.split('-')
+        _, potion = pet.split('-')
 
         if any_food:
             # just iterate all food until we find one in stock
