@@ -35,6 +35,7 @@ class PetCare(scriptabit.IPlugin):
             'Skeleton': ['Fish'],
             'White': ['Milk'],
             'Zombie': ['RottenMeat'],
+            'Shade': ['Chocolate'],
         }
 
     def get_arg_parser(self):
