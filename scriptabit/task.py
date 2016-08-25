@@ -8,7 +8,6 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-# from abc import ABCMeta, abstractmethod
 from enum import Enum
 from datetime import datetime
 

@@ -15,18 +15,61 @@ from pprint import pprint
 
 import scriptabit
 
+
 class PetCare(scriptabit.IPlugin):
     """ Habitica pet care
     """
     def __init__(self):
         """ Initialises the plugin.
-        Generally nothing to do here other than initialise any class attributes.
         """
         super().__init__()
         self.__items = None
         self.__print_help = None
         self.__any_food = False
-        self.__good_food = {
+
+        # Generate the reference lists
+        self.__base_pets = [
+            'BearCub',
+            'Cactus',
+            'Dragon',
+            'FlyingPig',
+            'Fox',
+            'LionCub',
+            'PandaCub',
+            'TigerCub',
+            'Wolf',
+        ]
+
+        # TODO: other rare pets
+        self.__rare_pets = [
+            'Wolf-Veteran',
+        ]
+
+        # TODO: I probably don't need this list. Any pet that is not in the
+        # base pets, special potions, or rare list is by default a quest pet
+        # self.__quest_pets = [
+            # 'Armadillo',
+            # 'SeaTurtle',
+            # 'Axolotl',
+            # 'Treeling',
+            # 'Falcon',
+            # 'Snail',
+            # 'Monkey',
+            # 'Sabretooth',
+            # 'Unicorn',
+            # 'Snake',
+            # 'Frog',
+            # 'Horse',
+            # 'Cheetah',
+            # '',
+            # '',
+            # '',
+            # '',
+            # '',
+            # '',
+        # ]
+
+        self.__preferred_foods = {
             'Base': ['Meat'],
             'CottonCandyBlue': ['CottonCandyBlue'],
             'CottonCandyPink': ['CottonCandyPink'],
@@ -38,6 +81,37 @@ class PetCare(scriptabit.IPlugin):
             'Zombie': ['RottenMeat'],
             'Shade': ['Chocolate'],
         }
+
+        self.__base_potions = [
+            'Base',
+            'White',
+            'Desert',
+            'Red',
+            'Shade',
+            'Skeleton',
+            'Zombie',
+            'CottonCandyPink',
+            'CottonCandyBlue',
+            'Golden',
+        ]
+
+        self.__special_potions = [
+            'Floral',
+            'Thunderstorm',
+        ]
+
+        # augment the preferred foods with the special foods
+        for potion in self.__base_potions:
+            self.__preferred_foods[potion].append('Cake_{0}'.format(potion))
+            # TODO: other special foods
+
+        # build a list of all foods, for the special potions
+        self.__all_foods = []
+        for f in self.__preferred_foods.values():
+            self.__all_foods.extend(f)
+
+        for potion in self.__special_potions:
+            self.__preferred_foods[potion] = self.__all_foods
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -122,21 +196,95 @@ class PetCare(scriptabit.IPlugin):
         # return False if finished, and True to be updated again.
         return False
 
+    def is_base_pet(self, pet, animal, potion):
+        """ Is this a base pet?
+
+        Args:
+            pet (str): The full pet name.
+            animal (str): The animal type.
+            potion (str): The potion type.
+        """
+        return animal in self.__base_pets and potion in self.__base_potions
+
+    def is_quest_pet(self, pet, animal, potion):
+        """ Is this a quest pet?
+
+        Args:
+            pet (str): The full pet name.
+            animal (str): The animal type.
+            potion (str): The potion type.
+        """
+        return not (self.is_base_pet(pet, animal, potion)
+                    or self.is_magic_pet(pet, animal, potion)
+                    or self.is_rare_pet(pet, animal, potion))
+
+    def is_magic_pet(self, pet, animal, potion):
+        """ Is this a magic pet?
+
+        Args:
+            pet (str): The full pet name.
+            animal (str): The animal type.
+            potion (str): The potion type.
+        """
+        return potion in self.__special_potions
+
+    def is_rare_pet(self, pet, animal, potion):
+        """ Is this a rare pet?
+
+        Args:
+            pet (str): The full pet name.
+            animal (str): The animal type.
+            potion (str): The potion type.
+        """
+        return pet in self.__rare_pets
+
+    def get_pets(self, base=True, magic=False, quest=False, rare=False):
+        """ Gets a filtered list of current user pets.
+
+        Args:
+            base (bool): Includes or excludes base pets.
+            magic (bool): Includes or excludes magic pets.
+            quest (bool): Includes or excludes quest pets.
+            rare (bool): Includes or excludes rare pets.
+
+        Returns:
+            list: the filtered pet list tuples (name, growth).
+        """
+        pets = []
+        for pet, growth in self.__items['pets'].items():
+            # Habitica indicates a pet that has been raised to a mount with
+            # growth == -1. These pets are non-interactive, so exclude them
+            if growth > 0:
+                animal, potion = pet.split('-')
+                if base and self.is_base_pet(pet, animal, potion):
+                    pets.append((pet, growth))
+                elif magic and self.is_magic_pet(pet, animal, potion):
+                    pets.append((pet, growth))
+                elif quest and self.is_quest_pet(pet, animal, potion):
+                    pets.append((pet, growth))
+                elif rare and self.is_rare_pet(pet, animal, potion):
+                    pets.append((pet, growth))
+
+        return pets
+
     def feed_pets(self):
         """ Feeds all current pets. """
-        # TODO: filter pets by normal and special pets.
-        # Probably want an option to only feed normal pets
-
         # TODO: This algorithm is ugly, but it works.
         # I think a version built around a food generator might be more elegant.
         # The generator would keep returning an in-stock food item suitable for
         # a given pet until no more suitable foods are in stock.
         # Could then loop until the food is gone, or the pet becomes a mount.
-        pets = self.__items['pets']
-        for pet, growth in pets.items():
+
+        # TODO: command line args for the pet filter
+        pets = self.get_pets(
+            base=True,
+            magic=False,
+            quest=False,
+            rare=False)
+
+        for pet, growth in pets:
             # get the first food item
             food = self.get_food_for_pet(pet)
-            count = 0
             while food:
                 logging.getLogger(__name__).info(
                     '%s (%d): %s', pet, growth, food)
@@ -145,9 +293,6 @@ class PetCare(scriptabit.IPlugin):
                 self.consume_food(food)
 
                 # TODO: break if pet became a mount
-                count += 1
-                if count > 2:
-                    break
 
                 # get the next food item
                 food = self.get_food_for_pet(pet)
@@ -173,10 +318,7 @@ class PetCare(scriptabit.IPlugin):
                 if quantity > 0:
                     return food
         else:
-            # get a list of candidate preferred foods
-            pantry = self.get_good_food_for_potion(potion)
-            # then iterate
-            for food in pantry:
+            for food in self.__preferred_foods[potion]:
                 if self.has_food(food):
                     return food
         return None
@@ -201,26 +343,6 @@ class PetCare(scriptabit.IPlugin):
         quantity = self.__items['food'].get(food, 0)
         if quantity > 0:
             self.__items['food'][food] = quantity - 1
-
-    def get_good_food_for_potion(self, potion):
-        """ Gets a list of known good foods for a given potion type.
-
-        Args:
-            potion (str): The potion type for which a
-        """
-        # TODO: I don't need this function. Just run it once during start up and cache the results. They don't change
-        foods = []
-
-        # standard foods
-        if potion in self.__good_food:
-            foods.extend(self.__good_food[potion])
-
-        # special foods
-        foods.append('Cake_{0}'.format(potion))
-
-        # TODO: special potions that like all foods
-
-        return foods
 
     @staticmethod
     def list_pet_items(items):
