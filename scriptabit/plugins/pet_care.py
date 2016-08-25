@@ -25,6 +25,7 @@ class PetCare(scriptabit.IPlugin):
         super().__init__()
         self.__items = None
         self.__print_help = None
+        self.__any_food = False
         self.__good_food = {
             'Base': ['Meat'],
             'CottonCandyBlue': ['CottonCandyBlue'],
@@ -59,7 +60,7 @@ class PetCare(scriptabit.IPlugin):
             help='Feed all pets')
 
         parser.add(
-            '--pets-non-preferred-food',
+            '--pets-any-food',
             required=False,
             action='store_true',
             help='When feeding pets, allows the use of non-preferred food')
@@ -85,6 +86,7 @@ class PetCare(scriptabit.IPlugin):
                                          ' after your pets since yesterday')
 
         self.__items = self._hs.get_user()['items']
+        self.__any_food = self._config.pets_any_food
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
@@ -111,8 +113,7 @@ class PetCare(scriptabit.IPlugin):
             return False
 
         if self._config.pets_feed:
-            self.feed_pets(self._config.pets_non_preferred_food)
-            # self.feed_pets(True)
+            self.feed_pets()
             return False
 
         # if no other options selected, print plugin specific help and exit
@@ -121,18 +122,13 @@ class PetCare(scriptabit.IPlugin):
         # return False if finished, and True to be updated again.
         return False
 
-    def feed_pets(self, any_food=False):
-        """ Feeds all current pets.
-
-        Args:
-            any_food (bool): If true, any food items will be used; otherwise
-                only preferred food items will be offered to a pet.
-        """
+    def feed_pets(self):
+        """ Feeds all current pets. """
         # TODO: filter pets by normal and special pets.
         # Probably want an option to only feed normal pets
         pets = self.__items['pets']
         for pet, growth in pets.items():
-            food = self.get_food_for_pet(pet, any_food)
+            food = self.get_food_for_pet(pet)
             if food:
                 logging.getLogger(__name__).info(
                     '%s (%d): %s', pet, growth, food)
@@ -140,12 +136,20 @@ class PetCare(scriptabit.IPlugin):
                 logging.getLogger(__name__).info(
                     '%s (%d): no food :(', pet, growth)
 
-    def get_food_for_pet(self, pet, any_food=False):
-        """ Gets a food item for a pet """
+    def get_food_for_pet(self, pet):
+        """ Gets a food item for a pet
+
+        Args:
+            pet (str): The composite pet name (animal-potion)
+
+        Returns:
+            str: The name of a suitable food if that food is in stock.
+                If no suitable food is available, then None is returned.
+        """
         # split the pet name
         _, potion = pet.split('-')
 
-        if any_food:
+        if self.__any_food:
             # just iterate all food until we find one in stock
             all_food = self.__items['food']
             for k, v in all_food.items():
@@ -163,6 +167,7 @@ class PetCare(scriptabit.IPlugin):
                     return food
         return None
 
+    # TODO: change this to consume_food
     def get_if_has_food(self, food):
         """ Returns the food if it is in stock, otherwise returns None """
         quantity = self.__items['food'].get(food, 0)
@@ -172,7 +177,12 @@ class PetCare(scriptabit.IPlugin):
         return None
 
     def get_good_food_for_potion(self, potion):
-        """ Gets a list of known good foods for a given potion type """
+        """ Gets a list of known good foods for a given potion type.
+
+        Args:
+            potion (str): The potion type for which a
+        """
+        # TODO: I don't need this function. Just run it once during start up and cache the results. They don't change
         foods = []
 
         # standard foods
