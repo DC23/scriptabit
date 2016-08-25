@@ -126,15 +126,34 @@ class PetCare(scriptabit.IPlugin):
         """ Feeds all current pets. """
         # TODO: filter pets by normal and special pets.
         # Probably want an option to only feed normal pets
+
+        # TODO: This algorithm is ugly, but it works.
+        # I think a version built around a food generator might be more elegant.
+        # The generator would keep returning an in-stock food item suitable for
+        # a given pet until no more suitable foods are in stock.
+        # Could then loop until the food is gone, or the pet becomes a mount.
         pets = self.__items['pets']
         for pet, growth in pets.items():
+            # get the first food item
             food = self.get_food_for_pet(pet)
-            if food:
+            count = 0
+            while food:
                 logging.getLogger(__name__).info(
                     '%s (%d): %s', pet, growth, food)
-            else:
-                logging.getLogger(__name__).info(
-                    '%s (%d): no food :(', pet, growth)
+
+                # TODO: feed the pet
+                self.consume_food(food)
+
+                # TODO: break if pet became a mount
+                count += 1
+                if count > 2:
+                    break
+
+                # get the next food item
+                food = self.get_food_for_pet(pet)
+
+            logging.getLogger(__name__).debug(
+                '%s (%d): no food', pet, growth)
 
     def get_food_for_pet(self, pet):
         """ Gets a food item for a pet
@@ -150,31 +169,38 @@ class PetCare(scriptabit.IPlugin):
         _, potion = pet.split('-')
 
         if self.__any_food:
-            # just iterate all food until we find one in stock
-            all_food = self.__items['food']
-            for k, v in all_food.items():
-                if v > 0:
-                    # consume a piece of food
-                    all_food[k] = v - 1
-                    return k
+            for food, quantity in self.__items['food']:
+                if quantity > 0:
+                    return food
         else:
             # get a list of candidate preferred foods
             pantry = self.get_good_food_for_potion(potion)
             # then iterate
-            for cf in pantry:
-                food = self.get_if_has_food(cf)
-                if food:
+            for food in pantry:
+                if self.has_food(food):
                     return food
         return None
 
-    # TODO: change this to consume_food
-    def get_if_has_food(self, food):
-        """ Returns the food if it is in stock, otherwise returns None """
+    def has_food(self, food):
+        """ Returns True if the food is in stock, otherwise False.
+
+        Args:
+            food (str): The food to check
+
+        Returns:
+            bool: True if the food is in stock, otherwise False.
+        """
+        return self.__items['food'].get(food, 0) > 0
+
+    def consume_food(self, food):
+        """ Consumes a food, updating the cached quantity.
+
+        Args:
+            food (str): The food.
+        """
         quantity = self.__items['food'].get(food, 0)
         if quantity > 0:
             self.__items['food'][food] = quantity - 1
-            return food
-        return None
 
     def get_good_food_for_potion(self, potion):
         """ Gets a list of known good foods for a given potion type.
