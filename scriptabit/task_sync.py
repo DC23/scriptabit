@@ -22,7 +22,7 @@ Basic algorithm
 
         - new task
         - if task completed, check if last modified date is newer than last sync
-        date
+          date
 
 - Check all destination tasks for which mapped source tasks can't be found:
 
@@ -34,6 +34,7 @@ Basic algorithm
 
 - **Not implemented**: persist source tasks
 - Persist destination tasks
+
 
 """
 # Ensure backwards compatibility with Python 2

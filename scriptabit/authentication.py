@@ -28,7 +28,7 @@ def load_habitica_authentication_credentials(
     Returns:
         dict: the selected credentials
 
-        ::
+    .. code-block:: python
 
             {
             'x-api-user': 'the user name',
