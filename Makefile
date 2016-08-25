@@ -28,6 +28,11 @@ help:
 	echo '  * bdist_wheel: builds a universal wheel distribution.'
 	echo '  * register: register package with PiPY.'
 	echo '  * upload: uploads a package to PiPY.'
+	echo '  * tox: runs tox tests'
+
+.PHONY: tox
+tox:
+	tox
 
 .PHONY: tests
 tests:

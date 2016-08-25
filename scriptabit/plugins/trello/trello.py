@@ -250,9 +250,7 @@ The default is to only synchronise the task names.''')
             last_sync=self.__data.last_sync,
             sync_description=self._config.trello_sync_description)
 
-        stats = sync.synchronise(
-            clean_orphans=False,
-            sync_completed_new_tasks=True)
+        stats = sync.synchronise(clean_orphans=False)
 
         self.__notify(stats)
 

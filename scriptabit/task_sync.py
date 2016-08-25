@@ -198,24 +198,25 @@ class TaskSync(object):
                 src.name)
             self.__stats.skipped += 1
 
-    def __handle_new_task(self, src, sync_completed_new_tasks=False):
+    def __handle_new_task(self, src):
         """ Handle a new source task.
 
         Args:
             src (Task): the source task
-            sync_completed_new_tasks (bool): If True, new source tasks that are
-                already completed are synced. The default is to ignore such
-                tasks.
         """
-        if sync_completed_new_tasks or not src.completed:
-            if src.completed:
-                logging.getLogger(__name__).info(
-                    'Creating (completed): %s',
-                    src.name)
-            else:
-                logging.getLogger(__name__).info(
-                    'Creating: %s',
-                    src.name)
+        create = False
+        if src.completed and src.last_modified >= self.__last_sync:
+            logging.getLogger(__name__).info(
+                'Creating (completed): %s',
+                src.name)
+            create = True
+        elif not src.completed:
+            logging.getLogger(__name__).info(
+                'Creating: %s',
+                src.name)
+            create = True
+
+        if create:
             self.__dst_tasks.append(self.__create_new_dst(src))
             self.__stats.created += 1
 
@@ -251,17 +252,13 @@ class TaskSync(object):
 
     def synchronise(
             self,
-            clean_orphans=False,
-            sync_completed_new_tasks=False):
+            clean_orphans=False):
         """ Synchronise the source service with the destination.
         The task_map will be updated.
 
         Args:
             clean_orphans (bool): If True, mappings for tasks that exist in
                 neither the source or destination are deleted.
-            sync_completed_new_tasks (bool): If True, new source tasks that are
-                already completed are synced. The default is to ignore such
-                tasks.
 
         Returns:
             TaskSync.Stats: Summary statistics of the sync.
@@ -288,7 +285,7 @@ class TaskSync(object):
                     else:
                         self.__handle_destination_missing(src)
                 else:
-                    self.__handle_new_task(src, sync_completed_new_tasks)
+                    self.__handle_new_task(src)
             except Exception as e:
                 self.__stats.errors += 1
                 logging.getLogger(__name__).warning(
