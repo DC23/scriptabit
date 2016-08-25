@@ -291,33 +291,21 @@ def test_remove_orphan_mappings():
     assert len(all_mappings) == 1
     assert map.get_dst_id(src_tasks[0].id)
 
-def test_new_completed_tasks_sync_completed_is_true():
+def test_new_completed_tasks():
     src = random_task(completed=True)
     src_tasks = [src]
     src_svc = MockTaskService(src_tasks)
     dst_tasks = []
     dst_svc = MockTaskService(dst_tasks)
     map = TaskMap()
-    TaskSync(src_svc, dst_svc, map).synchronise(sync_completed_new_tasks=True)
+    TaskSync(src_svc, dst_svc, map).synchronise()
 
     assert len(dst_svc.tasks) == 1
     assert dst_svc.tasks[0].completed
     assert dst_svc.tasks[0].status == SyncStatus.new
 
-def test_new_completed_tasks_sync_completed_is_false():
-    src = random_task(completed=True)
-    src_tasks = [src]
-    src_svc = MockTaskService(src_tasks)
-    dst_tasks = []
-    dst_svc = MockTaskService(dst_tasks)
-    map = TaskMap()
-    TaskSync(src_svc, dst_svc, map).synchronise(sync_completed_new_tasks=False)
-
-    assert len(dst_svc.tasks) == 0
-
 def test_completion_of_existing_mapped_tasks():
     src = random_task(completed=True)
-    # last_modified=datetime.now(tz=pytz.utc) + timedelta(hours=1))
     src_tasks = [src]
     src_svc = MockTaskService(src_tasks)
 
