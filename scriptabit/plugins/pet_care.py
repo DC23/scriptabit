@@ -46,8 +46,8 @@ class PetCare(scriptabit.IPlugin):
             'Wolf-Veteran',
         ]
 
-        # TODO: I probably don't need this list. Any pet that is not in the
-        # base pets, special potions, or rare list is by default a quest pet
+        # I don't need this list. Any pet that is not in the base pets,
+        # special potions, or rare list is by default a quest pet
         # self.__quest_pets = [
             # 'Armadillo',
             # 'SeaTurtle',
@@ -139,6 +139,24 @@ class PetCare(scriptabit.IPlugin):
             required=False,
             action='store_true',
             help='When feeding pets, allows the use of non-preferred food')
+
+        parser.add(
+            '--no-base-pets',
+            required=False,
+            action='store_true',
+            help='Disables feeding of base pets')
+
+        parser.add(
+            '--quest-pets',
+            required=False,
+            action='store_true',
+            help='Allows feeding of quest pets')
+
+        parser.add(
+            '--magic-pets',
+            required=False,
+            action='store_true',
+            help='Allows feeding of magic pets')
 
         self.__print_help = parser.print_help
 
@@ -276,32 +294,34 @@ class PetCare(scriptabit.IPlugin):
         # a given pet until no more suitable foods are in stock.
         # Could then loop until the food is gone, or the pet becomes a mount.
 
-        # TODO: command line args for the pet filter
         pets = self.get_pets(
-            base=True,
-            magic=False,
-            quest=False,
+            base=not self._config.no_base_pets,
+            magic=self._config.magic_pets,
+            quest=self._config.quest_pets,
             rare=False)
 
         for pet in pets:
-            food = self.get_food_for_pet(pet)
-            while food:
-                response = self._hs.feed_pet(pet, food)
-                pprint(response)
-                self.consume_food(food)
-                growth = response['data']
-                logging.getLogger(__name__).info(
-                    '%s (%d): %s', pet, growth, response['message'])
+            try:
+                food = self.get_food_for_pet(pet)
+                while food:
+                    response = self._hs.feed_pet(pet, food)
+                    self.consume_food(food)
+                    growth = response['data']
+                    logging.getLogger(__name__).info(
+                        '%s (%d): %s', pet, growth, response['message'])
 
-                if growth > 0:
-                    # growth > 0 indicates that the pet is still hungry
-                    food = self.get_food_for_pet(pet)
-                else:
-                    # growth <= 0 (-1 actually) indicates that the
-                    # pet became a mount
-                    break
+                    if growth > 0:
+                        # growth > 0 indicates that the pet is still hungry
+                        food = self.get_food_for_pet(pet)
+                    else:
+                        # growth <= 0 (-1 actually) indicates that the
+                        # pet became a mount
+                        break
 
-            sleep(2)
+                logging.getLogger(__name__).info('Fetching the next pet ...')
+                sleep(2)
+            except Exception as e:
+                logging.getLogger(__name__).warning(e)
 
     def get_food_for_pet(self, pet):
         """ Gets a food item for a pet
