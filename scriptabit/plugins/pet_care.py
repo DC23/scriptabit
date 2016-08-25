@@ -133,7 +133,13 @@ class PetCare(scriptabit.IPlugin):
             '--pets-feed',
             required=False,
             action='store_true',
-            help='Feed all pets')
+            help='Batch pet feeding')
+
+        # parser.add(
+            # '--pets-hatch',
+            # required=False,
+            # action='store_true',
+            # help='Batch pet hatching')
 
         parser.add(
             '--pets-any-food',

@@ -18,7 +18,10 @@ Basic algorithm
         - recreate destination
         - alternatively, could delete source task
 
-    - No mapping found: new task
+    - No mapping found:
+
+        - new task
+        - if task completed, check if last modified date is newer than last sync date
 
 - Check all destination tasks for which mapped source tasks can't be found:
 
