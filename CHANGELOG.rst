@@ -172,11 +172,12 @@ Changelog
 * Changed bank fees to use a diminishing returns function, to reward the larger
   risk of saving longer to deposit larger amounts.
 
-1.6.0 (2016-08-
+1.6.0 (2016-08-25)
 -----------------------------------------
 
 * Added pet feeding function to pet care plugin.
-* New and completed Trello cards are now synchronised to Habitica if their last
-  update time is more recent than the last synchronisation.
+* Trello cards that are both new and completed are now synchronised to Habitica
+  if their last update time is more recent than the last synchronisation.
 * Added support for a 'no sync' label on Trello cards. Cards with this label are
   ignored even if they meet all the other criteria for synchronisation.
+* Added pet care usage documentation.
