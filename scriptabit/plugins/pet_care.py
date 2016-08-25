@@ -11,6 +11,7 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import logging
+import random
 from pprint import pprint
 from time import sleep
 
@@ -300,10 +301,18 @@ class PetCare(scriptabit.IPlugin):
             quest=self._config.quest_pets,
             rare=False)
 
+        pet_count = 0
+        food_count = 0
+        mounts_raised = 0
         for pet in pets:
+            if not self.has_any_food():
+                logging.getLogger(__name__).info('Out of food')
+                break
             try:
+                pet_count += 1
                 food = self.get_food_for_pet(pet)
                 while food:
+                    food_count += 1
                     response = self._hs.feed_pet(pet, food)
                     self.consume_food(food)
                     growth = response['data']
@@ -316,11 +325,16 @@ class PetCare(scriptabit.IPlugin):
                     else:
                         # growth <= 0 (-1 actually) indicates that the
                         # pet became a mount
+                        mounts_raised += 1
                         break
 
-                sleep(5)  # sleep for a bit so we don't pound the server
+                sleep(2)  # sleep for a bit so we don't pound the server
             except Exception as e:
                 logging.getLogger(__name__).warning(e)
+
+        message = '{1} pets ate {0} pieces of food. Raised {2} mounts'.format(
+            food_count, pet_count, mounts_raised)
+        self.notify(message)
 
     def get_food_for_pet(self, pet):
         """ Gets a food item for a pet
@@ -344,6 +358,14 @@ class PetCare(scriptabit.IPlugin):
                 if self.has_food(food):
                     return food
         return None
+
+    def has_any_food(self):
+        """ Checks whether any food is left.
+
+        Returns:
+            bool: True if some food remains, otherwise False.
+        """
+        return sum(self.__items['food'].values()) > 0
 
     def has_food(self, food):
         """ Returns True if the food is in stock, otherwise False.
@@ -388,3 +410,28 @@ class PetCare(scriptabit.IPlugin):
         print()
         print('Mounts:')
         pprint(items['mounts'])
+
+    def notify(self, message):
+        """ Notify the Habitica user """
+        emoticons = [
+            'dog',
+            'mouse',
+            'snake',
+            'snail',
+            'monkey_face',
+            'panda_face',
+            'pig',
+            'whale',
+            'dragon',
+            'monkey',
+            'wolf',
+            'bear',
+            'dragon_face',
+            'cactus',
+        ]
+        logging.getLogger(__name__).info(message)
+        scriptabit.UtilityFunctions.upsert_notification(
+            self._hs,
+            text=':{0}: {1}'.format(
+                random.choice(emoticons),
+                message))
