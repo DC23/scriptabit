@@ -304,6 +304,32 @@ def test_new_completed_tasks():
     assert dst_svc.tasks[0].completed
     assert dst_svc.tasks[0].status == SyncStatus.new
 
+def test_new_completed_tasks_are_updated_when_last_mod_newer_than_last_sync():
+    last_sync = datetime(2016, 8, 15, tzinfo=pytz.utc)
+    src_mod_date = last_sync + timedelta(hours=2)
+    src = random_task(completed=True, last_modified=src_mod_date)
+    src_tasks = [src]
+    src_svc = MockTaskService(src_tasks)
+    dst_svc = MockTaskService([])
+
+    TaskSync(src_svc, dst_svc, TaskMap(), last_sync=last_sync).synchronise()
+
+    assert len(dst_svc.persisted_tasks) == 1
+    assert dst_svc.tasks[0].status == SyncStatus.new
+
+def test_new_completed_tasks_are_not_updated_when_last_mod_older_than_last_sync():
+    last_sync = datetime(2016, 8, 15, tzinfo=pytz.utc)
+    src = random_task(
+        completed=True,
+        last_modified=last_sync - timedelta(days=2))
+    src_tasks = [src]
+    src_svc = MockTaskService(src_tasks)
+    dst_svc = MockTaskService([])
+
+    TaskSync(src_svc, dst_svc, TaskMap(), last_sync=last_sync).synchronise()
+
+    assert len(dst_svc.persisted_tasks) == 0
+
 def test_completion_of_existing_mapped_tasks():
     src = random_task(completed=True)
     src_tasks = [src]

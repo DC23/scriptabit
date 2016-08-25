@@ -210,7 +210,7 @@ class TaskSync(object):
                 'Creating (completed): %s',
                 src.name)
             create = True
-        else:
+        elif not src.completed:
             logging.getLogger(__name__).info(
                 'Creating: %s',
                 src.name)
