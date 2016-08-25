@@ -319,7 +319,7 @@ class PetCare(scriptabit.IPlugin):
                         break
 
                 logging.getLogger(__name__).info('Fetching the next pet ...')
-                sleep(2)
+                sleep(5)  # sleep for a bit so we don't pound the server
             except Exception as e:
                 logging.getLogger(__name__).warning(e)
 
