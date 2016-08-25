@@ -382,6 +382,7 @@ The default is to only synchronise the task names.''')
         difficulty_labels = [a.name for a in Difficulty]
         attribute_labels = [a.name for a in CharacterAttribute]
         required_labels = difficulty_labels + attribute_labels
+        required_labels.append('no sync')
 
         for b in boards:
             for rl in required_labels:

@@ -178,3 +178,5 @@ Changelog
 * Added pet feeding function to pet care plugin.
 * New and completed Trello cards are now synchronised to Habitica if their last
   update time is more recent than the last synchronisation.
+* Added support for a 'no sync' label on Trello cards. Cards with this label are
+  ignored even if they meet all the other criteria for synchronisation.

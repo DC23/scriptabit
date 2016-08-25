@@ -58,7 +58,9 @@ class TrelloTaskService(TaskService):
                 # settings: all cards or only those assigned to the current user
                 use_card = False
 
-                if board_defaults.all_cards:
+                if 'no sync' in [l.name for l in card.labels]:
+                    use_card = False
+                elif board_defaults.all_cards:
                     use_card = True
                 else:
                     card.fetch()  # we need the fetch to get the user ID
