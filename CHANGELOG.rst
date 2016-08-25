@@ -162,7 +162,7 @@ Changelog
   next task.
 * Made sync of task description/extra text optional, with default to False.
 
-1.5.0 (2016-08-??
+1.5.0 (2016-08-24)
 -----------------------------------------
 
 * Updated usage documentation for banking, and CSV upload.
@@ -171,3 +171,8 @@ Changelog
 * Added direct gold amount setting to utility functions (-gp X)
 * Changed bank fees to use a diminishing returns function, to reward the larger
   risk of saving longer to deposit larger amounts.
+
+1.6.0 (2016-08-
+-----------------------------------------
+
+* Added pet feeding function to pet care plugin.
