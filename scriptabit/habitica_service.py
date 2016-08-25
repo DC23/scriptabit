@@ -56,7 +56,7 @@ class HabiticaService(object):
         logging.getLogger(__name__).debug('PUT %s', url)
         return requests.put(url, headers=self.__headers, data=data)
 
-    def __post(self, command, data):
+    def __post(self, command, data=None):
         """Utility wrapper around a HTTP POST"""
         url = self.__base_url + command
         logging.getLogger(__name__).debug('PUT %s', url)
@@ -432,3 +432,17 @@ class HabiticaService(object):
             'tasks/{0}/checklist'.format(task_id),
             data=item)
         response.raise_for_status()
+
+    def feed_pet(self, pet, food):
+        """ Feed a pet.
+
+        Args:
+            pet (str): The pet name.
+            food (str): The food.
+
+        Returns:
+            dict: The Habitica response data.
+        """
+        response = self.__post('user/feed/{0}/{1}'.format(pet, food))
+        response.raise_for_status()
+        return response.json()

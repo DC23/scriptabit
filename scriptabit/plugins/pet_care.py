@@ -12,6 +12,7 @@ from __future__ import (
 from builtins import *
 import logging
 from pprint import pprint
+from time import sleep
 
 import scriptabit
 
@@ -248,7 +249,7 @@ class PetCare(scriptabit.IPlugin):
             rare (bool): Includes or excludes rare pets.
 
         Returns:
-            list: the filtered pet list tuples (name, growth).
+            list: the filtered pet list.
         """
         pets = []
         for pet, growth in self.__items['pets'].items():
@@ -257,13 +258,13 @@ class PetCare(scriptabit.IPlugin):
             if growth > 0:
                 animal, potion = pet.split('-')
                 if base and self.is_base_pet(pet, animal, potion):
-                    pets.append((pet, growth))
+                    pets.append(pet)
                 elif magic and self.is_magic_pet(pet, animal, potion):
-                    pets.append((pet, growth))
+                    pets.append(pet)
                 elif quest and self.is_quest_pet(pet, animal, potion):
-                    pets.append((pet, growth))
+                    pets.append(pet)
                 elif rare and self.is_rare_pet(pet, animal, potion):
-                    pets.append((pet, growth))
+                    pets.append(pet)
 
         return pets
 
@@ -282,23 +283,25 @@ class PetCare(scriptabit.IPlugin):
             quest=False,
             rare=False)
 
-        for pet, growth in pets:
-            # get the first food item
+        for pet in pets:
             food = self.get_food_for_pet(pet)
             while food:
-                logging.getLogger(__name__).info(
-                    '%s (%d): %s', pet, growth, food)
-
-                # TODO: feed the pet
+                response = self._hs.feed_pet(pet, food)
+                pprint(response)
                 self.consume_food(food)
+                growth = response['data']
+                logging.getLogger(__name__).info(
+                    '%s (%d): %s', pet, growth, response['message'])
 
-                # TODO: break if pet became a mount
+                if growth > 0:
+                    # growth > 0 indicates that the pet is still hungry
+                    food = self.get_food_for_pet(pet)
+                else:
+                    # growth <= 0 (-1 actually) indicates that the
+                    # pet became a mount
+                    break
 
-                # get the next food item
-                food = self.get_food_for_pet(pet)
-
-            logging.getLogger(__name__).debug(
-                '%s (%d): no food', pet, growth)
+            sleep(2)
 
     def get_food_for_pet(self, pet):
         """ Gets a food item for a pet
