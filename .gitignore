@@ -19,3 +19,4 @@ scriptabit.log
 .cache/
 .tox
 setuptools-*
+scriptabit_logging.cfg
