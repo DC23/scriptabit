@@ -535,16 +535,29 @@ class PetCare(scriptabit.IPlugin):
                         # "Can't hatch %s, already have one", potential_pet)
                     continue
 
-                logging.getLogger(__name__).info("Hatching %s", potential_pet)
-                # TODO: habitica service call
-                hatched += 1
-                potions[potion] -= 1
+                try:
+                    if self._config.dry_run:
+                        response = {'message': 'dry run'}
+                    else:
+                        response = self._hs.hatch_pet(egg, potion)
 
-                # don't need to store the egg_quantity back into the dict,
-                # since it is the outer loop
-                egg_quantity -= 1
+                    logging.getLogger(__name__).info(
+                        '%s: %s',
+                        potential_pet,
+                        response['message'])
 
-                current_pets.append(potential_pet)
+                    hatched += 1
+                    potions[potion] -= 1
+
+                    # don't need to store the egg_quantity back into the dict,
+                    # since it is the outer loop
+                    egg_quantity -= 1
+
+                    current_pets.append(potential_pet)
+                except Exception as e:
+                    logging.getLogger(__name__).warning(e)
+
+                return
 
         message = 'Hatched {0} new pets'.format(hatched)
         self.notify(message)
