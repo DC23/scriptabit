@@ -446,3 +446,17 @@ class HabiticaService(object):
         response = self.__post('user/feed/{0}/{1}'.format(pet, food))
         response.raise_for_status()
         return response.json()
+
+    def hatch_pet(self, egg, potion):
+        """ Hatch a pet.
+
+        Args:
+            egg (str): The egg name.
+            potion (str): The potion name.
+
+        Returns:
+            dict: The Habitica response data.
+        """
+        response = self.__post('user/hatch/{0}/{1}'.format(egg, potion))
+        response.raise_for_status()
+        return response.json()

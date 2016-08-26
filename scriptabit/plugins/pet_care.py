@@ -135,11 +135,11 @@ class PetCare(scriptabit.IPlugin):
             action='store_true',
             help='Batch pet feeding')
 
-        # parser.add(
-            # '--pets-hatch',
-            # required=False,
-            # action='store_true',
-            # help='Batch pet hatching')
+        parser.add(
+            '--pets-hatch',
+            required=False,
+            action='store_true',
+            help='Batch pet hatching')
 
         parser.add(
             '--pets-any-food',
@@ -216,6 +216,10 @@ class PetCare(scriptabit.IPlugin):
             self.feed_pets()
             return False
 
+        if self._config.pets_hatch:
+            self.hatch_pets()
+            return False
+
         # if no other options selected, print plugin specific help and exit
         self.__print_help()
 
@@ -264,6 +268,48 @@ class PetCare(scriptabit.IPlugin):
         """
         return pet in self.__rare_pets
 
+    def get_eggs(self, base=True, quest=False):
+        """ Gets the filtered dictionary of available eggs. Values
+        indicate current quantity.
+
+        Args:
+            base (bool): Includes or excludes standard eggs.
+            eggs (bool): Includes or excludes quest eggs.
+
+        Returns:
+            dict: The dictionary of eggs and quantities.
+        """
+        eggs = {}
+
+        for e, q in self.__items['eggs'].items():
+            is_base_egg = e in self.__base_pets
+            if base and is_base_egg:
+                eggs[e] = q
+            elif quest and not is_base_egg:
+                eggs[e] = q
+
+        return eggs
+
+    def get_hatching_potions(self, base=True, magic=False):
+        """ Gets the filtered dictionary of available hatching potions. Values
+        indicate current quantity.
+
+        Args:
+            base (bool): Includes or excludes standard potions.
+            magic (bool): Includes or excludes magic potions.
+
+        Returns:
+            dict: The dictionary of potions and quantities.
+        """
+        hp = {}
+
+        for p, q in self.__items['hatchingPotions'].items():
+            if (base and p in self.__base_potions) or\
+                    (magic and p in self.__special_potions):
+                hp[p] = q
+
+        return hp
+
     def get_pets(self, base=True, magic=False, quest=False, rare=False):
         """ Gets a filtered list of current user pets.
 
@@ -295,12 +341,6 @@ class PetCare(scriptabit.IPlugin):
 
     def feed_pets(self):
         """ Feeds all current pets. """
-        # TODO: This algorithm is ugly, but it works.
-        # I think a version built around a food generator might be more elegant.
-        # The generator would keep returning an in-stock food item suitable for
-        # a given pet until no more suitable foods are in stock.
-        # Could then loop until the food is gone, or the pet becomes a mount.
-
         pets = self.get_pets(
             base=not self._config.no_base_pets,
             magic=self._config.magic_pets,
@@ -319,7 +359,12 @@ class PetCare(scriptabit.IPlugin):
                 food = self.get_food_for_pet(pet)
                 while food:
                     food_count += 1
-                    response = self._hs.feed_pet(pet, food)
+                    if self._config.dry_run:
+                        response = {'data': -1,
+                                    'message': 'dry run'}
+                    else:
+                        response = self._hs.feed_pet(pet, food)
+
                     self.consume_food(food)
                     growth = response['data']
                     logging.getLogger(__name__).info(
@@ -434,11 +479,79 @@ class PetCare(scriptabit.IPlugin):
             'wolf',
             'bear',
             'dragon_face',
-            'cactus',
-        ]
+            'cactus']
+
         logging.getLogger(__name__).info(message)
-        scriptabit.UtilityFunctions.upsert_notification(
-            self._hs,
-            text=':{0}: {1}'.format(
-                random.choice(emoticons),
-                message))
+
+        if not self._config.dry_run:
+            scriptabit.UtilityFunctions.upsert_notification(
+                self._hs,
+                text=':{0}: {1}'.format(
+                    random.choice(emoticons),
+                    message))
+
+    def hatch_pets(self):
+        """ Hatch all available pets. """
+        # first get the lists of things
+        current_pets = self.get_pets(
+            base=not self._config.no_base_pets,
+            magic=self._config.magic_pets,
+            quest=self._config.quest_pets,
+            rare=False)
+
+        potions = self.get_hatching_potions(
+            base=True,  # we always need the base potions
+            magic=self._config.magic_pets)
+
+        eggs = self.get_eggs(
+            base=not self._config.no_base_pets,
+            quest=self._config.quest_pets)
+
+        pprint(current_pets)
+        pprint(potions)
+        pprint(eggs)
+        hatched = 0
+
+        for egg, egg_quantity in eggs.items():
+            for potion, potion_quantity in potions.items():
+                potential_pet = '{0}-{1}'.format(egg, potion)
+
+                if egg_quantity <= 0:
+                    # logging.getLogger(__name__).debug(
+                        # "Can't hatch %s, no egg", potential_pet)
+                    continue
+                if potion_quantity <= 0:
+                    # logging.getLogger(__name__).debug(
+                        # "Can't hatch %s, no potion", potential_pet)
+                    continue
+                if potential_pet in current_pets:
+                    # logging.getLogger(__name__).debug(
+                        # "Can't hatch %s, already have one", potential_pet)
+                    continue
+
+                try:
+                    if self._config.dry_run:
+                        response = {'message': 'dry run'}
+                    else:
+                        response = self._hs.hatch_pet(egg, potion)
+
+                    logging.getLogger(__name__).info(
+                        '%s: %s',
+                        potential_pet,
+                        response['message'])
+
+                    hatched += 1
+                    potions[potion] -= 1
+
+                    # don't need to store the egg_quantity back into the dict,
+                    # since it is the outer loop
+                    egg_quantity -= 1
+
+                    # strictly speaking don't need this either, since we
+                    # shouldn't ever revist the same egg/potion combo
+                    current_pets.append(potential_pet)
+                except Exception as e:
+                    logging.getLogger(__name__).warning(e)
+
+        message = 'Hatched {0} new pets'.format(hatched)
+        self.notify(message)
