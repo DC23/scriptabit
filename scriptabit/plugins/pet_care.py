@@ -268,6 +268,25 @@ class PetCare(scriptabit.IPlugin):
         """
         return pet in self.__rare_pets
 
+    def get_eggs(self, base=True, quest=False):
+        """ Gets the filtered dictionary of available eggs. Values
+        indicate current quantity.
+
+        Args:
+            base (bool): Includes or excludes standard eggs.
+            eggs (bool): Includes or excludes quest eggs.
+
+        Returns:
+            dict: The dictionary of eggs and quantities.
+        """
+        eggs = {}
+
+        for e, q in self.__items['eggs'].items():
+            if (base and e in self.__base_pets) or quest:
+                eggs[e] = q
+
+        return eggs
+
     def get_hatching_potions(self, base=True, magic=False):
         """ Gets the filtered dictionary of available hatching potions. Values
         indicate current quantity.
@@ -488,7 +507,32 @@ class PetCare(scriptabit.IPlugin):
         potions = self.get_hatching_potions(
             base=not self._config.no_base_pets,
             magic=self._config.magic_pets)
-        # eggs = self.__items['eggs']
+
+        eggs = self.get_eggs(
+            base=not self._config.no_base_pets,
+            quest=self._config.quest_pets)
 
         pprint(current_pets)
         pprint(potions)
+        pprint(eggs)
+
+        for egg, egg_quantity in eggs.items():
+            for potion, potion_quantity in potions.items():
+                potential_pet = '{0}-{1}'.format(egg, potion)
+
+                logging.getLogger(__name__).debug("Trying %s", potential_pet)
+
+                if egg_quantity <= 0:
+                    logging.getLogger(__name__).debug(
+                        "Can't hatch %s, no egg", potential_pet)
+                    break
+                if potion_quantity <= 0:
+                    logging.getLogger(__name__).debug(
+                        "Can't hatch %s, no potion", potential_pet)
+                    break
+                if potential_pet in current_pets:
+                    logging.getLogger(__name__).debug(
+                        "Can't hatch %s, already have one", potential_pet)
+                    break
+
+                logging.getLogger(__name__).info("Hatching %s", potential_pet)
