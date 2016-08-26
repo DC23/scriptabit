@@ -55,6 +55,8 @@ set the permissions as follows:
 
     chmod 600 .auth.cfg
 
+.. _trello-credentials:
+
 Trello Credentials
 ++++++++++++++++++
 If you wish to use the Trello plugin, you will need to add your Trello
@@ -73,6 +75,8 @@ Your authorisation token and token secret will be obtained through an
 interactive process when you first run the trello plugin. You must save your API
 key and API secret to the .auth.cfg file before you will be able to authorise
 the scriptabit application with Trello.
+
+.. _usage:
 
 Usage
 -----
