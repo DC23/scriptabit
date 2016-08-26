@@ -282,7 +282,10 @@ class PetCare(scriptabit.IPlugin):
         eggs = {}
 
         for e, q in self.__items['eggs'].items():
-            if (base and e in self.__base_pets) or quest:
+            is_base_egg = e in self.__base_pets
+            if base and is_base_egg:
+                eggs[e] = q
+            elif quest and not is_base_egg:
                 eggs[e] = q
 
         return eggs
@@ -495,8 +498,6 @@ class PetCare(scriptabit.IPlugin):
 
     def hatch_pets(self):
         """ Hatch all available pets. """
-        logging.getLogger(__name__).debug('hatching...')
-
         # first get the lists of things
         current_pets = self.get_pets(
             base=not self._config.no_base_pets,
@@ -505,7 +506,7 @@ class PetCare(scriptabit.IPlugin):
             rare=False)
 
         potions = self.get_hatching_potions(
-            base=not self._config.no_base_pets,
+            base=True,  # we always need the base potions
             magic=self._config.magic_pets)
 
         eggs = self.get_eggs(
@@ -515,24 +516,35 @@ class PetCare(scriptabit.IPlugin):
         pprint(current_pets)
         pprint(potions)
         pprint(eggs)
+        hatched = 0
 
         for egg, egg_quantity in eggs.items():
             for potion, potion_quantity in potions.items():
                 potential_pet = '{0}-{1}'.format(egg, potion)
 
-                logging.getLogger(__name__).debug("Trying %s", potential_pet)
-
                 if egg_quantity <= 0:
-                    logging.getLogger(__name__).debug(
-                        "Can't hatch %s, no egg", potential_pet)
-                    break
+                    # logging.getLogger(__name__).debug(
+                        # "Can't hatch %s, no egg", potential_pet)
+                    continue
                 if potion_quantity <= 0:
-                    logging.getLogger(__name__).debug(
-                        "Can't hatch %s, no potion", potential_pet)
-                    break
+                    # logging.getLogger(__name__).debug(
+                        # "Can't hatch %s, no potion", potential_pet)
+                    continue
                 if potential_pet in current_pets:
-                    logging.getLogger(__name__).debug(
-                        "Can't hatch %s, already have one", potential_pet)
-                    break
+                    # logging.getLogger(__name__).debug(
+                        # "Can't hatch %s, already have one", potential_pet)
+                    continue
 
                 logging.getLogger(__name__).info("Hatching %s", potential_pet)
+                # TODO: habitica service call
+                hatched += 1
+                potions[potion] -= 1
+
+                # don't need to store the egg_quantity back into the dict,
+                # since it is the outer loop
+                egg_quantity -= 1
+
+                current_pets.append(potential_pet)
+
+        message = 'Hatched {0} new pets'.format(hatched)
+        self.notify(message)
