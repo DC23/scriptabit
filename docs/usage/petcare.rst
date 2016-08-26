@@ -9,7 +9,7 @@ features are:
   primarily for development support, as this task is easily achieved through the
   official applications.
 - `pets-feed`: Batch pet feeding.
-- `pets-hatch`: Batch pet hatching (**not yet implemented**)
+- `pets-hatch`: Batch pet hatching.
 
 A number of flags exist to control the pets, food, and potions used for
 the batch operations. They are:
@@ -40,3 +40,11 @@ An example command line to feed preferred foods to standard pets::
 A command line to feed any food to quest pets only::
 
     scriptabit --run pet_care --pets-feed --no-base-pets --quest-pets
+
+A command line to hatch all available standard pets::
+    
+    scriptabit --run pet_care --pets-hatch
+
+A command line to hatch all available standard and quest pets::
+    
+    scriptabit --run pet_care --pets-hatch --quest-pets
