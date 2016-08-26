@@ -507,9 +507,6 @@ class PetCare(scriptabit.IPlugin):
             base=not self._config.no_base_pets,
             quest=self._config.quest_pets)
 
-        pprint(current_pets)
-        pprint(potions)
-        pprint(eggs)
         hatched = 0
 
         for egg, egg_quantity in eggs.items():

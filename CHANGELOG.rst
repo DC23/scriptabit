@@ -187,4 +187,5 @@ Changelog
 
 * Added trello plugin usage documentation.
 * Added pet hatching function to pet care plugin.
+* Updated documentation.
 
