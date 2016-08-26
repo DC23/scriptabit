@@ -341,12 +341,6 @@ class PetCare(scriptabit.IPlugin):
 
     def feed_pets(self):
         """ Feeds all current pets. """
-        # TODO: This algorithm is ugly, but it works.
-        # I think a version built around a food generator might be more elegant.
-        # The generator would keep returning an in-stock food item suitable for
-        # a given pet until no more suitable foods are in stock.
-        # Could then loop until the food is gone, or the pet becomes a mount.
-
         pets = self.get_pets(
             base=not self._config.no_base_pets,
             magic=self._config.magic_pets,
