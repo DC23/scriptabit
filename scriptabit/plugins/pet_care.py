@@ -553,11 +553,11 @@ class PetCare(scriptabit.IPlugin):
                     # since it is the outer loop
                     egg_quantity -= 1
 
+                    # strictly speaking don't need this either, since we
+                    # shouldn't ever revist the same egg/potion combo
                     current_pets.append(potential_pet)
                 except Exception as e:
                     logging.getLogger(__name__).warning(e)
-
-                return
 
         message = 'Hatched {0} new pets'.format(hatched)
         self.notify(message)
