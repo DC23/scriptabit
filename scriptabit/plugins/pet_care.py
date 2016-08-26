@@ -135,11 +135,11 @@ class PetCare(scriptabit.IPlugin):
             action='store_true',
             help='Batch pet feeding')
 
-        # parser.add(
-            # '--pets-hatch',
-            # required=False,
-            # action='store_true',
-            # help='Batch pet hatching')
+        parser.add(
+            '--pets-hatch',
+            required=False,
+            action='store_true',
+            help='Batch pet hatching')
 
         parser.add(
             '--pets-any-food',
@@ -216,6 +216,10 @@ class PetCare(scriptabit.IPlugin):
             self.feed_pets()
             return False
 
+        if self._config.pets_hatch:
+            self.hatch_pets()
+            return False
+
         # if no other options selected, print plugin specific help and exit
         self.__print_help()
 
@@ -263,6 +267,26 @@ class PetCare(scriptabit.IPlugin):
             potion (str): The potion type.
         """
         return pet in self.__rare_pets
+
+    def get_hatching_potions(self, base=True, magic=False):
+        """ Gets the filtered dictionary of available hatching potions. Values
+        indicate current quantity.
+
+        Args:
+            base (bool): Includes or excludes standard potions.
+            magic (bool): Includes or excludes magic potions.
+
+        Returns:
+            dict: The dictionary of potions and quantities.
+        """
+        hp = {}
+
+        for p, q in self.__items['hatchingPotions'].items():
+            if (base and p in self.__base_potions) or\
+                    (magic and p in self.__special_potions):
+                hp[p] = q
+
+        return hp
 
     def get_pets(self, base=True, magic=False, quest=False, rare=False):
         """ Gets a filtered list of current user pets.
@@ -319,7 +343,12 @@ class PetCare(scriptabit.IPlugin):
                 food = self.get_food_for_pet(pet)
                 while food:
                     food_count += 1
-                    response = self._hs.feed_pet(pet, food)
+                    if self._config.dry_run:
+                        response = {'data': -1,
+                                    'message': 'dry run'}
+                    else:
+                        response = self._hs.feed_pet(pet, food)
+
                     self.consume_food(food)
                     growth = response['data']
                     logging.getLogger(__name__).info(
@@ -434,11 +463,32 @@ class PetCare(scriptabit.IPlugin):
             'wolf',
             'bear',
             'dragon_face',
-            'cactus',
-        ]
+            'cactus']
+
         logging.getLogger(__name__).info(message)
-        scriptabit.UtilityFunctions.upsert_notification(
-            self._hs,
-            text=':{0}: {1}'.format(
-                random.choice(emoticons),
-                message))
+
+        if not self._config.dry_run:
+            scriptabit.UtilityFunctions.upsert_notification(
+                self._hs,
+                text=':{0}: {1}'.format(
+                    random.choice(emoticons),
+                    message))
+
+    def hatch_pets(self):
+        """ Hatch all available pets. """
+        logging.getLogger(__name__).debug('hatching...')
+
+        # first get the lists of things
+        current_pets = self.get_pets(
+            base=not self._config.no_base_pets,
+            magic=self._config.magic_pets,
+            quest=self._config.quest_pets,
+            rare=False)
+
+        potions = self.get_hatching_potions(
+            base=not self._config.no_base_pets,
+            magic=self._config.magic_pets)
+        # eggs = self.__items['eggs']
+
+        pprint(current_pets)
+        pprint(potions)

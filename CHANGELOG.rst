@@ -181,3 +181,10 @@ Changelog
 * Added support for a 'no sync' label on Trello cards. Cards with this label are
   ignored even if they meet all the other criteria for synchronisation.
 * Added pet care usage documentation.
+
+1.7.0 (2016-08-26)
+-----------------------------------------
+
+* Added trello plugin usage documentation.
+* Added pet hatching function to pet care plugin.
+
