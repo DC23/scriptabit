@@ -41,9 +41,58 @@ command line, they are best set in the scriptabit configuration file. See the
 :ref:`usage` section for general information on the configuration file,
 including its default location. Only Trello specific options are discussed here.
 
-todo: configure boards
-todo: configure lists
-todo: configure other options
+This is a typical configuration file section for the trello plugin::
+
+    [trello]
+    # Specify default settings for each board by specifying a composite string:
+    #    board_name|difficulty|attribute|user
+    # If you do not specify the difficulty then it defaults to easy.
+    # If you do not specify the attribute then it defaults to strength.
+    # If you don't specify anything for the user field, it defaults to using all
+    # cards on the board.
+    # E.G.:
+    trello-boards = [Work|easy|intelligence|user, scriptabit|easy|intelligence]
+    trello-lists = [Next Actions, Waiting For, Scheduled, Backlog, Doing]
+    trello-done-lists = [Done]
+
+Boards
+^^^^^^
+
+Boards are specified by name, with additional board options specified in the
+composite string. The format is `Board name|default difficulty|default
+attribute|user`. If the difficulty is not specified it defaults to easy, and if
+the attribute is not specified it defaults to strength. This matches the
+Habitica defaults.
+
+Legal values for difficulty are:
+
+- trivial
+- easy
+- medium
+- hard
+
+Legal values for attribute are:
+
+- strength
+- intelligence
+- perception
+- constitution
+
+Invalid values will cause a warning, and the default values will be used
+instead.
+
+Finally, note that the order of board options is fixed. So if you want to
+specify an attribute default, you must also specify the preceeding difficulty.
+
+Lists
+^^^^^
+
+Lists are also specified by name. `trello-lists` defines the list names that
+will be searched for incomplete cards, while `trello-done-lists` defines the
+names of the lists that indicate completed cards. See :ref:`donelists` for
+details on the use of Done lists as opposed to archiving cards.
+
+.. _donelists:
 
 Done Lists versus Archiving: A Note on Task Completion in Trello
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -64,3 +113,10 @@ they can then be archived in Trello without consequences.
 Example Command Lines
 +++++++++++++++++++++
 
+Run the trello plugin with default options::
+
+    scriptabit --run trello
+
+Run once rather than syncing every 30 minutes::
+
+    scriptabit --run trello --max-updates 1
