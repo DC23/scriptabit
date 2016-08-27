@@ -355,7 +355,6 @@ class PetCare(scriptabit.IPlugin):
                 logging.getLogger(__name__).info('Out of food')
                 break
             try:
-                pet_count += 1
                 food = self.get_food_for_pet(pet)
                 while food:
                     food_count += 1
@@ -382,6 +381,8 @@ class PetCare(scriptabit.IPlugin):
                 sleep(2)  # sleep for a bit so we don't pound the server
             except Exception as e:
                 logging.getLogger(__name__).warning(e)
+
+            pet_count += 1
 
         message = \
             'Checked {1} pets, fed {0} pieces of food, raised {2} mounts'.\
