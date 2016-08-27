@@ -357,13 +357,13 @@ class PetCare(scriptabit.IPlugin):
             try:
                 food = self.get_food_for_pet(pet)
                 while food:
-                    food_count += 1
                     if self._config.dry_run:
                         response = {'data': -1,
                                     'message': 'dry run'}
                     else:
                         response = self._hs.feed_pet(pet, food)
 
+                    food_count += 1
                     self.consume_food(food)
                     growth = response['data']
                     logging.getLogger(__name__).info(
