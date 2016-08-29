@@ -119,40 +119,60 @@ class UtilityFunctions(object):
             self.set_gold(self.__config.set_gp)
 
     def set_health(self, hp):
-        """Sets the user health to the specified value"""
+        """Sets the user health to the specified value
+
+        Returns:
+            float: The new health points.
+        """
         old_hp = self.__hs.get_stats()['hp']
         new_hp = hp if self.dry_run else self.__hs.set_hp(hp)
         logging.getLogger(__name__).info(
             'HP changed from %f to %f',
             old_hp,
             new_hp)
+        return new_hp
 
     def set_xp(self, xp):
-        """Sets the user experience points to the specified value"""
+        """Sets the user experience points to the specified value.
+
+        Returns:
+            int: The new experience points.
+        """
         old_xp = self.__hs.get_stats()['exp']
         new_xp = xp if self.dry_run else self.__hs.set_exp(xp)
         logging.getLogger(__name__).info(
             'XP changed from %f to %f',
             old_xp,
             new_xp)
+        return new_xp
 
     def set_mana(self, mp):
-        """Sets the user mana to the specified value"""
+        """Sets the user mana to the specified value
+
+        Returns:
+            float: The new mana points.
+        """
         old_mp = self.__hs.get_stats()['mp']
         new_mp = mp if self.dry_run else self.__hs.set_mp(mp)
         logging.getLogger(__name__).info(
             'MP changed from %f to %f',
             old_mp,
             new_mp)
+        return new_mp
 
     def set_gold(self, gp):
-        """Sets the user gold to the specified value"""
+        """Sets the user gold to the specified value
+
+        Returns:
+            float: The new gold points.
+        """
         old = self.__hs.get_stats()['gp']
         new = gp if self.dry_run else self.__hs.set_gp(gp)
         logging.getLogger(__name__).info(
             'Gold changed from %f to %f',
             old,
             new)
+        return new
 
     def show_user_data(self):
         """Shows the user data"""

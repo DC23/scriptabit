@@ -36,27 +36,36 @@ class TestUtilityFunctions(object):
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats()[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(hp=10)[1])
+                  text=get_fake_stats(hp=39)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_health(39)
+            assert uf.set_health(39) == 39
 
     def test_set_mana(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats()[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(mp=10)[1])
+                  text=get_fake_stats(mp=9)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_mana(9)
+            assert uf.set_mana(9) == 9
 
     def test_set_xp(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats()[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(exp=10)[1])
+                  text=get_fake_stats(exp=39)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_xp(39)
+            assert uf.set_xp(39) == 39
+
+    def test_set_gold(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user',
+                  text=get_fake_stats()[1])
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(gp=9009)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            assert uf.set_gold(9009) == 9009
 
     def test_set_health_dry_run(self):
         with requests_mock.mock() as m:
@@ -88,5 +97,16 @@ class TestUtilityFunctions(object):
 
             history = m.request_history
             # the put method to set XP should not be called
+            assert history[0].method == 'GET'
+            assert len(history) == 1
+
+    def test_set_gold_dry_run(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user', text=get_fake_stats()[1])
+            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
+            uf.set_gold(39)
+
+            history = m.request_history
+            # the put method to set HP should not be called
             assert history[0].method == 'GET'
             assert len(history) == 1

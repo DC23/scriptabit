@@ -209,3 +209,5 @@ Changelog
 * Implemented full dry run mode support in pet care plugin.
 * Implemented full dry run mode support in trello sync plugin.
 * Implemented full dry run mode support in the utility functions.
+* Updated utility functions so they return the new value set into the character
+  stats (gold, XP, HP, MP).
