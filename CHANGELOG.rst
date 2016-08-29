@@ -193,4 +193,4 @@ Changelog
 -----------------------------------------
 
 * Fixed #13: incorrect pet count when API error occurs.
-
+* Made pet-care commands more logical (issue #16)

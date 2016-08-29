@@ -124,25 +124,25 @@ class PetCare(scriptabit.IPlugin):
         parser = super().get_arg_parser()
 
         parser.add(
-            '--pets-list-items',
+            '--list-pets',
             required=False,
             action='store_true',
             help='Lists all pet-related items')
 
         parser.add(
-            '--pets-feed',
+            '--feed-pets',
             required=False,
             action='store_true',
             help='Batch pet feeding')
 
         parser.add(
-            '--pets-hatch',
+            '--hatch-pets',
             required=False,
             action='store_true',
             help='Batch pet hatching')
 
         parser.add(
-            '--pets-any-food',
+            '--any-pet-food',
             required=False,
             action='store_true',
             help='When feeding pets, allows the use of non-preferred food')
