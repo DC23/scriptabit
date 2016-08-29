@@ -19,6 +19,7 @@ from .iplugin import IPlugin
 from .scriptabit import (
     start_cli,
     start_banking,
+    start_trello,
 )
 from .task import (
     Task,

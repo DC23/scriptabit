@@ -145,6 +145,7 @@ setup(
         'console_scripts': [
             'scriptabit = scriptabit:start_cli',
             'sb-banking = scriptabit:start_banking',
+            'sb-trello = scriptabit:start_trello',
         ],
     },
 

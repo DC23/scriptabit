@@ -148,9 +148,15 @@ def start_cli():
     run_scriptabit(*__init_config_and_plugin_manager())
 
 def start_banking():
-    """ Command-line entry point for scriptabit """
+    """ Command-line entry point for banking """
     config, plugin_manager = __init_config_and_plugin_manager()
     config.run = "banking"
+    run_scriptabit(config, plugin_manager)
+
+def start_trello():
+    """ Command-line entry point for Trello """
+    config, plugin_manager = __init_config_and_plugin_manager()
+    config.run = "trello"
     run_scriptabit(config, plugin_manager)
 
 def run_scriptabit(config, plugin_manager):

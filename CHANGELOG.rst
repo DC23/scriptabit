@@ -223,3 +223,10 @@ Changelog
 -----------------------------------------
 
 * Updated documentation.
+* Added new entry points for built-in plugins:
+
+    * `sb-banking` instead of `scriptabit --run banking`
+    * `sb-trello` instead of `scriptabit --run trello`
+    * `sb-pets` instead of `scriptabit --run pet_care`
+    * `sb-csv` instead of `scriptabit --run csv_tasks`
+    * `sb-health` instead of `scriptabit --run health_effects`
