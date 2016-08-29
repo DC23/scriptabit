@@ -211,3 +211,10 @@ Changelog
 * Implemented full dry run mode support in the utility functions.
 * Updated utility functions so they return the new value set into the character
   stats (gold, XP, HP, MP).
+
+1.8.1 (2016-08-29)
+-----------------------------------------
+
+* Added missing supports_dry_run method to pet care plugin, that was preventing
+  dry runs.
+

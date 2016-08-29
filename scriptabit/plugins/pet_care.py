@@ -188,6 +188,15 @@ class PetCare(scriptabit.IPlugin):
         self.__items = self._hs.get_user()['items']
         self.__any_food = self._config.any_pet_food
 
+    @staticmethod
+    def supports_dry_runs():
+        """ The PetCare plugin supports dry runs.
+
+        Returns:
+            bool: True
+        """
+        return True
+
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
 
@@ -371,8 +380,7 @@ class PetCare(scriptabit.IPlugin):
                 food = self.get_food_for_pet(pet)
                 while food:
                     if self.dry_run:
-                        response = {'data': -1,
-                                    'message': 'dry run'}
+                        response = {'data': -1, 'message': 'dry run'}
                     else:
                         response = self._hs.feed_pet(pet, food)
 
