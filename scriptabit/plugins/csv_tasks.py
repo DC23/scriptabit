@@ -153,7 +153,7 @@ class CsvTasks(scriptabit.IPlugin):
                 'No tasks created. Check your CSV file format')
             return False
 
-        if not self.dry_run() and self.tasks:
+        if not self.dry_run and self.tasks:
             self._hs.create_tasks(self.tasks)
 
         self.__notify('Uploaded {0} rows from CSV'.format(row_count))
@@ -202,7 +202,7 @@ class CsvTasks(scriptabit.IPlugin):
     def __notify(self, message):
         """ Notify the Habitica user """
         logging.getLogger(__name__).info(message)
-        if not self.dry_run():
+        if not self.dry_run:
             scriptabit.UtilityFunctions.upsert_notification(
                 self._hs,
                 text=message)

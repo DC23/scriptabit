@@ -63,6 +63,7 @@ class IPlugin(YapsyIPlugin):
         """
         return False
 
+    @property
     def dry_run(self):
         """ Indicates whether this is a dry run or not.
 

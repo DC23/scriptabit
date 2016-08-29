@@ -1,2 +1,2 @@
 #!/bin/bash
-scriptabit -r trello --trello-data-file 'trello_crash_test' --trello-done-lists 'done' --trello-lists todo --trello-lists doing --trello-boards 'test|medium|perception' -mup 1
+scriptabit -r trello --trello-data-file 'trello_crash_test' --trello-done-lists 'Done' --trello-lists Doing --trello-boards 'scriptabit|medium|perception' -mup 1 --dry-run -as crash

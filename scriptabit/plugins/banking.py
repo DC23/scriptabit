@@ -164,7 +164,7 @@ amount.''')
 
         # subtract from user balance
         user_amount = min(self.__user_balance, tax)
-        if not self.dry_run():
+        if not self.dry_run:
             self._hs.set_gp(max(0, self.__user_balance - user_amount))
         total_paid = user_amount
 
@@ -194,7 +194,7 @@ amount.''')
         self.update_bank_balance(self.__bank_balance + nett_amount)
 
         # subtract the gold from user balance
-        if not self.dry_run():
+        if not self.dry_run:
             self._hs.set_gp(max(0, self.__user_balance - gross_amount))
 
         message = 'Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
@@ -213,7 +213,7 @@ amount.''')
         self.update_bank_balance(new_balance)
 
         # add the gold to user balance
-        if not self.dry_run():
+        if not self.dry_run:
             self._hs.set_gp(self.__user_balance + nett_amount)
 
         message = 'Withdrew: {0}, Fee: {1}'.format(nett_amount, fee)
@@ -222,7 +222,7 @@ amount.''')
     def notify(self, message):
         """ Notify the Habitica user """
         logging.getLogger(__name__).info(message)
-        if not self.dry_run():
+        if not self.dry_run:
             scriptabit.UtilityFunctions.upsert_notification(
                 self._hs,
                 text=':moneybag: ' + message)
@@ -236,7 +236,7 @@ amount.''')
         new_balance = math.trunc(new_balance)
         self.__bank['notes'] = Banking.get_balance_string(new_balance)
         self.__bank['value'] = new_balance
-        if not self.dry_run():
+        if not self.dry_run:
             self._hs.upsert_task(self.__bank)
 
     def calculate_fee(self, amount):

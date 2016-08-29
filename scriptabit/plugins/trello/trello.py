@@ -171,6 +171,7 @@ The default is to only synchronise the task names.''')
         # instantiate the HabiticaTaskService
         self.__habitica_task_service = HabiticaTaskService(
             habitica_service,
+            dry_run=self.dry_run,
             tags=['Trello', 'scriptabit'])
 
         self.__task_map_file = os.path.join(
@@ -193,7 +194,7 @@ The default is to only synchronise the task names.''')
 
     def __save_persistent_data(self):
         """ Saves the persistent data """
-        if not self.dry_run():
+        if not self.dry_run:
             with open(self.__data_file, 'wb') as f:
                 pickle.dump(self.__data, f, pickle.HIGHEST_PROTOCOL)
 
@@ -266,7 +267,7 @@ The default is to only synchronise the task names.''')
 
         # Checkpoint the sync data
         self.__data.last_sync = sync.last_sync
-        if not self.dry_run():
+        if not self.dry_run:
             task_map.persist(self.__task_map_file)
             self.__save_persistent_data()
 
@@ -288,7 +289,7 @@ The default is to only synchronise the task names.''')
             total,
             now.strftime('%X %x'))
 
-        if not self.dry_run():
+        if not self.dry_run:
             UtilityFunctions.upsert_notification(
                 self._hs,
                 text=text,
@@ -372,15 +373,14 @@ The default is to only synchronise the task names.''')
 
         return credentials
 
-    @staticmethod
-    def __ensure_labels_exist(boards):
+    def __ensure_labels_exist(self, boards):
         """ Ensures that the Trello labels used to mark task difficulty and
         Habitica character attributes exist.
 
         Args:
             boards (list): The list of boards that are being synchronised.
         """
-        if self.dry_run():
+        if self.dry_run:
             return
 
         difficulty_labels = [a.name for a in Difficulty]
