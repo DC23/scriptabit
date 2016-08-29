@@ -189,7 +189,7 @@ Changelog
 * Added pet hatching function to pet care plugin.
 * Updated documentation.
 
-1.7.1 (2016-08-
+1.7.1 (2016-08-29)
 -----------------------------------------
 
 * Fixed #13: incorrect pet count when API error occurs.
