@@ -189,8 +189,13 @@ Changelog
 * Added pet hatching function to pet care plugin.
 * Updated documentation.
 
-1.7.1 (2016-08-
+1.7.1 (2016-08-29)
 -----------------------------------------
 
 * Fixed #13: incorrect pet count when API error occurs.
-
+* Made pet-care commands more logical (issue #16)
+* Fixed issue #14: trying to feed pet when mount already exists.
+* Fixed issue #15: errors if config and user plugin directories don't exist on
+  first run (when depth is > 1)
+* Added note to CSV plugin docs indicating that Daily repeat options are not
+  supported.

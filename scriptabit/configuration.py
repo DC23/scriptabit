@@ -111,7 +111,7 @@ def copy_default_config_to_user_directory(
         os.path.join('scriptabit', basename))
 
     if not os.path.exists(dst_dir):
-        os.mkdir(dst_dir)
+        os.makedirs(dst_dir)
 
     if clobber or not os.path.isfile(dst):
         shutil.copy(src, dst)

@@ -124,25 +124,25 @@ class PetCare(scriptabit.IPlugin):
         parser = super().get_arg_parser()
 
         parser.add(
-            '--pets-list-items',
+            '--list-pets',
             required=False,
             action='store_true',
             help='Lists all pet-related items')
 
         parser.add(
-            '--pets-feed',
+            '--feed-pets',
             required=False,
             action='store_true',
             help='Batch pet feeding')
 
         parser.add(
-            '--pets-hatch',
+            '--hatch-pets',
             required=False,
             action='store_true',
             help='Batch pet hatching')
 
         parser.add(
-            '--pets-any-food',
+            '--any-pet-food',
             required=False,
             action='store_true',
             help='When feeding pets, allows the use of non-preferred food')
@@ -186,7 +186,7 @@ class PetCare(scriptabit.IPlugin):
                                          ' after your pets since yesterday')
 
         self.__items = self._hs.get_user()['items']
-        self.__any_food = self._config.pets_any_food
+        self.__any_food = self._config.any_pet_food
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
@@ -208,15 +208,15 @@ class PetCare(scriptabit.IPlugin):
         """
 
         # do work here
-        if self._config.pets_list_items:
+        if self._config.list_pets:
             self.list_pet_items(self.__items)
             return False
 
-        if self._config.pets_feed:
+        if self._config.feed_pets:
             self.feed_pets()
             return False
 
-        if self._config.pets_hatch:
+        if self._config.hatch_pets:
             self.hatch_pets()
             return False
 
@@ -310,7 +310,13 @@ class PetCare(scriptabit.IPlugin):
 
         return hp
 
-    def get_pets(self, base=True, magic=False, quest=False, rare=False):
+    def get_pets(
+            self,
+            base=True,
+            magic=False,
+            quest=False,
+            rare=False,
+            feedable_only=False):
         """ Gets a filtered list of current user pets.
 
         Args:
@@ -318,6 +324,8 @@ class PetCare(scriptabit.IPlugin):
             magic (bool): Includes or excludes magic pets.
             quest (bool): Includes or excludes quest pets.
             rare (bool): Includes or excludes rare pets.
+            feedable_only (bool): If true, only feedable pets are included.
+                Pets where a matching mount exists are not feedable.
 
         Returns:
             list: the filtered pet list.
@@ -325,17 +333,21 @@ class PetCare(scriptabit.IPlugin):
         pets = []
         for pet, growth in self.__items['pets'].items():
             # Habitica indicates a pet that has been raised to a mount with
-            # growth == -1. These pets are non-interactive, so exclude them
+            # growth == -1. These pets are non-interactive, so exclude them.
+            # There is no direct indication of the second pet (where a mount
+            # also exists), so we check for the presence of a mount.
             if growth > 0:
-                animal, potion = pet.split('-')
-                if base and self.is_base_pet(pet, animal, potion):
-                    pets.append(pet)
-                elif magic and self.is_magic_pet(pet, animal, potion):
-                    pets.append(pet)
-                elif quest and self.is_quest_pet(pet, animal, potion):
-                    pets.append(pet)
-                elif rare and self.is_rare_pet(pet, animal, potion):
-                    pets.append(pet)
+                has_mount = self.__items['mounts'].get(pet, False)
+                if not (feedable_only and has_mount):
+                    animal, potion = pet.split('-')
+                    if base and self.is_base_pet(pet, animal, potion):
+                        pets.append(pet)
+                    elif magic and self.is_magic_pet(pet, animal, potion):
+                        pets.append(pet)
+                    elif quest and self.is_quest_pet(pet, animal, potion):
+                        pets.append(pet)
+                    elif rare and self.is_rare_pet(pet, animal, potion):
+                        pets.append(pet)
 
         return pets
 
@@ -345,7 +357,8 @@ class PetCare(scriptabit.IPlugin):
             base=not self._config.no_base_pets,
             magic=self._config.magic_pets,
             quest=self._config.quest_pets,
-            rare=False)
+            rare=False,
+            feedable_only=True)
 
         pet_count = 0
         food_count = 0
@@ -378,7 +391,8 @@ class PetCare(scriptabit.IPlugin):
                         mounts_raised += 1
                         break
 
-                sleep(2)  # sleep for a bit so we don't pound the server
+                if not self._config.dry_run:
+                    sleep(2)  # sleep for a bit so we don't pound the server
             except Exception as e:
                 logging.getLogger(__name__).warning(e)
 
