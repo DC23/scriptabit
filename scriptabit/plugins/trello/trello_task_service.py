@@ -13,6 +13,7 @@ from scriptabit import TaskService
 
 from .trello_task import TrelloTask
 
+# TODO: Implement dry run support if I implement task writing
 class TrelloTaskService(TaskService):
     """ Implements the Trello synchronisation task service.
     """
