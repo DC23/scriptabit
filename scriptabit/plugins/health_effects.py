@@ -45,6 +45,15 @@ class HealthEffects(scriptabit.IPlugin):
         super().initialise(configuration, habitica_service, data_dir)
         logging.getLogger(__name__).info('HealthEffects initialising')
 
+    @staticmethod
+    def supports_dry_runs():
+        """ The HealthEffects plugin supports dry runs.
+
+        Returns:
+            bool: True
+        """
+        return True
+
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
 
@@ -59,4 +68,4 @@ class HealthEffects(scriptabit.IPlugin):
         is finished and the application should shut down.
         """
         super().update()
-        return self._update_count < 3
+        return False
