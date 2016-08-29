@@ -200,7 +200,7 @@ Changelog
 * Added note to CSV plugin docs indicating that Daily repeat options are not
   supported.
 
-1.8.0 (2016-08
+1.8.0 (2016-08-29)
 -----------------------------------------
 
 * Added messages and checks for dry run support in plugins.
