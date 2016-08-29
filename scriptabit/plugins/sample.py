@@ -24,6 +24,15 @@ class Sample(scriptabit.IPlugin):
         """
         super().__init__()
 
+    @staticmethod
+    def supports_dry_runs():
+        """ The Sample plugin supports dry runs.
+
+        Returns:
+            bool: True
+        """
+        return True
+
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
 

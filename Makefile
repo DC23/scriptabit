@@ -45,9 +45,10 @@ tests-slow:
 .PHONY: clean
 clean:
 	echo Cleaning ...
-	rm -rf build/ .tox/ ./setuptools-* .cache/ ./scriptabit.log
+	rm -rf build/ .tox/ ./setuptools-* .cache/
 	find . -name "__pycache__" -nowarn -exec rm -rf {} \;
 	find . -name "*.pyc" -nowarn -exec rm -rf {} \;
+	find . -name "scriptabit.log" -nowarn -exec rm -rf {} \;
 	echo ... done
 
 .PHONY: install-deps

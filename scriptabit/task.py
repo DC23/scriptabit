@@ -94,8 +94,6 @@ class Task(object):
         checklist (list): The task checklist, or None if the task does not have
             a checklist.
     """
-    # TODO: define and add checklists
-
     def __init__(self):
         """ Initialise the task.
         """

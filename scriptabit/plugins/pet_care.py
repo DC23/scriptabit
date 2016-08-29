@@ -370,7 +370,7 @@ class PetCare(scriptabit.IPlugin):
             try:
                 food = self.get_food_for_pet(pet)
                 while food:
-                    if self._config.dry_run:
+                    if self.dry_run:
                         response = {'data': -1,
                                     'message': 'dry run'}
                     else:
@@ -391,7 +391,7 @@ class PetCare(scriptabit.IPlugin):
                         mounts_raised += 1
                         break
 
-                if not self._config.dry_run:
+                if not self.dry_run:
                     sleep(2)  # sleep for a bit so we don't pound the server
             except Exception as e:
                 logging.getLogger(__name__).warning(e)
@@ -498,7 +498,7 @@ class PetCare(scriptabit.IPlugin):
 
         logging.getLogger(__name__).info(message)
 
-        if not self._config.dry_run:
+        if not self.dry_run:
             scriptabit.UtilityFunctions.upsert_notification(
                 self._hs,
                 text=':{0}: {1}'.format(
@@ -542,7 +542,7 @@ class PetCare(scriptabit.IPlugin):
                     continue
 
                 try:
-                    if self._config.dry_run:
+                    if self.dry_run:
                         response = {'message': 'dry run'}
                     else:
                         response = self._hs.hatch_pet(egg, potion)

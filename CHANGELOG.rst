@@ -199,3 +199,15 @@ Changelog
   first run (when depth is > 1)
 * Added note to CSV plugin docs indicating that Daily repeat options are not
   supported.
+
+1.8.0 (2016-08
+-----------------------------------------
+
+* Added messages and checks for dry run support in plugins.
+* Implemented full dry run mode support in banking.
+* Implemented full dry run mode support in CSV uploader.
+* Implemented full dry run mode support in pet care plugin.
+* Implemented full dry run mode support in trello sync plugin.
+* Implemented full dry run mode support in the utility functions.
+* Updated utility functions so they return the new value set into the character
+  stats (gold, XP, HP, MP).
