@@ -61,9 +61,10 @@ class HabiticaTaskService(TaskService):
             for task in tasks:
                 td = task.task_dict
                 if task.completed:
-                    # We need to update the task first, as scoring a todo does not
-                    # update the data, and the task may have changed upstream
-                    # in ways that affect the Habitica score for completing it.
+                    # We need to update the task first, as scoring a todo
+                    # does not update the data, and the task may have
+                    # changed upstream in ways that affect the Habitica
+                    # score for completing it.
                     self.__update_task(task)
                     self.__hs.score_task(td)
                 elif task.status in (SyncStatus.updated, SyncStatus.new):
@@ -106,9 +107,9 @@ class HabiticaTaskService(TaskService):
         """
 
         new_task_dict = {
-                'text': src.name,
-                'tags': [t['id'] for t in self.__task_tags]
-            }
+            'text': src.name,
+            'tags': [t['id'] for t in self.__task_tags]
+        }
 
         if self.dry_run:
             # create a fake random ID for the dry run
