@@ -16,7 +16,10 @@ from .habitica_service import HabiticaService, HabiticaTaskTypes
 from .habitica_task import HabiticaTask
 from .habitica_task_service import HabiticaTaskService
 from .iplugin import IPlugin
-from .scriptabit import start_cli
+from .scriptabit import (
+    start_cli,
+    start_banking,
+)
 from .task import (
     Task,
     Difficulty,

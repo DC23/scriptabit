@@ -60,6 +60,7 @@ class Banking(scriptabit.IPlugin):
         parser = super().get_arg_parser()
 
         parser.add(
+            '-d',
             '--bank-deposit',
             required=False,
             default=0,
@@ -67,6 +68,7 @@ class Banking(scriptabit.IPlugin):
             help='Banking: Deposit gold')
 
         parser.add(
+            '-w',
             '--bank-withdraw',
             required=False,
             default=0,

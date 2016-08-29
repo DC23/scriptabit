@@ -132,11 +132,34 @@ def __list_plugins(plugin_manager):
     print('-----------------')
     print()
 
-def start_cli():
-    """ Command-line entry point for scriptabit """
+def __init_config_and_plugin_manager():
+    """ Initialises the configuration and plugin manager for all entry points.
 
+    Returns:
+        config: The program configuration.
+        plugin_manager: The plugin manager.
+    """
     plugin_manager = __get_plugin_manager()
     config = __get_configuration(plugin_manager)
+    return config, plugin_manager
+
+def start_cli():
+    """ Command-line entry point for scriptabit """
+    run_scriptabit(*__init_config_and_plugin_manager())
+
+def start_banking():
+    """ Command-line entry point for scriptabit """
+    config, plugin_manager = __init_config_and_plugin_manager()
+    config.run = "banking"
+    run_scriptabit(config, plugin_manager)
+
+def run_scriptabit(config, plugin_manager):
+    """ Runs scriptabit.
+
+    Args:
+        config: The program configuration.
+        plugin_manager: The plugin manager.
+    """
     __init_logging(config.logging_config)
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
 

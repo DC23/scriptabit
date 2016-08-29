@@ -142,7 +142,10 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     # Delete either or both of these if not required (and remove the corresponding imports in the package __init__.py
     entry_points={
-        'console_scripts': ['scriptabit = scriptabit:start_cli',],
+        'console_scripts': [
+            'scriptabit = scriptabit:start_cli',
+            'sb-banking = scriptabit:start_banking',
+        ],
     },
 
     # Is your project zip safe?

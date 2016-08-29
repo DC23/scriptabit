@@ -27,6 +27,10 @@ To install the latest release from `PyPI <https://pypi.python.org/pypi>`_:
 
     pip install scriptabit
 
+If you already have `scriptabit` installed, then upgrade with::
+
+    pip install --upgrade scriptabit
+
 Habitica Credentials
 ++++++++++++++++++++
 You require an authentication credentials file in your home directory
@@ -72,9 +76,9 @@ Your API key and API secret can be
 `obtained here <https://trello.com/1/appKey/generate>`_.
 
 Your authorisation token and token secret will be obtained through an
-interactive process when you first run the trello plugin. You must save your API
-key and API secret to the .auth.cfg file before you will be able to authorise
-the scriptabit application with Trello.
+interactive process when you first run the trello plugin. You must first save
+your API key and API secret to the .auth.cfg file before you will be able to
+obtain the token and tokensecret.
 
 .. _usage:
 
