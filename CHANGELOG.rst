@@ -217,4 +217,4 @@ Changelog
 
 * Added missing supports_dry_run method to pet care plugin, that was preventing
   dry runs.
-
+* Fixed incorrect dryrun message in main loop.
