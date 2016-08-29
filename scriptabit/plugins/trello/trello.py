@@ -60,6 +60,15 @@ class Trello(scriptabit.IPlugin):
         self.__data = None
         self.__boards = None
 
+    @staticmethod
+    def supports_dry_runs():
+        """ The Trello plugin supports dry runs.
+
+        Returns:
+            bool: True
+        """
+        return True
+
     def __parse_board_configuration(self):
         """ Parses the board configuration from the command line arguments
         """
@@ -184,8 +193,9 @@ The default is to only synchronise the task names.''')
 
     def __save_persistent_data(self):
         """ Saves the persistent data """
-        with open(self.__data_file, 'wb') as f:
-            pickle.dump(self.__data, f, pickle.HIGHEST_PROTOCOL)
+        if not self.dry_run():
+            with open(self.__data_file, 'wb') as f:
+                pickle.dump(self.__data, f, pickle.HIGHEST_PROTOCOL)
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
@@ -269,17 +279,6 @@ The default is to only synchronise the task names.''')
             sync_stats (TaskSync.Stats): Stats from the last sync.
         """
 
-        # Ahh, pylint - so useful but so pedantic. Yes this line is longer than
-        # 80 characters, but any other rearrangment is much uglier!
-        # pylint: disable=line-too-long
-        notes = "{0} updated\n{1} completed\n{2} deleted\n{3} created\n{4} skipped".format(
-            sync_stats.updated,
-            sync_stats.completed,
-            sync_stats.deleted,
-            sync_stats.created,
-            sync_stats.skipped)
-        # pylint: enable=line-too-long
-
         total = sync_stats.total_changed
         now = datetime.now()
 
@@ -288,11 +287,12 @@ The default is to only synchronise the task names.''')
             total,
             now.strftime('%X %x'))
 
-        UtilityFunctions.upsert_notification(
-            self._hs,
-            text=text,
-            notes=notes,
-            heading_level=0)
+        if not self.dry_run():
+            UtilityFunctions.upsert_notification(
+                self._hs,
+                text=text,
+                notes=str(sync_stats),
+                heading_level=0)
 
     @staticmethod
     def __load_authentication_credentials(
@@ -379,6 +379,9 @@ The default is to only synchronise the task names.''')
         Args:
             boards (list): The list of boards that are being synchronised.
         """
+        if self.dry_run():
+            return
+
         difficulty_labels = [a.name for a in Difficulty]
         attribute_labels = [a.name for a in CharacterAttribute]
         required_labels = difficulty_labels + attribute_labels

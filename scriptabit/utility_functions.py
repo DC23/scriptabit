@@ -188,7 +188,6 @@ class UtilityFunctions(object):
         if heading_level > 0:
             text = '#' * heading_level + ' ' + text
 
-
         task = {
             'alias': alias,
             'up': 'false',
