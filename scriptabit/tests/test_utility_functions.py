@@ -57,3 +57,36 @@ class TestUtilityFunctions(object):
                   text=get_fake_stats(exp=10)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
             uf.set_xp(39)
+
+    def test_set_health_dry_run(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user', text=get_fake_stats()[1])
+            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
+            uf.set_health(39)
+
+            history = m.request_history
+            # the put method to set HP should not be called
+            assert history[0].method == 'GET'
+            assert len(history) == 1
+
+    def test_set_mana_dry_run(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user', text=get_fake_stats()[1])
+            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
+            uf.set_mana(39)
+
+            history = m.request_history
+            # the put method to set mana should not be called
+            assert history[0].method == 'GET'
+            assert len(history) == 1
+
+    def test_set_xp_dry_run(self):
+        with requests_mock.mock() as m:
+            m.get('https://habitica.com/api/v3/user', text=get_fake_stats()[1])
+            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
+            uf.set_xp(39)
+
+            history = m.request_history
+            # the put method to set XP should not be called
+            assert history[0].method == 'GET'
+            assert len(history) == 1
