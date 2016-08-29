@@ -206,3 +206,4 @@ Changelog
 * Added messages and checks for dry run support in plugins.
 * Implemented full dry run mode support in banking.
 * Implemented full dry run mode support in CSV uploader.
+* Implemented full dry run mode support in pet care plugin.
