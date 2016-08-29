@@ -189,16 +189,17 @@ def start_cli():
                 # Second, activate it
                 plugin_manager.activatePluginByName(config.run)
                 plugin = plugin_info.plugin_object
-                plugin.initialise(
-                    config,
-                    habitica_service,
-                    __init_user_plugin_directory())
 
                 if config.dry_run and not plugin.supports_dry_runs():
                     raise PluginError('Dry run mode not supported')
 
                 logging.getLogger(__name__).info(
                     'Dry run mode: no changes will be written')
+
+                plugin.initialise(
+                    config,
+                    habitica_service,
+                    __init_user_plugin_directory())
 
                 # Finally, run it
                 updating = True
