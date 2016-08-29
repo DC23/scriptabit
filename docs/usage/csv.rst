@@ -22,6 +22,7 @@ Habitica task features that are **not currently supported** are:
 
 - Due dates
 - Checklists
+- Repeat options (days of the week, every X days) for Dailies.
 
 The CSV file must have a first row header, with the following columns:
 
