@@ -265,9 +265,10 @@ The default is to only synchronise the task names.''')
         self.__notify(stats)
 
         # Checkpoint the sync data
-        task_map.persist(self.__task_map_file)
         self.__data.last_sync = sync.last_sync
-        self.__save_persistent_data()
+        if not self.dry_run():
+            task_map.persist(self.__task_map_file)
+            self.__save_persistent_data()
 
         # return False if finished, and True to be updated again.
         return True
