@@ -27,6 +27,15 @@ class CsvTasks(scriptabit.IPlugin):
         self.tasks = []
         self.tag_names = []
 
+    @staticmethod
+    def supports_dry_runs():
+        """ The CSV plugin supports dry runs.
+
+        Returns:
+            bool: True
+        """
+        return True
+
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
 
@@ -68,15 +77,6 @@ class CsvTasks(scriptabit.IPlugin):
                 persistent data.
         """
         super().initialise(configuration, habitica_service, data_dir)
-
-    def update_interval_minutes(self):
-        """ Indicates the required update interval in minutes.
-
-        Returns: float: The required update interval in minutes.
-        """
-        # minimum update frequency of once every 1 minute, or whatever the
-        # user specified
-        return max(1, self._config.update_frequency)
 
     def update(self):
         """ This update method will be called once on every update cycle,
@@ -153,7 +153,7 @@ class CsvTasks(scriptabit.IPlugin):
                 'No tasks created. Check your CSV file format')
             return False
 
-        if not self._config.dry_run and self.tasks:
+        if not self.dry_run() and self.tasks:
             self._hs.create_tasks(self.tasks)
 
         self.__notify('Uploaded {0} rows from CSV'.format(row_count))
@@ -202,6 +202,7 @@ class CsvTasks(scriptabit.IPlugin):
     def __notify(self, message):
         """ Notify the Habitica user """
         logging.getLogger(__name__).info(message)
-        scriptabit.UtilityFunctions.upsert_notification(
-            self._hs,
-            text=message)
+        if not self.dry_run():
+            scriptabit.UtilityFunctions.upsert_notification(
+                self._hs,
+                text=message)

@@ -47,14 +47,10 @@ class Banking(scriptabit.IPlugin):
 
     @staticmethod
     def supports_dry_runs():
-        """ Indicates whether the plugin correctly supports the `dry-run`
-        command-line flag.
-
-        To support dry runs, the plugin must not modify any persistent data,
-        either on Habitica or elsewhere if the `dry-run` flag is True.
+        """ The Banking plugin supports dry runs.
 
         Returns:
-            bool: True if dry runs are supported, otherwise False.
+            bool: True
         """
         return True
 
