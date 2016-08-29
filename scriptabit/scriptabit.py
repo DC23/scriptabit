@@ -190,11 +190,12 @@ def start_cli():
                 plugin_manager.activatePluginByName(config.run)
                 plugin = plugin_info.plugin_object
 
-                if config.dry_run and not plugin.supports_dry_runs():
-                    raise PluginError('Dry run mode not supported')
+                if config.dry_run:
+                    if not plugin.supports_dry_runs():
+                        raise PluginError('Dry run mode not supported')
 
-                logging.getLogger(__name__).info(
-                    'Dry run mode: no changes will be written')
+                    logging.getLogger(__name__).info(
+                        'Dry run mode: no changes will be written')
 
                 plugin.initialise(
                     config,
