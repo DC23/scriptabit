@@ -207,3 +207,4 @@ Changelog
 * Implemented full dry run mode support in banking.
 * Implemented full dry run mode support in CSV uploader.
 * Implemented full dry run mode support in pet care plugin.
+* Implemented full dry run mode support in trello sync plugin.
