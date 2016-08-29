@@ -17,6 +17,9 @@ from scriptabit.utility_functions import UtilityFunctions
 
 from .fake_data import get_fake_stats
 
+class MockConfig(object):
+    def __init__(self, dry_run=False):
+        self.dry_run = dry_run
 
 class TestUtilityFunctions(object):
 
@@ -34,7 +37,7 @@ class TestUtilityFunctions(object):
                   text=get_fake_stats()[1])
             m.put('https://habitica.com/api/v3/user',
                   text=get_fake_stats(hp=10)[1])
-            uf = UtilityFunctions(None, self.hs)
+            uf = UtilityFunctions(MockConfig(), self.hs)
             uf.set_health(39)
 
     def test_set_mana(self):
@@ -43,7 +46,7 @@ class TestUtilityFunctions(object):
                   text=get_fake_stats()[1])
             m.put('https://habitica.com/api/v3/user',
                   text=get_fake_stats(mp=10)[1])
-            uf = UtilityFunctions(None, self.hs)
+            uf = UtilityFunctions(MockConfig(), self.hs)
             uf.set_mana(9)
 
     def test_set_xp(self):
@@ -52,5 +55,5 @@ class TestUtilityFunctions(object):
                   text=get_fake_stats()[1])
             m.put('https://habitica.com/api/v3/user',
                   text=get_fake_stats(exp=10)[1])
-            uf = UtilityFunctions(None, self.hs)
+            uf = UtilityFunctions(MockConfig(), self.hs)
             uf.set_xp(39)
