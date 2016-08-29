@@ -45,6 +45,19 @@ class Banking(scriptabit.IPlugin):
         """
         super().initialise(configuration, habitica_service, data_dir)
 
+    @staticmethod
+    def supports_dry_runs():
+        """ Indicates whether the plugin correctly supports the `dry-run`
+        command-line flag.
+
+        To support dry runs, the plugin must not modify any persistent data,
+        either on Habitica or elsewhere if the `dry-run` flag is True.
+
+        Returns:
+            bool: True if dry runs are supported, otherwise False.
+        """
+        return True
+
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
         """
@@ -155,7 +168,8 @@ amount.''')
 
         # subtract from user balance
         user_amount = min(self.__user_balance, tax)
-        self._hs.set_gp(max(0, self.__user_balance - user_amount))
+        if not self.dry_run():
+            self._hs.set_gp(max(0, self.__user_balance - user_amount))
         total_paid = user_amount
 
         # tax still owing?
@@ -184,7 +198,8 @@ amount.''')
         self.update_bank_balance(self.__bank_balance + nett_amount)
 
         # subtract the gold from user balance
-        self._hs.set_gp(max(0, self.__user_balance - gross_amount))
+        if not self.dry_run():
+            self._hs.set_gp(max(0, self.__user_balance - gross_amount))
 
         message = 'Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
         self.notify(message)
@@ -202,7 +217,8 @@ amount.''')
         self.update_bank_balance(new_balance)
 
         # add the gold to user balance
-        self._hs.set_gp(self.__user_balance + nett_amount)
+        if not self.dry_run():
+            self._hs.set_gp(self.__user_balance + nett_amount)
 
         message = 'Withdrew: {0}, Fee: {1}'.format(nett_amount, fee)
         self.notify(message)
@@ -210,9 +226,10 @@ amount.''')
     def notify(self, message):
         """ Notify the Habitica user """
         logging.getLogger(__name__).info(message)
-        scriptabit.UtilityFunctions.upsert_notification(
-            self._hs,
-            text=':moneybag: ' + message)
+        if not self.dry_run():
+            scriptabit.UtilityFunctions.upsert_notification(
+                self._hs,
+                text=':moneybag: ' + message)
 
     def update_bank_balance(self, new_balance):
         """ Updates the bank balance.
@@ -223,7 +240,8 @@ amount.''')
         new_balance = math.trunc(new_balance)
         self.__bank['notes'] = Banking.get_balance_string(new_balance)
         self.__bank['value'] = new_balance
-        self._hs.upsert_task(self.__bank)
+        if not self.dry_run():
+            self._hs.upsert_task(self.__bank)
 
     def calculate_fee(self, amount):
         """ Calculates the fee for a given transaction amount.

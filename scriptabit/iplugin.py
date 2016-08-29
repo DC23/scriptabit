@@ -50,6 +50,27 @@ class IPlugin(YapsyIPlugin):
         """
         return configargparse.ArgParser(add_help=False)
 
+    @staticmethod
+    def supports_dry_runs():
+        """ Indicates whether the plugin correctly supports the `dry-run`
+        command-line flag.
+
+        To support dry runs, the plugin must not modify any persistent data,
+        either on Habitica or elsewhere if the `dry-run` flag is True.
+
+        Returns:
+            bool: True if dry runs are supported, otherwise False.
+        """
+        return False
+
+    def dry_run(self):
+        """ Indicates whether this is a dry run or not.
+
+        Returns:
+            bool: True if this is a dry run, otherwise False.
+        """
+        return self._config.dry_run
+
     def activate(self):
         """ Called by the plugin framework when a plugin is activated."""
         pass

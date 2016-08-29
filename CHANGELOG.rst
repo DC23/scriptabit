@@ -199,3 +199,9 @@ Changelog
   first run (when depth is > 1)
 * Added note to CSV plugin docs indicating that Daily repeat options are not
   supported.
+
+1.8.0 (2016-08
+-----------------------------------------
+
+* Added messages and checks for dry run support in plugins.
+* Implemented full dry run mode support in banking.
