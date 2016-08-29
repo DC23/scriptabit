@@ -77,7 +77,7 @@ def __init_user_plugin_directory():
     if not os.path.exists(plugin_dir):
         # Can't use logging, as logging is initialised after plugins
         print('Creating user plugin directory {0}'.format(plugin_dir))
-        os.mkdir(plugin_dir)
+        os.makedirs(plugin_dir)
 
     return plugin_dir
 
