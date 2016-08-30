@@ -13,7 +13,7 @@ while [ 1 ]; do
     elif [ ! "$1" == "" ]; then
         $1
     else
-        make test
+        make tests
     fi
 
     echo
