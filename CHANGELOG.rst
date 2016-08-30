@@ -219,7 +219,7 @@ Changelog
   dry runs.
 * Fixed incorrect dryrun message in main loop.
 
-1.9.0 (2016-)
+1.9.0 (2016-08-30)
 -----------------------------------------
 
 * Updated documentation.
