@@ -24,6 +24,7 @@ class HealthEffects(scriptabit.IPlugin):
         """
         super().__init__()
         self.__print_help = None
+        self.__stats = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -71,15 +72,19 @@ class HealthEffects(scriptabit.IPlugin):
 
     def get_health_delta(self):
         """ Gets the health delta for the current update """
-        hp24 = self._config.max_hp_change_per_day
+        hp24 = abs(self._config.max_hp_change_per_day)
         interval = self.update_interval_minutes()
         return interval * hp24 / (24 * 60)
 
     def poisoned(self):
         """ Simple health drain/poisoning """
-        hp_delta = self.get_health_delta()
-        logging.getLogger(__name__).info('Poisoning %f HP', hp_delta)
-        return False
+        delta = self.get_health_delta()
+        old_hp = self.__stats['hp']
+        new_hp = max(0, old_hp - delta)
+        logging.getLogger(__name__).info('Poisoning %f HP', delta)
+        if not self.dry_run:
+            self._hs.set_hp(new_hp)
+        return True
 
     def update(self):
         """ Update the health effects plugin.
@@ -88,6 +93,10 @@ class HealthEffects(scriptabit.IPlugin):
         is finished and the application should shut down.
         """
         super().update()
+
+        # get some user data
+        self.__stats = self._hs.get_stats()
+
         if self._config.health_drain:
             return self.poisoned()
 
