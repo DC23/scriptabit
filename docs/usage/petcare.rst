@@ -33,18 +33,24 @@ which pets are fed. Each pet will be repeatedly offered food until either the
 remain, then the process repeats. If you want to feed specific pets, this should
 be done through the official applications.
 
-An example command line to feed preferred foods to standard pets::
+Examples
+^^^^^^^^
 
-    scriptabit --run pet_care --feed-pets
+These example command lines all use the shortcut method. The long form would 
+use `scriptabit --run pet_care` instead of `sb-pets`.
 
-A command line to feed any food to quest pets only::
+Feed preferred foods to standard pets only::
 
-    scriptabit --run pet_care --feed-pets --no-base-pets --quest-pets
+    sb-pets --feed-pets
 
-A command line to hatch all available standard pets::
+Feed any food to quest pets only::
+
+    sb-pets --feed-pets --no-base-pets --quest-pets
+
+Hatch all available standard pets::
     
-    scriptabit --run pet_care --hatch-pets
+    sb-pets --hatch-pets
 
-A command line to hatch all available standard and quest pets::
+Hatch all available standard and quest pets::
     
-    scriptabit --run pet_care --hatch-pets --quest-pets
+    sb-pets --hatch-pets --quest-pets
