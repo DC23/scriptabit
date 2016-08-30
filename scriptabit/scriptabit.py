@@ -279,4 +279,4 @@ def run_scriptabit(plugin_name=''):
 
 
 if __name__ == 'main':
-    start_cli()
+    start_scriptabit()
