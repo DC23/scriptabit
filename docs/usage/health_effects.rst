@@ -11,7 +11,10 @@ game.
 Examples
 ++++++++
 
-Run the health effects plugin on a 30 minute cycle, draining 15 HP over 24
-hours::
+Drain 15 HP over 24 hours, updating every 30 minutes::
 
     sb-health --update-frequency 30 --max-hp-change-per-day 15 --health-drain
+
+Regenerate 10 HP over 24 hours, updating every 30 minutes (shortcut args)::
+
+    sb-health -uf 30 -hp24 10 --health-regen
