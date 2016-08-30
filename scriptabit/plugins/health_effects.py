@@ -108,13 +108,13 @@ class HealthEffects(scriptabit.IPlugin):
     def poisoned(self):
         """ Simple health drain/poisoning """
         delta = abs(self.apply_health_delta(up=False))
-        self.notify('Poisoned. Lost {0:.2} HP'.format(delta))
+        self.notify('Poisoned. Lost {0:.2} HP'.format(delta), panel=False)
         return True
 
     def regenerating(self):
         """ Simple health regeneration """
         delta = self.apply_health_delta(up=True)
-        self.notify('Regenerated {0:.2} HP'.format(delta))
+        self.notify('Regenerated {0:.2} HP'.format(delta), panel=False)
         return True
 
     def update(self):

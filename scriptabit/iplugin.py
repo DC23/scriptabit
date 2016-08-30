@@ -75,7 +75,7 @@ class IPlugin(YapsyIPlugin):
         """
         return self._config.dry_run
 
-    def notify(self, message):
+    def notify(self, message, panel=True):
         """ Notify the Habitica user.
 
         If this is a dry run, then the message is logged. Otherwise the message
@@ -83,9 +83,10 @@ class IPlugin(YapsyIPlugin):
 
         Args:
             message (str): The message.
+            panel (bool): If True, the Habitica panel is updated.
         """
         logging.getLogger(__name__).info(message)
-        if not self.dry_run:
+        if panel and not self.dry_run:
             UtilityFunctions.upsert_notification(
                 self._hs,
                 text=message)
