@@ -36,7 +36,6 @@ class HabiticaService(object):
             """
         self.__headers = headers
         self.__base_url = base_url
-        logging.getLogger(__name__).debug('HabiticaService online')
 
     def __delete(self, command, params=None):
         """Utility wrapper around a HTTP DELETE"""
