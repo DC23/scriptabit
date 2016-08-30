@@ -378,7 +378,9 @@ class PetCare(scriptabit.IPlugin):
                 break
             try:
                 food = self.get_food_for_pet(pet)
+                fed_something = False
                 while food:
+                    fed_something = True
                     if self.dry_run:
                         response = {'data': -1, 'message': 'dry run'}
                     else:
@@ -399,7 +401,7 @@ class PetCare(scriptabit.IPlugin):
                         mounts_raised += 1
                         break
 
-                if not self.dry_run:
+                if fed_something and not self.dry_run:
                     sleep(2)  # sleep for a bit so we don't pound the server
             except Exception as e:
                 logging.getLogger(__name__).warning(e)

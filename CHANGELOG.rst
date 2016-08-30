@@ -234,7 +234,9 @@ Changelog
 1.10.0 (2016-08-30)
 -----------------------------------------
 
-* Made plugin update more robust. Exceptions are caught so that updates can 
+* Made plugin update more robust. Exceptions are caught so that updates can
   continue rather than aborting the whole run.
 * Implemented simple health drain and regeneration in health effects plugin.
-
+* Refactored plugin notification methods.
+* Changed pet care so it only sleeps during feeding if API calls were made
+  during the last pet.
