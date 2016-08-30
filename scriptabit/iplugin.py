@@ -10,6 +10,7 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import configargparse
+import logging
 
 from yapsy.IPlugin import IPlugin as YapsyIPlugin
 
@@ -71,6 +72,21 @@ class IPlugin(YapsyIPlugin):
             bool: True if this is a dry run, otherwise False.
         """
         return self._config.dry_run
+
+    def notify(self, message):
+        """ Notify the Habitica user.
+
+        If this is a dry run, then the message is logged. Otherwise the message
+        is logged and posted to the Habitica notification panel.
+
+        Args:
+            message (str): The message.
+        """
+        logging.getLogger(__name__).info(message)
+        if not self.dry_run:
+            scriptabit.UtilityFunctions.upsert_notification(
+                self._hs,
+                text=message)
 
     def activate(self):
         """ Called by the plugin framework when a plugin is activated."""

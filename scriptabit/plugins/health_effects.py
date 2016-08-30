@@ -45,6 +45,12 @@ class HealthEffects(scriptabit.IPlugin):
             action='store_true',
             help='Drains your health over time')
 
+        parser.add(
+            '--health-regen',
+            required=False,
+            action='store_true',
+            help='Restores your health over time')
+
         self.__print_help = parser.print_help
 
         return parser
@@ -76,14 +82,39 @@ class HealthEffects(scriptabit.IPlugin):
         interval = self.update_interval_minutes()
         return interval * hp24 / (24 * 60)
 
-    def poisoned(self):
-        """ Simple health drain/poisoning """
+    def apply_health_delta(self, up=True):
+        """ Applies the health delta.
+
+        Args:
+            up (bool): If True, then health is increased, otherwise health is
+                decreased.
+
+        Returns:
+            float: the signed health delta that was applied.
+        """
         delta = self.get_health_delta()
         old_hp = self.__stats['hp']
-        new_hp = max(0, old_hp - delta)
-        logging.getLogger(__name__).info('Poisoning %f HP', delta)
+
+        if up:
+            new_hp = max(50, old_hp + delta)
+        else:
+            new_hp = max(0, old_hp - delta)
+
         if not self.dry_run:
             self._hs.set_hp(new_hp)
+
+        return delta if up else -delta
+
+    def poisoned(self):
+        """ Simple health drain/poisoning """
+        delta = abs(self.apply_health_delta(up=False))
+        self.notify('Poisoned. Lost {0:.2} HP'.format(delta))
+        return True
+
+    def regenerating(self):
+        """ Simple health regeneration """
+        delta = self.apply_health_delta(up=True)
+        self.notify('Regenerated {0:.2} HP'.format(delta))
         return True
 
     def update(self):
@@ -99,6 +130,8 @@ class HealthEffects(scriptabit.IPlugin):
 
         if self._config.health_drain:
             return self.poisoned()
+        elif self._config.health_regen:
+            return self.regenerating()
 
         # If no other functions ran, just print the help and exit
         self.__print_help()
