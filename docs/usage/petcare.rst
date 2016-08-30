@@ -34,7 +34,7 @@ remain, then the process repeats. If you want to feed specific pets, this should
 be done through the official applications.
 
 Examples
-^^^^^^^^
+++++++++
 
 These example command lines all use the shortcut method. The long form would 
 use `scriptabit --run pet_care` instead of `sb-pets`.
