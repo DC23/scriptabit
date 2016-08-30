@@ -143,8 +143,11 @@ setup(
     # Delete either or both of these if not required (and remove the corresponding imports in the package __init__.py
     entry_points={
         'console_scripts': [
-            'scriptabit = scriptabit:start_cli',
+            'scriptabit = scriptabit:start_scriptabit',
             'sb-banking = scriptabit:start_banking',
+            'sb-csv = scriptabit:start_csv',
+            'sb-health = scriptabit:start_health',
+            'sb-pets = scriptabit:start_pets',
             'sb-trello = scriptabit:start_trello',
         ],
     },

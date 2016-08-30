@@ -17,8 +17,11 @@ from .habitica_task import HabiticaTask
 from .habitica_task_service import HabiticaTaskService
 from .iplugin import IPlugin
 from .scriptabit import (
-    start_cli,
+    start_scriptabit,
     start_banking,
+    start_csv,
+    start_health,
+    start_pets,
     start_trello,
 )
 from .task import (

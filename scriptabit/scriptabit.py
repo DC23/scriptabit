@@ -143,29 +143,42 @@ def __init_config_and_plugin_manager():
     config = __get_configuration(plugin_manager)
     return config, plugin_manager
 
-def start_cli():
+def start_scriptabit():
     """ Command-line entry point for scriptabit """
-    run_scriptabit(*__init_config_and_plugin_manager())
+    run_scriptabit()
 
 def start_banking():
     """ Command-line entry point for banking """
-    config, plugin_manager = __init_config_and_plugin_manager()
-    config.run = "banking"
-    run_scriptabit(config, plugin_manager)
+    run_scriptabit('banking')
+
+def start_csv():
+    """ Command-line entry point for csv """
+    run_scriptabit('csv_tasks')
+
+def start_health():
+    """ Command-line entry point for health """
+    run_scriptabit('health_effects')
+
+def start_pets():
+    """ Command-line entry point for pets """
+    run_scriptabit('pet_care')
 
 def start_trello():
     """ Command-line entry point for Trello """
-    config, plugin_manager = __init_config_and_plugin_manager()
-    config.run = "trello"
-    run_scriptabit(config, plugin_manager)
+    run_scriptabit('trello')
 
-def run_scriptabit(config, plugin_manager):
+def run_scriptabit(plugin_name=''):
     """ Runs scriptabit.
 
     Args:
-        config: The program configuration.
-        plugin_manager: The plugin manager.
+        plugin_name (str): The optional plugin. If supplied, then this plugin is
+            executed regardless of the actual command line arguments.
     """
+    config, plugin_manager = __init_config_and_plugin_manager()
+
+    if plugin_name:
+        config.run = plugin_name
+
     __init_logging(config.logging_config)
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
 
