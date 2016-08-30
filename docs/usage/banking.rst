@@ -20,7 +20,7 @@ cost gold equal to the bank balance, but will not update the actual balance
 field in the reward).
 
 The primary advantage of using a bank is that the gold is not lost on death.
-However, to reduce the advantage this provides, the scriptabit bank charges 
+However, to maintain some balance the scriptabit bank charges
 :ref:`banking-fees` on each transaction.
 
 Checking your balance
@@ -35,6 +35,10 @@ banking plugin with no addition arguments::
 
     scriptabit --run banking
 
+Or using the banking-specific command::
+
+    sb-banking
+
 There are no fees for balance checks.
 
 Deposits
@@ -43,6 +47,10 @@ Deposits
 Deposits are made with the `--bank-deposit` argument::
 
     scriptabit --run banking --bank-deposit 100
+
+Or using the shortcut method (short-form arguments and banking command)::
+
+    sb-banking -d 100
 
 Deposits are capped by your available gold, so trying to deposit more gold than
 you have is a simple way to deposit all your gold.
@@ -53,6 +61,10 @@ Withdrawals
 Withdrawals are made with the `--bank-withdraw` argument::
 
     scriptabit --run banking --bank-withdraw 100
+
+Or using the shortcut method (short-form arguments and banking command)::
+
+    sb-banking -w 100
 
 Withdrawals are capped by the bank balance, so trying to withdraw more gold than
 you have is a simple way to withdraw all gold from the bank.
@@ -66,6 +78,10 @@ players seeking an extra challenge::
 
     scriptabit --run banking --bank-tax 100
 
+Or using the shortcut method (short-form arguments and banking command)::
+
+    sb-banking --bank-tax 100
+
 .. _banking-fees:
 
 Bank Fees
@@ -74,18 +90,18 @@ Bank Fees
 Extra realism is available through bank fees. Fees are charged for deposits and
 withdrawals. Small transactions are expensive, with larger transactions becoming
 better value for money. The fees level off significantly after 1000 gold.
-This means that the most cost effective way to use the bank is to save at least 
+This means that the most cost effective way to use the bank is to save at least
 1000 gold first, however this increases the risk of losing your gold due to
 death. It is up to you to balance the transaction cost with the risk of death.
 
-The command line argument `bank-max-fee` sets the upper limit on fees. 
+The command line argument `bank-max-fee` sets the upper limit on fees.
 Values up to 600 will make transactions very expensive, while going beyond
 600 will start to make small transactions cost more than the transaction
 amount.
 
 Fees can be disabled by setting `bank-max-fee` to zero.
-This can be on the command line, or permanently by adding the following 
+This can be on the command line, or permanently by adding the following
 to the scriptabit.cfg file::
-    
+
     [banking]
     bank-max-fee = 0
