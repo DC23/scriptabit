@@ -1,7 +1,7 @@
 .. _detailed-usage:
 
-Detailed Usage
---------------
+Using the Built-in Plugins
+--------------------------
 
 Some features of scriptabit are more complex than setting HP via the command
 line. These features are described in more detail here.
