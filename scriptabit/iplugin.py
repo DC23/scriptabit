@@ -9,10 +9,12 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
-import configargparse
 import logging
+import configargparse
 
 from yapsy.IPlugin import IPlugin as YapsyIPlugin
+
+from .utility_functions import UtilityFunctions
 
 
 # pylint: disable=no-self-use
@@ -84,7 +86,7 @@ class IPlugin(YapsyIPlugin):
         """
         logging.getLogger(__name__).info(message)
         if not self.dry_run:
-            scriptabit.UtilityFunctions.upsert_notification(
+            UtilityFunctions.upsert_notification(
                 self._hs,
                 text=message)
 
