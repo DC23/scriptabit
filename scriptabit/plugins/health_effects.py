@@ -19,17 +19,32 @@ import scriptabit
 class HealthEffects(scriptabit.IPlugin):
     """ Implements the health effects plugin.
     """
+    def __init__(self):
+        """ Initialises the plugin.
+        """
+        super().__init__()
+        self.__print_help = None
+
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
         """
         parser = super().get_arg_parser()
 
         parser.add(
-            '--he-max-hp-loss-per-day',
+            '-hp24',
+            '--max-hp-change-per-day',
             required=False,
-            default=20.0,
+            default=10.0,
             type=float,
-            help='Health Effects: Max amount of health loss per day')
+            help='Health Effects: Max amount of health change per day')
+
+        parser.add(
+            '--health-drain',
+            required=False,
+            action='store_true',
+            help='Drains your health over time')
+
+        self.__print_help = parser.print_help
 
         return parser
 
@@ -54,12 +69,17 @@ class HealthEffects(scriptabit.IPlugin):
         """
         return True
 
-    def update_interval_minutes(self):
-        """ Indicates the required update interval in minutes.
+    def get_health_delta(self):
+        """ Gets the health delta for the current update """
+        hp24 = self._config.max_hp_change_per_day
+        interval = self.update_interval_minutes()
+        return interval * hp24 / (24 * 60)
 
-        Returns: float: The required update interval in minutes.
-        """
-        return max(0.02, self._config.update_frequency)
+    def poisoned(self):
+        """ Simple health drain/poisoning """
+        hp_delta = self.get_health_delta()
+        logging.getLogger(__name__).info('Poisoning %f HP', hp_delta)
+        return False
 
     def update(self):
         """ Update the health effects plugin.
@@ -68,4 +88,9 @@ class HealthEffects(scriptabit.IPlugin):
         is finished and the application should shut down.
         """
         super().update()
+        if self._config.health_drain:
+            return self.poisoned()
+
+        # If no other functions ran, just print the help and exit
+        self.__print_help()
         return False

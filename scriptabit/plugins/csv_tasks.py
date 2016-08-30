@@ -26,6 +26,7 @@ class CsvTasks(scriptabit.IPlugin):
         super().__init__()
         self.tasks = []
         self.tag_names = []
+        self.__print_help = None
 
     @staticmethod
     def supports_dry_runs():
@@ -53,6 +54,8 @@ class CsvTasks(scriptabit.IPlugin):
             required=False,
             metavar='FILE',
             help='CSV file for bulk task import')
+
+        self.__print_help = parser.print_help
 
         return parser
 
@@ -89,6 +92,11 @@ class CsvTasks(scriptabit.IPlugin):
         Returns: bool: True if further updates are required; False if the plugin
         is finished and the application should shut down.
         """
+        if not self._config.csv_file:
+            logging.getLogger(__name__).warning('No CSV file specified')
+            self.__print_help()
+            return False
+
         logging.getLogger(__name__).info(
             'Importing tasks from %s',
             self._config.csv_file)

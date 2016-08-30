@@ -110,7 +110,7 @@ class IPlugin(YapsyIPlugin):
         Returns:
             float: The required update interval in minutes.
         """
-        return 60
+        return max(5, self._config.update_frequency)
 
     def update(self):
         """ This update method will be called once on every update cycle,
