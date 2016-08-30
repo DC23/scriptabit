@@ -259,7 +259,14 @@ def run_scriptabit(plugin_name=''):
                     logging.getLogger(__name__).info(
                         "%s update %d @ %s",
                         config.run, count, datetime.now().strftime("%c"))
-                    updating = plugin.update()
+
+                    try:
+                        updating = plugin.update()
+                    except Exception as e:
+                        logging.getLogger(__name__).error(
+                            'Plugin Update failed')
+                        logging.getLogger(__name__).error(e)
+
                     count += 1
 
                     # Only sleep if we have another update pending

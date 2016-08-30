@@ -230,3 +230,11 @@ Changelog
     * `sb-pets` instead of `scriptabit --run pet_care`
     * `sb-csv` instead of `scriptabit --run csv_tasks`
     * `sb-health` instead of `scriptabit --run health_effects`
+
+1.10.0 (2016-08-30)
+-----------------------------------------
+
+* Made plugin update more robust. Exceptions are caught so that updates can 
+  continue rather than aborting the whole run.
+* Implemented simple health drain and regeneration in health effects plugin.
+

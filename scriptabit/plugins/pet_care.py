@@ -486,8 +486,16 @@ class PetCare(scriptabit.IPlugin):
         print('Mounts:')
         pprint(items['mounts'])
 
-    def notify(self, message):
-        """ Notify the Habitica user """
+    def notify(self, message, panel=True):
+        """ Notify the Habitica user.
+
+        If this is a dry run, then the message is logged. Otherwise the message
+        is logged and posted to the Habitica notification panel.
+
+        Args:
+            message (str): The message.
+            panel (bool): If True, the Habitica panel is updated.
+        """
         emoticons = [
             'dog',
             'mouse',
@@ -504,14 +512,10 @@ class PetCare(scriptabit.IPlugin):
             'dragon_face',
             'cactus']
 
-        logging.getLogger(__name__).info(message)
-
-        if not self.dry_run:
-            scriptabit.UtilityFunctions.upsert_notification(
-                self._hs,
-                text=':{0}: {1}'.format(
-                    random.choice(emoticons),
-                    message))
+        super().notify(
+            ':{0}: {1}'.format(
+                random.choice(emoticons),
+                message))
 
     def hatch_pets(self):
         """ Hatch all available pets. """

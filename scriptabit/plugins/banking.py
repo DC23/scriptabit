@@ -218,16 +218,8 @@ amount.''')
         if not self.dry_run:
             self._hs.set_gp(self.__user_balance + nett_amount)
 
-        message = 'Withdrew: {0}, Fee: {1}'.format(nett_amount, fee)
+        message = ':moneybag: Withdrew: {0}, Fee: {1}'.format(nett_amount, fee)
         self.notify(message)
-
-    def notify(self, message):
-        """ Notify the Habitica user """
-        logging.getLogger(__name__).info(message)
-        if not self.dry_run:
-            scriptabit.UtilityFunctions.upsert_notification(
-                self._hs,
-                text=':moneybag: ' + message)
 
     def update_bank_balance(self, new_balance):
         """ Updates the bank balance.
