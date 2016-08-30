@@ -115,8 +115,8 @@ Example Command Lines
 
 Run the trello plugin with default options::
 
-    scriptabit --run trello
+    sb-trello
 
 Run once rather than syncing every 30 minutes::
 
-    scriptabit --run trello --max-updates 1
+    sb-trello --max-updates 1

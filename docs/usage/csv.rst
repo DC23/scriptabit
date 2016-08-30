@@ -5,6 +5,10 @@ Example command line::
 
     scriptabit --run csv_tasks --csv-file [my_csv_file]
 
+Or using the csv-specific command::
+
+    sb-csv --csv-file [my_csv_file]
+
 The `csv-tasks` plugin provides limited support for batch creation of Habitica
 tasks from a CSV file. The supported task features are:
 

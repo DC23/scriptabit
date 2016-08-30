@@ -5,20 +5,20 @@ The Pet Care plugin streamlines a number of operations that are difficult to
 carry out in large numbers through the current Habitica applications. Core
 features are:
 
-- `pets-list-items`: List current inventory of pet-related items. This is
+- `list-pets`: List current inventory of pet-related items. This is
   primarily for development support, as this task is easily achieved through the
   official applications.
-- `pets-feed`: Batch pet feeding.
-- `pets-hatch`: Batch pet hatching.
+- `feed-pets`: Batch pet feeding.
+- `hatch-pets`: Batch pet hatching.
 
 A number of flags exist to control the pets, food, and potions used for
 the batch operations. They are:
 
-- `pets-any-food`: If supplied, then all food types will be offered to all pets.
+- `any-pet-food`: If supplied, then all food types will be offered to all pets.
   The default behaviour is to only use the preferred foods for a pet. The main
   use of this flag is for the case where you have just a few pets, but a lot of
-  food. It will let you raise the pets to a mount more quickly at the cost of
-  more food.
+  food. It will let you raise the pets to a mount more quickly without having to
+  wait for the preferred foods.
 - `no-base-pets`: If supplied, then the standard pets will be excluded from
   batch operations, allowing you to focus on quest and magic potion pets.
   The default is to only feed standard pets.
@@ -33,18 +33,24 @@ which pets are fed. Each pet will be repeatedly offered food until either the
 remain, then the process repeats. If you want to feed specific pets, this should
 be done through the official applications.
 
-An example command line to feed preferred foods to standard pets::
+Examples
+++++++++
 
-    scriptabit --run pet_care --pets-feed
+These example command lines all use the shortcut method. The long form would 
+use `scriptabit --run pet_care` instead of `sb-pets`.
 
-A command line to feed any food to quest pets only::
+Feed preferred foods to standard pets only::
 
-    scriptabit --run pet_care --pets-feed --no-base-pets --quest-pets
+    sb-pets --feed-pets
 
-A command line to hatch all available standard pets::
+Feed any food to quest pets only::
+
+    sb-pets --feed-pets --no-base-pets --quest-pets
+
+Hatch all available standard pets::
     
-    scriptabit --run pet_care --pets-hatch
+    sb-pets --hatch-pets
 
-A command line to hatch all available standard and quest pets::
+Hatch all available standard and quest pets::
     
-    scriptabit --run pet_care --pets-hatch --quest-pets
+    sb-pets --hatch-pets --quest-pets

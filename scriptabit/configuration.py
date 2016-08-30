@@ -205,7 +205,7 @@ new plugin that combines the effects as required.''')
         help='''Conduct a dry run. No changes are written to online services''')
 
     parser.add(
-        '-mup',
+        '-n',
         '--max-updates',
         required=False,
         type=int,

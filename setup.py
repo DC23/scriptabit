@@ -44,7 +44,7 @@ class PyTest(TestCommand):
 
 setup(
     name='scriptabit',
-    version='1.8.1',
+    version='1.9.0',
     description='Python scripting for Habitica via the API',
     long_description=long_description,
     url='https://github.com/DC23/scriptabit',
@@ -142,7 +142,14 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     # Delete either or both of these if not required (and remove the corresponding imports in the package __init__.py
     entry_points={
-        'console_scripts': ['scriptabit = scriptabit:start_cli',],
+        'console_scripts': [
+            'scriptabit = scriptabit:start_scriptabit',
+            'sb-banking = scriptabit:start_banking',
+            'sb-csv = scriptabit:start_csv',
+            'sb-health = scriptabit:start_health',
+            'sb-pets = scriptabit:start_pets',
+            'sb-trello = scriptabit:start_trello',
+        ],
     },
 
     # Is your project zip safe?

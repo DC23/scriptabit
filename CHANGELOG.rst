@@ -218,3 +218,15 @@ Changelog
 * Added missing supports_dry_run method to pet care plugin, that was preventing
   dry runs.
 * Fixed incorrect dryrun message in main loop.
+
+1.9.0 (2016-08-30)
+-----------------------------------------
+
+* Updated documentation.
+* Added new entry points for built-in plugins:
+
+    * `sb-banking` instead of `scriptabit --run banking`
+    * `sb-trello` instead of `scriptabit --run trello`
+    * `sb-pets` instead of `scriptabit --run pet_care`
+    * `sb-csv` instead of `scriptabit --run csv_tasks`
+    * `sb-health` instead of `scriptabit --run health_effects`

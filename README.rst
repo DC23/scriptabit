@@ -13,7 +13,7 @@ Python scripting and scenarios for Habitica.
 * Free software: Apache 2.0
 * Homepage: https://github.com/DC23/scriptabit
 * Documentation: https://scriptabit.readthedocs.org
-* Version: 1.8.1
+* Version: 1.9.0
 
 **Note** that apart from bugs, I don't use the GitHub issue list for
 planning. Task and feature planning is carried out in a private
@@ -21,20 +21,20 @@ planning. Task and feature planning is carried out in a private
 
 Installation
 ------------
-To install the latest release from `PyPI <https://pypi.python.org/pypi>`_:
-
-::
+To install the latest release from `PyPI <https://pypi.python.org/pypi>`_::
 
     pip install scriptabit
+
+If you already have `scriptabit` installed, then upgrade with::
+
+    pip install --upgrade scriptabit
 
 Habitica Credentials
 ++++++++++++++++++++
 You require an authentication credentials file in your home directory
 containing your
 `Habitica API Key and User ID <https://habitica.com/#/options/settings/api>`__.
-The file should have a typical ini file structure, with the following section:
-
-::
+The file should have a typical ini file structure, with the following section::
 
     [habitica]
     userid =
@@ -49,9 +49,7 @@ you first run scriptabit. You can then fill in your account values.
 **Note that your API key is effectively a password to your Habitica
 account.** You should make sure the .auth.cfg file is protected, and
 never share the key with others. On Linux and related systems, you can
-set the permissions as follows:
-
-::
+set the permissions as follows::
 
     chmod 600 .auth.cfg
 
@@ -72,9 +70,9 @@ Your API key and API secret can be
 `obtained here <https://trello.com/1/appKey/generate>`_.
 
 Your authorisation token and token secret will be obtained through an
-interactive process when you first run the trello plugin. You must save your API
-key and API secret to the .auth.cfg file before you will be able to authorise
-the scriptabit application with Trello.
+interactive process when you first run the trello plugin. You must first save
+your API key and API secret to the .auth.cfg file before you will be able to
+obtain the token and tokensecret.
 
 .. _usage:
 
@@ -102,6 +100,18 @@ recreated on the next run).
 
 See the :ref:`detailed-usage` section for detailed instructions on specific
 functionality.
+
+Finally, most of the built-in plugins define a convenience command-line
+application name:
+
+- `sb-banking` is a shortcut for `scriptabit --run banking`
+- `sb-csv` is a shortcut for `scriptabit --run csv_tasks`
+- `sb-health` is a shortcut for `scriptabit --run health_effects`
+- `sb-pets` is a shortcut for `scriptabit --run pet_care`
+- `sb-trello` is a shortcut for `scriptabit --run trello`
+
+When using the shortcuts, all other command-line arguments are the same as when
+running `scriptabit`.
 
 Writing Plugins
 ---------------
