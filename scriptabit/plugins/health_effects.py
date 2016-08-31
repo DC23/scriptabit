@@ -12,6 +12,7 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import logging
+from datetime import datetime
 
 import scriptabit
 
@@ -130,6 +131,13 @@ class HealthEffects(scriptabit.IPlugin):
         Feeding increases the risk of encountering a Vampire Slayer.
         """
         logging.getLogger(__name__).debug('You are a Vampire!')
+
+        # determine day or night mode
+        # Night is 6pm (1800) to 6am (0600)
+        now = datetime.now()
+        night = now.hour < 6 or now.hour >= 18
+        logging.getLogger(__name__).debug(
+            'Ahh, sweet moonlight' if night else 'The Sun! It burns!')
 
         return True
 
