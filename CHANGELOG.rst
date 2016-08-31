@@ -248,3 +248,5 @@ Changelog
   (`SCRIPTABIT_LOGGING_CONFIG`). Log statement with the location of the user
   plugin directory.
 * Added 10 second timeout to http requests.
+* Added simple vampire mode - health drain during the day, slower regen at
+  night.

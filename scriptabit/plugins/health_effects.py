@@ -82,23 +82,24 @@ class HealthEffects(scriptabit.IPlugin):
         """
         return True
 
-    def get_health_delta(self):
+    def get_health_delta(self, hp24=None):
         """ Gets the health delta for the current update """
-        hp24 = abs(self._config.max_hp_change_per_day)
+        hp24 = abs(hp24 or self._config.max_hp_change_per_day)
         interval = self.update_interval_minutes()
         return interval * hp24 / (24 * 60)
 
-    def apply_health_delta(self, up=True):
+    def apply_health_delta(self, hp24=None, up=True):
         """ Applies the health delta.
 
         Args:
+            hp24 (float): The health change per 24 hours.
             up (bool): If True, then health is increased, otherwise health is
                 decreased.
 
         Returns:
             float: the signed health delta that was applied.
         """
-        delta = self.get_health_delta()
+        delta = self.get_health_delta(hp24)
         old_hp = self.__stats['hp']
 
         if up:
@@ -136,8 +137,26 @@ class HealthEffects(scriptabit.IPlugin):
         # Night is 6pm (1800) to 6am (0600)
         now = datetime.now()
         night = now.hour < 6 or now.hour >= 18
+        night = True
         logging.getLogger(__name__).debug(
             'Ahh, sweet moonlight' if night else 'The Sun! It burns!')
+
+        # Are we regenerating or taking damage?
+        if night:
+            hp24 = self._config.max_hp_change_per_day * 0.2
+            message = 'The soothing moonlight allows you to recover {0:.2} health'
+        else:
+            hp24 = self._config.max_hp_change_per_day
+            message = 'Ow! It burns! {0:.2} health damage from the sun'
+
+        # apply the health change
+        delta = self.apply_health_delta(hp24=hp24, up=night)
+
+        # Notifications
+        self.notify(
+            message.format(delta),
+            tags=['scriptabit', 'vampire'],
+            alias='vampire_notification_panel')
 
         return True
 
