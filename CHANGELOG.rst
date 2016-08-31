@@ -244,3 +244,6 @@ Changelog
 1.11.0 (2016-
 -----------------------------------------
 
+* Minor logging changes: config file specifiable via environment variable
+  (`SCRIPTABIT_LOGGING_CONFIG`). Log statement with the location of the user
+  plugin directory.
