@@ -240,10 +240,8 @@ class UtilityFunctions(object):
         print("--------------------")
         tasks = self.__hs.get_tasks()
         for t in tasks:
-            if t['type'] == 'todo':
+            if t['type'] == 'habit':
                 pprint(t)
-                del t['checklist']
-                # t['checklist'][0]['completed'] = False
-                self.__hs.update_task(t)
+                print()
         print("--------------------")
         print()

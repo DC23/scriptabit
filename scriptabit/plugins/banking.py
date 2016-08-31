@@ -33,6 +33,7 @@ class Banking(scriptabit.IPlugin):
         self.__bank_balance = 0
         self.__user_balance = 0
         self.__transaction_fee = 0
+        self.print_help = None
 
     def initialise(self, configuration, habitica_service, data_dir):
         """ Initialises the banking plugin.
@@ -76,6 +77,13 @@ class Banking(scriptabit.IPlugin):
             help='Banking: Withdraw gold')
 
         parser.add(
+            '-b',
+            '--bank-balance',
+            required=False,
+            action='store_true',
+            help='Banking: Display balance')
+
+        parser.add(
             '--bank-tax',
             required=False,
             default=0,
@@ -100,6 +108,7 @@ Values up to 600 will make transactions very expensive, while going beyond
 600 will start to make small transactions cost more than the transaction
 amount.''')
 
+        self.print_help = parser.print_help
         return parser
 
     @staticmethod
@@ -141,13 +150,6 @@ amount.''')
             self.__bank['notes'])
         self.__user_balance = self._hs.get_stats()['gp']
 
-        logging.getLogger(__name__).info(
-            'Bank balance: %f',
-            self.__bank_balance)
-        logging.getLogger(__name__).info(
-            'User balance: %f',
-            self.__user_balance)
-
         # Do the banking thing
         if self._config.bank_deposit > 0:
             self.deposit()
@@ -155,6 +157,16 @@ amount.''')
             self.withdraw()
         elif self._config.bank_tax > 0:
             self.pay_tax()
+        elif self._config.bank_balance:
+            logging.getLogger(__name__).info(
+                'Bank balance: %f',
+                self.__bank_balance)
+            logging.getLogger(__name__).info(
+                'User balance: %f',
+                self.__user_balance)
+        else:
+            print()
+            self.print_help()
 
         return False
 

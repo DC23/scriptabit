@@ -1,7 +1,4 @@
-"""Scriptabit plugin that implements a poisoning/health
-regeneration scenario based on player performance on dailies.
-
-**Not implemented yet**
+"""Scriptabit plugin that implements various health-modification effects.
 """
 
 # Ensure backwards compatibility with Python 2

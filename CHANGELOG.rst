@@ -250,3 +250,5 @@ Changelog
 * Added 10 second timeout to http requests.
 * Added simple vampire mode - health drain during the day, slower regen at
   night.
+* Added bank-balance option so that sb-banking with no args can display usage
+  information.
