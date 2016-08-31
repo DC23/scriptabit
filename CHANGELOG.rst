@@ -240,3 +240,7 @@ Changelog
 * Refactored plugin notification methods.
 * Changed pet care so it only sleeps during feeding if API calls were made
   during the last pet.
+
+1.11.0 (2016-
+-----------------------------------------
+

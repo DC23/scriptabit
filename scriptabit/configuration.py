@@ -155,6 +155,7 @@ def get_configuration(basename='scriptabit.cfg', parents=None):
         required=False,
         default='scriptabit_logging.cfg',
         metavar='FILE',
+        env_var='SCRIPTABIT_LOGGING_CONFIG',
         help='Logging configuration file')
 
     # Authentication file section
