@@ -69,7 +69,6 @@ def __get_configuration(plugin_manager):
 
 def __init_user_plugin_directory():
     """ Locates (and creates if necessary) the user plugin directory. """
-
     default = os.path.expanduser('~/scriptabit_plugins')
     user = os.path.expanduser(os.getenv('SCRIPTABIT_USER_PLUGIN_DIR', ''))
     plugin_dir = user if user else default
@@ -87,8 +86,6 @@ def __get_plugin_manager():
     Returns:
         yapsy.PluginManager: The plugin manager with the loaded plugins.
     """
-
-
     # Build the manager
     plugin_manager = PluginManager()
 
@@ -115,7 +112,6 @@ def __list_plugins(plugin_manager):
         plugin_manager (yapsy.PluginManager): the plugin manager containing
         the plugins.
     """
-
     def print_plugin_metadata(plugin_info):
         """Utility class to pretty-print plugin information."""
 
@@ -239,10 +235,10 @@ def run_scriptabit(plugin_name=''):
                     logging.getLogger(__name__).info(
                         'Dry run mode: no changes will be written')
 
-                plugin.initialise(
-                    config,
-                    habitica_service,
-                    __init_user_plugin_directory())
+                data_dir = __init_user_plugin_directory()
+                logging.getLogger(__name__).debug(
+                    'User plugin and data directory: %s', data_dir)
+                plugin.initialise(config, habitica_service, data_dir)
 
                 # Finally, run it
                 updating = True
