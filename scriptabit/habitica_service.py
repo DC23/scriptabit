@@ -36,30 +36,47 @@ class HabiticaService(object):
             """
         self.__headers = headers
         self.__base_url = base_url
+        self.__timeout = 10  # allow 10 seconds before timing out API calls
 
     def __delete(self, command, params=None):
         """Utility wrapper around a HTTP DELETE"""
         url = self.__base_url + command
         logging.getLogger(__name__).debug('DELETE %s', url)
-        return requests.delete(url, params=params, headers=self.__headers)
+        return requests.delete(
+            url,
+            params=params,
+            headers=self.__headers,
+            timeout=self.__timeout)
 
     def __get(self, command, params=None):
         """Utility wrapper around a HTTP GET"""
         url = self.__base_url + command
         logging.getLogger(__name__).debug('GET %s', url)
-        return requests.get(url, params=params, headers=self.__headers)
+        return requests.get(
+            url,
+            params=params,
+            headers=self.__headers,
+            timeout=self.__timeout)
 
     def __put(self, command, data):
         """Utility wrapper around a HTTP PUT"""
         url = self.__base_url + command
         logging.getLogger(__name__).debug('PUT %s', url)
-        return requests.put(url, headers=self.__headers, data=data)
+        return requests.put(
+            url,
+            headers=self.__headers,
+            data=data,
+            timeout=self.__timeout)
 
     def __post(self, command, data=None):
         """Utility wrapper around a HTTP POST"""
         url = self.__base_url + command
         logging.getLogger(__name__).debug('PUT %s', url)
-        return requests.post(url, headers=self.__headers, json=data)
+        return requests.post(
+            url,
+            headers=self.__headers,
+            json=data,
+            timeout=self.__timeout)
 
     @staticmethod
     def __get_key(task):
