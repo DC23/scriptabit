@@ -8,6 +8,7 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+import itertools
 import logging
 from datetime import datetime, timedelta
 from pprint import pprint
@@ -186,6 +187,40 @@ class HealthEffects(scriptabit.IPlugin):
 
         return True
 
+    def summarise_task_score(self, task, now, window):
+        def pairwise(iterable):
+            "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+            a, b = itertools.tee(iterable)
+            next(b, None)
+            return zip(a, b)
+
+        up = 0
+        down = 0
+        history = task['history']
+        sum_delta = 0
+        if len(history) == 1:
+            a = history[0]
+            date = scriptabit.parse_date_utc(a['date'])
+            if now - date < window:
+                delta = a['value']
+                sum_delta += delta
+                if delta > 0:
+                    up += 1
+                elif delta < 0:
+                    down += 1
+        else:
+            for a, b in pairwise(history):
+                b_date = scriptabit.parse_date_utc(b['date'])
+                if now - b_date < window:
+                    delta = b['value'] - a['value']
+                    sum_delta += delta
+                    if delta > 0:
+                        up += 1
+                    elif delta < 0:
+                        down += 1
+
+        return sum_delta, up, down
+
     def test(self):
         """ Health effects test function.
 
@@ -195,42 +230,49 @@ class HealthEffects(scriptabit.IPlugin):
         # score changes
         now = datetime.now(tz=pytz.utc)
         window = timedelta(days=1)
-        tasks = [t for t in self._hs.get_tasks()
-                 if t['type'] in ['habit', 'daily']]
+        all_tasks = self._hs.get_tasks()
+        tasks = [t for t in all_tasks if t['type'] in ['habit', 'daily']]
         changed = []
-        avg_delta = 0
         up = 0
         down = 0
+        total_delta = 0
+        count = 0
         for t in tasks:
-            lastmod = scriptabit.parse_date_utc(t['updatedAt'])
-            if now - lastmod < window:
-                delta = t['value']
-                if len(t['history']) >= 2:
-                    second_last = t['history'][-2]
-                    delta -= second_last['value']
-                    if delta > 0:
-                        up += 1
-                    elif delta < 0:
-                        down += 1
+            tot_delta, tup, tdown = self.summarise_task_score(
+                t, now, window)
 
-                avg_delta += delta
-
+            if tup + tdown:
+                count += 1
+                up += tup
+                down += tdown
+                total_delta += tot_delta
                 stat = {
                     'id': t['_id'],
                     'text': t['text'],
                     'last_change': t['updatedAt'],
-                    'delta': delta,
-                    # 'task': t,
+                    'tot_delta': tot_delta,
+                    'tup': tup,
+                    'tdown': tdown,
                 }
                 changed.append(stat)
 
-        avg_delta /= len(changed)
-
+        # pprint(changed)
         # pprint(tasks)
-        pprint(changed)
-        print('avg_delta', avg_delta)
         print('up', up)
         print('down', down)
+        print('total_delta', total_delta)
+        print('avg_delta', total_delta / count if count else 0)
+
+        todo_score = 0
+        todo_count = 0
+        for t in all_tasks:
+            if t['type'] == 'todo':
+                todo_score += t['value']
+                todo_count += 1
+
+        print('todo score', todo_score)
+        print('todo count', todo_count)
+        print('todo avg', todo_score / todo_count if todo_count else 'NaN')
 
         return False
 
