@@ -51,6 +51,12 @@ class HealthEffects(scriptabit.IPlugin):
             action='store_true',
             help='Restores your health over time')
 
+        parser.add(
+            '--vampire',
+            required=False,
+            action='store_true',
+            help='Enables Vampire mode')
+
         self.__print_help = parser.print_help
 
         return parser
@@ -65,7 +71,6 @@ class HealthEffects(scriptabit.IPlugin):
                 persistent data.
         """
         super().initialise(configuration, habitica_service, data_dir)
-        logging.getLogger(__name__).info('HealthEffects initialising')
 
     @staticmethod
     def supports_dry_runs():
@@ -117,6 +122,17 @@ class HealthEffects(scriptabit.IPlugin):
         self.notify('Regenerated {0:.2} HP'.format(delta), panel=False)
         return True
 
+    def vampire(self):
+        """ Vampire mode.
+
+        Lose health during daylight hours.
+        Gain health by feeding.
+        Feeding increases the risk of encountering a Vampire Slayer.
+        """
+        logging.getLogger(__name__).debug('You are a Vampire!')
+
+        return True
+
     def update(self):
         """ Update the health effects plugin.
 
@@ -132,6 +148,8 @@ class HealthEffects(scriptabit.IPlugin):
             return self.poisoned()
         elif self._config.health_regen:
             return self.regenerating()
+        elif self._config.vampire:
+            return self.vampire()
 
         # If no other functions ran, just print the help and exit
         self.__print_help()
