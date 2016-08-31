@@ -247,3 +247,4 @@ Changelog
 * Minor logging changes: config file specifiable via environment variable
   (`SCRIPTABIT_LOGGING_CONFIG`). Log statement with the location of the user
   plugin directory.
+* Added 10 second timeout to http requests.
