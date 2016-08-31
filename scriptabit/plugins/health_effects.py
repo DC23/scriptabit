@@ -41,6 +41,20 @@ class HealthEffects(scriptabit.IPlugin):
             help='Health Effects: Max amount of health change per day')
 
         parser.add(
+            '--sun-power',
+            required=False,
+            default=2.0,
+            type=float,
+            help='Health Effects: Sun HP damage multiplier.')
+
+        parser.add(
+            '--moon-power',
+            required=False,
+            default=1.0,
+            type=float,
+            help='Health Effects: Moonlight HP restoration multiplier.')
+
+        parser.add(
             '--health-drain',
             required=False,
             action='store_true',
@@ -103,7 +117,7 @@ class HealthEffects(scriptabit.IPlugin):
         old_hp = self.__stats['hp']
 
         if up:
-            new_hp = max(50, old_hp + delta)
+            new_hp = min(50, old_hp + delta)
         else:
             new_hp = max(0, old_hp - delta)
 
@@ -128,33 +142,40 @@ class HealthEffects(scriptabit.IPlugin):
         """ Vampire mode.
 
         Lose health during daylight hours.
-        Gain health by feeding.
-        Feeding increases the risk of encountering a Vampire Slayer.
+        Gain small amounts of health at night, and large amounts by feeding.
         """
         logging.getLogger(__name__).debug('You are a Vampire!')
+
+        moon_power = self._config.moon_power
+        sun_power = self._config.sun_power
+        hp24 = self._config.max_hp_change_per_day
+        hp24_night = hp24 * moon_power
+        hp24_day = hp24 * sun_power
+        print('Moon power multiplier: {0:.4}'.format(moon_power))
+        print('Sun power multiplier: {0:.4}'.format(sun_power))
+        print('HP Change per 24 hours: {0:.4}'.format(hp24))
+        print('Max HP loss during the day: {0:.4}'.format(hp24_day / 2))
+        print('Max HP gain during the night: {0:.4}'.format(hp24_night / 2))
 
         # determine day or night mode
         # Night is 6pm (1800) to 6am (0600)
         now = datetime.now()
         night = now.hour < 6 or now.hour >= 18
-        night = True
-        logging.getLogger(__name__).debug(
-            'Ahh, sweet moonlight' if night else 'The Sun! It burns!')
 
         # Are we regenerating or taking damage?
         if night:
-            hp24 = self._config.max_hp_change_per_day * 0.2
-            message = 'The soothing moonlight allows you to recover {0:.2} health'
+            hp24 = hp24_night
+            msg = ':full_moon: Ahh, sweet moonlight. {hp:.2} HP'
         else:
-            hp24 = self._config.max_hp_change_per_day
-            message = 'Ow! It burns! {0:.2} health damage from the sun'
+            hp24 = hp24_day
+            msg = ':sunny: The Sun! It burns! {hp:.2} HP'
 
         # apply the health change
         delta = self.apply_health_delta(hp24=hp24, up=night)
 
         # Notifications
         self.notify(
-            message.format(delta),
+            msg.format(hp=delta),
             tags=['scriptabit', 'vampire'],
             alias='vampire_notification_panel')
 
