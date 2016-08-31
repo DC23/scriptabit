@@ -9,8 +9,10 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
+from pprint import pprint
 
+import pytz
 import scriptabit
 
 
@@ -68,6 +70,12 @@ class HealthEffects(scriptabit.IPlugin):
             required=False,
             action='store_true',
             help='Enables Vampire mode')
+
+        parser.add(
+            '--htest',
+            required=False,
+            action='store_true',
+            help='health effects test function')
 
         self.__print_help = parser.print_help
 
@@ -178,6 +186,54 @@ class HealthEffects(scriptabit.IPlugin):
 
         return True
 
+    def test(self):
+        """ Health effects test function.
+
+        Could do anything depending on what I need to test.
+        """
+        # Lets try getting all habits and dailies, and some stats on recent
+        # score changes
+        now = datetime.now(tz=pytz.utc)
+        window = timedelta(days=1)
+        tasks = [t for t in self._hs.get_tasks()
+                 if t['type'] in ['habit', 'daily']]
+        changed = []
+        avg_delta = 0
+        up = 0
+        down = 0
+        for t in tasks:
+            lastmod = scriptabit.parse_date_utc(t['updatedAt'])
+            if now - lastmod < window:
+                delta = t['value']
+                if len(t['history']) >= 2:
+                    second_last = t['history'][-2]
+                    delta -= second_last['value']
+                    if delta > 0:
+                        up += 1
+                    elif delta < 0:
+                        down += 1
+
+                avg_delta += delta
+
+                stat = {
+                    'id': t['_id'],
+                    'text': t['text'],
+                    'last_change': t['updatedAt'],
+                    'delta': delta,
+                    # 'task': t,
+                }
+                changed.append(stat)
+
+        avg_delta /= len(changed)
+
+        # pprint(tasks)
+        pprint(changed)
+        print('avg_delta', avg_delta)
+        print('up', up)
+        print('down', down)
+
+        return False
+
     def update(self):
         """ Update the health effects plugin.
 
@@ -195,6 +251,8 @@ class HealthEffects(scriptabit.IPlugin):
             return self.regenerating()
         elif self._config.vampire:
             return self.vampire()
+        elif self._config.htest:
+            return self.test()
 
         # If no other functions ran, just print the help and exit
         self.__print_help()

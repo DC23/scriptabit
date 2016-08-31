@@ -240,7 +240,7 @@ class UtilityFunctions(object):
         print("--------------------")
         tasks = self.__hs.get_tasks()
         for t in tasks:
-            if t['type'] == 'habit':
+            if t['type'] == 'todo':
                 pprint(t)
                 print()
         print("--------------------")
