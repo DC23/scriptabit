@@ -270,7 +270,7 @@ class HealthEffects(scriptabit.IPlugin):
             a=80,
             b=1.5,
             k_x_positive=0.2,
-            k_x_negative=0.4):
+            k_x_negative=4.8):
         """ Returns the logistic growth function value for a given input x.
 
         y = a / (1 + b * e^(kx))
@@ -324,26 +324,26 @@ class HealthEffects(scriptabit.IPlugin):
         up = 0
         down = 0
         total_delta = 0
-        count = 0
         for t in tasks:
             tot_delta, tup, tdown = self.summarise_task_score(t, now, window)
 
             # only track those tasks in which something changed inside the time
             # window. If nothing changed, there will be no up or down counts.
             if tup + tdown:
-                count += 1
                 up += tup
                 down += tdown
                 total_delta += tot_delta
 
+        count = up + down
         avg_delta = total_delta / count if count else 0
         hp24 = self.logistic_growth(x=avg_delta)
+
         print()
         # pprint(tasks)
         print('window', window)
         print('up', up)
         print('down', down)
-        print('count', count)
+        print('Total up + down', count)
         print('total_delta', total_delta)
         print('avg_delta', avg_delta)
         print('hp24 from avg_delta', hp24)
