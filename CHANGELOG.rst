@@ -252,3 +252,6 @@ Changelog
   night.
 * Added bank-balance option so that sb-banking with no args can display usage
   information.
+* Changed main loop so that utility functions don't try to run at the same time
+  as plugins.
+* Removed upper MP limit check when setting mana.

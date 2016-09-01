@@ -76,12 +76,6 @@ class HealthEffects(scriptabit.IPlugin):
             action='store_true',
             help='Enables Vampire mode')
 
-        parser.add(
-            '--htest',
-            required=False,
-            action='store_true',
-            help='health effects test function')
-
         self.__print_help = parser.print_help
 
         return parser
@@ -291,7 +285,7 @@ class HealthEffects(scriptabit.IPlugin):
     def logistic_growth(
             self,
             x,
-            a=80,
+            a=50,
             b=1.5,
             k_x_positive=0.2,
             k_x_negative=4.8):
@@ -392,7 +386,7 @@ class HealthEffects(scriptabit.IPlugin):
             return self.regenerating()
         elif self._config.vampire:
             return self.vampire()
-        elif self._config.htest:
+        elif self._config.test:
             return self.test()
 
         # If no other functions ran, just print the help and exit

@@ -342,9 +342,9 @@ class HabiticaService(object):
         Returns:
             float: The new MP value, extracted from the JSON response data.
         """
-        max_mp = self.get_user()['stats']['mp']
-        if mp > max_mp:
-            raise ArgumentOutOfRangeError("mp > {0}".format(max_mp))
+        # max_mp = self.get_user()['stats']['maxMP']
+        # if mp > max_mp:
+            # raise ArgumentOutOfRangeError("mp > {0}".format(max_mp))
         if mp < 0:
             raise ArgumentOutOfRangeError("mp < 0")
 

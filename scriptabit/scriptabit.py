@@ -209,11 +209,11 @@ def run_scriptabit(plugin_name=''):
             logging.getLogger(__name__).info("Habitica API at '%s' is up",
                                              config.habitica_api_url)
 
-            # Utility functions
-            utility = UtilityFunctions(config, habitica_service)
-            utility.run()
-
-            if config.run:
+            if not config.run:
+                # Utility functions
+                utility = UtilityFunctions(config, habitica_service)
+                utility.run()
+            else:
                 # Time to run the selected plugin
                 # First, find it
                 logging.getLogger(__name__).info("** %s running", config.run)
