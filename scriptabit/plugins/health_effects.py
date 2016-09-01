@@ -273,13 +273,16 @@ class HealthEffects(scriptabit.IPlugin):
             self.summarise_task_performance(all_tasks)
 
         def load_all():
-            for filename in glob.glob("*.pickle"):
+            results = {}
+            for filename in glob.glob("*.p"):
                 print()
                 print('------------------------------')
                 print(filename)
                 with open(filename, 'rb') as f:
                     all_tasks = pickle.load(f)
-                self.summarise_task_performance(all_tasks)
+                results[filename] = self.summarise_task_performance(all_tasks)
+
+            pprint(results)
 
         # save()
         load_all()
@@ -370,7 +373,7 @@ class HealthEffects(scriptabit.IPlugin):
         print('hp24 from avg_delta', hp24)
         print('hp change per hour', hp24/24)
 
-        return False
+        return down, up, total_delta, avg_delta, hp24
 
     def update(self):
         """ Update the health effects plugin.
