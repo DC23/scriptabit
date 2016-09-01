@@ -9,8 +9,11 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import itertools
+import glob
 import logging
 import math
+import os
+import pickle
 from datetime import datetime, timedelta
 from pprint import pprint
 
@@ -261,7 +264,25 @@ class HealthEffects(scriptabit.IPlugin):
 
         Could do anything depending on what I need to test.
         """
-        self.summarise_task_performance()
+        def save():
+            filename = './dc_sep_01.pickle'
+            all_tasks = self._hs.get_tasks()
+            with open(filename, 'wb') as f:
+                pickle.dump(all_tasks, f, pickle.HIGHEST_PROTOCOL)
+
+            self.summarise_task_performance(all_tasks)
+
+        def load_all():
+            for filename in glob.glob("*.pickle"):
+                print()
+                print('------------------------------')
+                print(filename)
+                with open(filename, 'rb') as f:
+                    all_tasks = pickle.load(f)
+                self.summarise_task_performance(all_tasks)
+
+        # save()
+        load_all()
         return False
 
     def logistic_growth(
@@ -305,21 +326,21 @@ class HealthEffects(scriptabit.IPlugin):
         y = a / (1 + b * math.exp(k * x))
         return y
 
-    def summarise_task_performance(self, window_hours=24):
+    def summarise_task_performance(self, tasks, window_hours=24):
         """ Summarises overall task performance within a time window back from
         the current time.
 
         Args:
+            tasks (list): The list of Habitica tasks to summarise.
             window_hours (float): Size of the time window in hours
 
         Returns:
         """
         now = datetime.now(tz=pytz.utc)
         window = timedelta(hours=window_hours)
-        all_tasks = self._hs.get_tasks()
 
         # we only want habits and dailies for now
-        tasks = [t for t in all_tasks if t['type'] in ['habit', 'daily']]
+        tasks = [t for t in tasks if t['type'] in ['habit', 'daily']]
 
         up = 0
         down = 0

@@ -20,3 +20,4 @@ scriptabit.log
 .tox
 setuptools-*
 scriptabit_logging.cfg
+vtest/
