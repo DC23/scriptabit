@@ -194,32 +194,36 @@ class HealthEffects(scriptabit.IPlugin):
             next(b, None)
             return zip(a, b)
 
-        up = 0
-        down = 0
-        history = task['history']
-        sum_delta = 0
-        if len(history) == 1:
-            a = history[0]
-            date = scriptabit.parse_date_utc(a['date'])
-            if now - date < window:
-                delta = a['value']
-                sum_delta += delta
-                if delta > 0:
-                    up += 1
-                elif delta < 0:
-                    down += 1
-        else:
-            for a, b in pairwise(history):
-                b_date = scriptabit.parse_date_utc(b['date'])
-                if now - b_date < window:
-                    delta = b['value'] - a['value']
-                    sum_delta += delta
-                    if delta > 0:
-                        up += 1
-                    elif delta < 0:
-                        down += 1
+        class Counter(object):
+            def __init__(self, multiplier=1):
+                self.up = 0
+                self.down = 0
+                self.sum_delta = 0
+                self.multiplier = multiplier
 
-        return sum_delta, up, down
+            def count(self, a, b):
+                delta = (b - a) * self.multiplier
+                # print(a, b, delta)
+                self.sum_delta += delta
+                if delta > 0:
+                    self.up += 1
+                elif delta < 0:
+                    self.down += 1
+
+        counter = Counter(3 if task['type'] == 'daily' else 1)
+        history = [{'date': task['createdAt'], 'value': 0 }]
+        history.extend(task['history'])
+
+        # print()
+        # print(task['text'])
+        # pprint(history)
+
+        for a, b in pairwise(history):
+            date = scriptabit.parse_date_utc(b['date'])
+            if now - date < window:
+                counter.count(a['value'], b['value'])
+
+        return counter.sum_delta, counter.up, counter.down
 
     def test(self):
         """ Health effects test function.
@@ -238,8 +242,7 @@ class HealthEffects(scriptabit.IPlugin):
         total_delta = 0
         count = 0
         for t in tasks:
-            tot_delta, tup, tdown = self.summarise_task_score(
-                t, now, window)
+            tot_delta, tup, tdown = self.summarise_task_score(t, now, window)
 
             if tup + tdown:
                 count += 1
@@ -256,12 +259,15 @@ class HealthEffects(scriptabit.IPlugin):
                 }
                 changed.append(stat)
 
+        print()
         # pprint(changed)
         # pprint(tasks)
+        print('window', window)
         print('up', up)
         print('down', down)
+        print('count', count)
         print('total_delta', total_delta)
-        print('avg_delta', total_delta / count if count else 0)
+        print('avg_delta', total_delta / count if count else 'NaN')
 
         todo_score = 0
         todo_count = 0
@@ -270,6 +276,7 @@ class HealthEffects(scriptabit.IPlugin):
                 todo_score += t['value']
                 todo_count += 1
 
+        print()
         print('todo score', todo_score)
         print('todo count', todo_count)
         print('todo avg', todo_score / todo_count if todo_count else 'NaN')
