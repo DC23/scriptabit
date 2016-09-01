@@ -10,6 +10,7 @@ from __future__ import (
 from builtins import *
 import itertools
 import logging
+import math
 from datetime import datetime, timedelta
 from pprint import pprint
 
@@ -171,38 +172,68 @@ class HealthEffects(scriptabit.IPlugin):
         # Are we regenerating or taking damage?
         if night:
             hp24 = hp24_night
-            msg = ':full_moon: Ahh, sweet moonlight. {hp:.2} HP'
+            msg = ':full_moon: Ahh, sweet moonlight. {hp:.2} HP per hour'
         else:
             hp24 = hp24_day
-            msg = ':sunny: The Sun! It burns! {hp:.2} HP'
+            msg = ':sunny: The Sun! It burns! {hp:.2} HP per hour'
 
         # apply the health change
         delta = self.apply_health_delta(hp24=hp24, up=night)
 
+        delta_per_hour = hp24 / 24
+        if not night:
+            delta_per_hour *= -1
+
+        print('applied delta', delta)
+        print('delta_per_hour', delta_per_hour)
+
         # Notifications
         self.notify(
-            msg.format(hp=delta),
+            msg.format(hp=delta_per_hour),
             tags=['scriptabit', 'vampire'],
             alias='vampire_notification_panel')
 
         return True
 
     def summarise_task_score(self, task, now, window):
+        """ Summarises the task score changes within a time window.
+
+        Args:
+            task (dict): The task.
+            now (datetime): The most recent time to consider.
+            window (timedelta): The time window to consider prior to now.
+
+        Returns:
+            float: Total of the score changes within the time window.
+            int: Number of times the score went up.
+            int: Number of times the score went down.
+        """
         def pairwise(iterable):
-            "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+            """ pairwise iteration of a sequence.
+
+            s -> (s0,s1), (s1,s2), (s2, s3), ...
+
+            """
             a, b = itertools.tee(iterable)
             next(b, None)
             return zip(a, b)
 
-        class Counter(object):
-            def __init__(self, multiplier=1):
+        class PairCounter(object):
+            """ Tracks score movements for a pair of values. """
+            def __init__(self, scale=1):
+                """ Initialises the PairCounter.
+
+                Args:
+                    multiplier (float): Optional score scale factor.
+                """
                 self.up = 0
                 self.down = 0
                 self.sum_delta = 0
-                self.multiplier = multiplier
+                self.scale = scale
 
             def count(self, a, b):
-                delta = (b - a) * self.multiplier
+                """ Count a pair of values. """
+                delta = (b - a) * self.scale
                 # print(a, b, delta)
                 self.sum_delta += delta
                 if delta > 0:
@@ -210,8 +241,8 @@ class HealthEffects(scriptabit.IPlugin):
                 elif delta < 0:
                     self.down += 1
 
-        counter = Counter(3 if task['type'] == 'daily' else 1)
-        history = [{'date': task['createdAt'], 'value': 0 }]
+        counter = PairCounter(3 if task['type'] == 'daily' else 1)
+        history = [{'date': task['createdAt'], 'value': 0}]
         history.extend(task['history'])
 
         # print()
@@ -220,7 +251,7 @@ class HealthEffects(scriptabit.IPlugin):
 
         for a, b in pairwise(history):
             date = scriptabit.parse_date_utc(b['date'])
-            if now - date < window:
+            if date <= now and now - date < window:
                 counter.count(a['value'], b['value'])
 
         return counter.sum_delta, counter.up, counter.down
@@ -230,13 +261,66 @@ class HealthEffects(scriptabit.IPlugin):
 
         Could do anything depending on what I need to test.
         """
-        # Lets try getting all habits and dailies, and some stats on recent
-        # score changes
+        self.summarise_task_performance()
+        return False
+
+    def logistic_growth(
+            self,
+            x,
+            a=80,
+            b=1.5,
+            k_x_positive=0.2,
+            k_x_negative=0.4):
+        """ Returns the logistic growth function value for a given input x.
+
+        y = a / (1 + b * e^(kx))
+
+        For k > 0, larger values give a greater rate of change while smaller
+        values lead to a slower approach to the function asymptotes.
+
+        For positive k, the return values is bounded by a to the left
+        (large negative x) and by 0 to the right (large positive x). For
+        negative k this is reversed.
+
+        Additionally, this method allows different k terms for positive and
+        negative x, which allows finer-grained tuning of the output.
+
+        The y-intercept is given by a / (1 + b).
+
+        Args:
+            x (float): The input value
+            a (float): The upper limit on the function value.
+            b (float): Influences the steepness of the function curve, and also
+                contributes to the y-intercept. High values give a slower change
+                and a lower y-intercept.
+            k_x_positive (float): The k term used when x >= 0
+            k_x_negative (float): The k term used when x < 0. Passing None will
+                cause k_x_positive to be used for all x.
+
+        Returns:
+            float: The delta.
+        """
+        assert b >= 0
+        k = k_x_positive if x >= 0 or not k_x_negative else k_x_negative
+        y = a / (1 + b * math.exp(k * x))
+        return y
+
+    def summarise_task_performance(self, window_hours=24):
+        """ Summarises overall task performance within a time window back from
+        the current time.
+
+        Args:
+            window_hours (float): Size of the time window in hours
+
+        Returns:
+        """
         now = datetime.now(tz=pytz.utc)
-        window = timedelta(days=1)
+        window = timedelta(hours=window_hours)
         all_tasks = self._hs.get_tasks()
+
+        # we only want habits and dailies for now
         tasks = [t for t in all_tasks if t['type'] in ['habit', 'daily']]
-        changed = []
+
         up = 0
         down = 0
         total_delta = 0
@@ -244,42 +328,26 @@ class HealthEffects(scriptabit.IPlugin):
         for t in tasks:
             tot_delta, tup, tdown = self.summarise_task_score(t, now, window)
 
+            # only track those tasks in which something changed inside the time
+            # window. If nothing changed, there will be no up or down counts.
             if tup + tdown:
                 count += 1
                 up += tup
                 down += tdown
                 total_delta += tot_delta
-                stat = {
-                    'id': t['_id'],
-                    'text': t['text'],
-                    'last_change': t['updatedAt'],
-                    'tot_delta': tot_delta,
-                    'tup': tup,
-                    'tdown': tdown,
-                }
-                changed.append(stat)
 
+        avg_delta = total_delta / count if count else 0
+        hp24 = self.logistic_growth(x=avg_delta)
         print()
-        # pprint(changed)
         # pprint(tasks)
         print('window', window)
         print('up', up)
         print('down', down)
         print('count', count)
         print('total_delta', total_delta)
-        print('avg_delta', total_delta / count if count else 'NaN')
-
-        todo_score = 0
-        todo_count = 0
-        for t in all_tasks:
-            if t['type'] == 'todo':
-                todo_score += t['value']
-                todo_count += 1
-
-        print()
-        print('todo score', todo_score)
-        print('todo count', todo_count)
-        print('todo avg', todo_score / todo_count if todo_count else 'NaN')
+        print('avg_delta', avg_delta)
+        print('hp24 from avg_delta', hp24)
+        print('hp change per hour', hp24/24)
 
         return False
 
