@@ -46,6 +46,14 @@ supplied as a command-line argument.
 If you do not already have a `.auth.cfg` file, a default will be created when
 you first run scriptabit. You can then fill in your account values.
 
+Once you have entered your Habitica credentials, test them with the `-sud`
+command (short for `--show-user-data`)::
+
+    scriptabit -sud
+
+If everything is set up correctly, you should see a summary of your character
+data printed to the console.
+
 **Note that your API key is effectively a password to your Habitica
 account.** You should make sure the .auth.cfg file is protected, and
 never share the key with others. On Linux and related systems, you can
