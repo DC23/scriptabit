@@ -259,27 +259,38 @@ class HealthEffects(scriptabit.IPlugin):
         Could do anything depending on what I need to test.
         """
         def save():
-            filename = './dc_sep_01.pickle'
+            filename = './dc_sep_06.p'
             all_tasks = self._hs.get_tasks()
             with open(filename, 'wb') as f:
                 pickle.dump(all_tasks, f, pickle.HIGHEST_PROTOCOL)
 
             self.summarise_task_performance(all_tasks)
 
+        def load(filename):
+            print()
+            print('------------------------------')
+            print(filename)
+            with open(filename, 'rb') as f:
+                all_tasks = pickle.load(f)
+
+            dailies = self.summarise_task_performance(
+                [t for t in all_tasks if t['type'] == 'daily'])
+
+            habits = self.summarise_task_performance(
+                [t for t in all_tasks if t['type'] == 'habit'])
+
+            pprint(dailies)
+            pprint(habits)
+
         def load_all():
             results = {}
             for filename in glob.glob("*.p"):
-                print()
-                print('------------------------------')
-                print(filename)
-                with open(filename, 'rb') as f:
-                    all_tasks = pickle.load(f)
-                results[filename] = self.summarise_task_performance(all_tasks)
-
+                results[filename] = load(filename)
             pprint(results)
 
         # save()
-        load_all()
+        # load_all()
+        load('dc_sep_06.p')
         return False
 
     def logistic_growth(
@@ -336,9 +347,6 @@ class HealthEffects(scriptabit.IPlugin):
         now = datetime.now(tz=pytz.utc)
         window = timedelta(hours=window_hours)
 
-        # we only want habits and dailies for now
-        tasks = [t for t in tasks if t['type'] in ['habit', 'daily']]
-
         up = 0
         down = 0
         total_delta = 0
@@ -354,7 +362,6 @@ class HealthEffects(scriptabit.IPlugin):
 
         count = up + down
         avg_delta = total_delta / count if count else 0
-        hp24 = self.logistic_growth(x=avg_delta)
 
         print()
         # pprint(tasks)
@@ -364,10 +371,8 @@ class HealthEffects(scriptabit.IPlugin):
         print('Total up + down', count)
         print('total_delta', total_delta)
         print('avg_delta', avg_delta)
-        print('hp24 from avg_delta', hp24)
-        print('hp change per hour', hp24/24)
 
-        return down, up, total_delta, avg_delta, hp24
+        return down, up, total_delta, avg_delta
 
     def update(self):
         """ Update the health effects plugin.
