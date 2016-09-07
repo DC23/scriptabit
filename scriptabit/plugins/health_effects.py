@@ -205,6 +205,9 @@ class HealthEffects(scriptabit.IPlugin):
             int: Number of times the score went up.
             int: Number of times the score went down.
         """
+        if 'history' not in task:
+            return 0, 0, 0
+
         def pairwise(iterable):
             """ pairwise iteration of a sequence.
 
@@ -238,7 +241,8 @@ class HealthEffects(scriptabit.IPlugin):
                 elif delta < 0:
                     self.down += 1
 
-        counter = PairCounter(3 if task['type'] == 'daily' else 1)
+        counter = PairCounter()
+        # counter = PairCounter(3 if task['type'] == 'daily' else 1)
         history = [{'date': task['createdAt'], 'value': 0}]
         history.extend(task['history'])
 
@@ -258,6 +262,11 @@ class HealthEffects(scriptabit.IPlugin):
 
         Could do anything depending on what I need to test.
         """
+        def live():
+            all_tasks = self._hs.get_tasks()
+            # pprint(all_tasks)
+            self.summarise_task_performance(all_tasks)
+
         def save():
             filename = './dc_sep_06.p'
             all_tasks = self._hs.get_tasks()
@@ -288,9 +297,10 @@ class HealthEffects(scriptabit.IPlugin):
                 results[filename] = load(filename)
             pprint(results)
 
+        live()
         # save()
         # load_all()
-        load('dc_sep_06.p')
+        # load('dc_sep_06.p')
         return False
 
     def logistic_growth(
