@@ -255,3 +255,5 @@ Changelog
 * Changed main loop so that utility functions don't try to run at the same time
   as plugins.
 * Removed upper MP limit check when setting mana.
+* Added delete all todos utility function (can update to support other task
+  types later, but todos is all I needed right now).
