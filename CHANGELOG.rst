@@ -257,3 +257,5 @@ Changelog
 * Removed upper MP limit check when setting mana.
 * Added delete all todos utility function (can update to support other task
   types later, but todos is all I needed right now).
+* Fixed bug where last Trello sync time was displayed in UTC rather than local
+  time.

@@ -48,6 +48,7 @@ import logging
 from datetime import datetime
 
 import pytz
+from tzlocal import get_localzone
 
 from .task import SyncStatus
 
@@ -274,7 +275,7 @@ class TaskSync(object):
 
         logging.getLogger(__name__).info(
             'Starting sync. Last sync at %s',
-            self.last_sync)
+            self.last_sync.astimezone(get_localzone()))
 
         # reset the stats
         self.__stats = TaskSync.Stats()
