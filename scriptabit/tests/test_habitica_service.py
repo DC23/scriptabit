@@ -94,14 +94,7 @@ class TestHabiticaService(object):
 
             assert new_mp == 16.5
 
-    def test_set_hp_too_high(self):
-        with requests_mock.mock() as m:
-            m.get('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(maxMP=60)[1])
-            with (pytest.raises(ArgumentOutOfRangeError)):
-                self.hs.set_mp(60.1)
-
-    def test_set_hp_too_low(self):
+    def test_set_mp_too_low(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(maxMP=60)[1])

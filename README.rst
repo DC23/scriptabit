@@ -13,7 +13,7 @@ Python scripting and scenarios for Habitica.
 * Free software: Apache 2.0
 * Homepage: https://github.com/DC23/scriptabit
 * Documentation: https://scriptabit.readthedocs.org
-* Version: 1.10.0
+* Version: 1.11.0
 
 **Note** that apart from bugs, I don't use the GitHub issue list for
 planning. Task and feature planning is carried out in a private
@@ -45,6 +45,14 @@ supplied as a command-line argument.
 
 If you do not already have a `.auth.cfg` file, a default will be created when
 you first run scriptabit. You can then fill in your account values.
+
+Once you have entered your Habitica credentials, test them with the `-sud`
+command (short for `--show-user-data`)::
+
+    scriptabit -sud
+
+If everything is set up correctly, you should see a summary of your character
+data printed to the console.
 
 **Note that your API key is effectively a password to your Habitica
 account.** You should make sure the .auth.cfg file is protected, and

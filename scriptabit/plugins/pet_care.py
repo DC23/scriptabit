@@ -488,7 +488,7 @@ class PetCare(scriptabit.IPlugin):
         print('Mounts:')
         pprint(items['mounts'])
 
-    def notify(self, message, panel=True):
+    def notify(self, message, **kwargs):
         """ Notify the Habitica user.
 
         If this is a dry run, then the message is logged. Otherwise the message
@@ -517,7 +517,8 @@ class PetCare(scriptabit.IPlugin):
         super().notify(
             ':{0}: {1}'.format(
                 random.choice(emoticons),
-                message))
+                message),
+            **kwargs)
 
     def hatch_pets(self):
         """ Hatch all available pets. """

@@ -30,14 +30,9 @@ The simplest way to check your balance is through one of the Habitica apps or
 the website. The current balance is stored in both the extra notes field, and in
 the reward value.
 
-There are no command line arguments for checking your balance. Simply run the
-banking plugin with no addition arguments::
+To check your balance with scriptabit::
 
-    scriptabit --run banking
-
-Or using the banking-specific command::
-
-    sb-banking
+    sb-banking -b
 
 There are no fees for balance checks.
 

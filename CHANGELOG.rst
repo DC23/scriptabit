@@ -240,3 +240,22 @@ Changelog
 * Refactored plugin notification methods.
 * Changed pet care so it only sleeps during feeding if API calls were made
   during the last pet.
+
+1.11.0 (2016-
+-----------------------------------------
+
+* Minor logging changes: config file specifiable via environment variable
+  (`SCRIPTABIT_LOGGING_CONFIG`). Log statement with the location of the user
+  plugin directory.
+* Added 10 second timeout to http requests.
+* Added simple vampire mode - health drain during the day, slower regen at
+  night.
+* Added bank-balance option so that sb-banking with no args can display usage
+  information.
+* Changed main loop so that utility functions don't try to run at the same time
+  as plugins.
+* Removed upper MP limit check when setting mana.
+* Added delete all todos utility function (can update to support other task
+  types later, but todos is all I needed right now).
+* Fixed bug where last Trello sync time was displayed in UTC rather than local
+  time.

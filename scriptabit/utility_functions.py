@@ -80,6 +80,12 @@ class UtilityFunctions(object):
             help='''If > 0, set the user's current gold (gold points)''')
 
         parser.add(
+            '--delete-todos',
+            required=False,
+            action='store_true',
+            help='''Delete all current To-do tasks''')
+
+        parser.add(
             '-t',
             '--test',
             required=False,
@@ -117,6 +123,9 @@ class UtilityFunctions(object):
 
         if self.__config.set_gp >= 0:
             self.set_gold(self.__config.set_gp)
+
+        if self.__config.delete_todos:
+            self.delete_todos()
 
     def set_health(self, hp):
         """Sets the user health to the specified value
@@ -233,6 +242,15 @@ class UtilityFunctions(object):
             task,
             task_type=HabiticaTaskTypes.habits)
 
+    def delete_todos(self):
+        """Deletes all user todos"""
+        logging.getLogger(__name__).debug('Deleting all todos')
+        tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.todos)
+        for t in tasks:
+            print('Deleting {0}'.format(t['text']))
+            if not self.dry_run:
+                self.__hs.delete_task(t)
+
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""
         print()
@@ -242,8 +260,6 @@ class UtilityFunctions(object):
         for t in tasks:
             if t['type'] == 'todo':
                 pprint(t)
-                del t['checklist']
-                # t['checklist'][0]['completed'] = False
-                self.__hs.update_task(t)
+                print()
         print("--------------------")
         print()
