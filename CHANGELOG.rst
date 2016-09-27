@@ -241,7 +241,7 @@ Changelog
 * Changed pet care so it only sleeps during feeding if API calls were made
   during the last pet.
 
-1.11.0 (2016-
+1.11.0 (2016-09-20)
 -----------------------------------------
 
 * Minor logging changes: config file specifiable via environment variable
@@ -259,3 +259,9 @@ Changelog
   types later, but todos is all I needed right now).
 * Fixed bug where last Trello sync time was displayed in UTC rather than local
   time.
+
+1.12.0 (2016-
+-----------------------------------------
+
+* Updated pet care to handle the candy foods.
+
