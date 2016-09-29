@@ -133,7 +133,7 @@ class HabiticaService(object):
 
         Args:
             task_type (HabiticaTaskTypes): The type of task to get.
-                Default is all tasks.
+                Default is all tasks apart from completed todos.
 
         Returns:
             dict: The tasks.
