@@ -260,8 +260,10 @@ Changelog
 * Fixed bug where last Trello sync time was displayed in UTC rather than local
   time.
 
-1.12.0 (2016-
+1.12.0 (2016-10-24)
 -----------------------------------------
 
 * Updated pet care to handle the candy foods.
+* Updated pet care to handle the spooky and ghost potions.
+* Added purchase armoire item utility function, with optional repeat.
 

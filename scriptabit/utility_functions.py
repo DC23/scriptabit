@@ -86,6 +86,12 @@ class UtilityFunctions(object):
             help='''Delete all current To-do tasks''')
 
         parser.add(
+            '--buy-armoire',
+            required=False,
+            action='store_true',
+            help='''Purchase an item from the armoire''')
+
+        parser.add(
             '-t',
             '--test',
             required=False,
@@ -126,6 +132,9 @@ class UtilityFunctions(object):
 
         if self.__config.delete_todos:
             self.delete_todos()
+
+        if self.__config.buy_armoire:
+            self.buy_armoire()
 
     def set_health(self, hp):
         """Sets the user health to the specified value
@@ -251,15 +260,19 @@ class UtilityFunctions(object):
             if not self.dry_run:
                 self.__hs.delete_task(t)
 
+    def buy_armoire(self):
+        """Purchase an item from the Enchanted Armoire"""
+        logging.getLogger(__name__).debug("Checking the armoire...")
+        for _ in range(self.__config.max_updates or 1):
+            data = self.__hs.buy_armoire()
+            print(data['message'])
+
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        tasks = self.__hs.get_tasks()
-        for t in tasks:
-            if t['type'] == 'todo':
-                pprint(t)
-                print()
+        data = self.__hs.buy_armoire()
+        pprint(data['message'])
         print("--------------------")
         print()

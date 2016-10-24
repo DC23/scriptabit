@@ -100,6 +100,8 @@ class PetCare(scriptabit.IPlugin):
         self.__special_potions = [
             'Floral',
             'Thunderstorm',
+            'Spooky',
+            'Ghost',
         ]
 
         # augment the preferred foods with the special foods

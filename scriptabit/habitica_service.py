@@ -476,3 +476,14 @@ class HabiticaService(object):
         response = self.__post('user/hatch/{0}/{1}'.format(egg, potion))
         response.raise_for_status()
         return response.json()
+
+    def buy_armoire(self):
+        """ Buy an armoire item.
+
+        Returns:
+            dict: The Habitica response data.
+        """
+        response = self.__post('user/buy-armoire')
+        response.raise_for_status()
+        return response.json()
+
