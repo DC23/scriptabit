@@ -267,3 +267,8 @@ Changelog
 * Updated pet care to handle the spooky and ghost potions.
 * Added purchase armoire item utility function, with optional repeat.
 
+1.12.1 (2016-10-24)
+-----------------------------------------
+
+* Fixed bug in `--any-pet-food` feeding option in pet-care plugin.
+

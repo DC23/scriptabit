@@ -429,7 +429,7 @@ class PetCare(scriptabit.IPlugin):
         _, potion = pet.split('-')
 
         if self.__any_food:
-            for food, quantity in self.__items['food']:
+            for food, quantity in self.__items['food'].items():
                 if quantity > 0:
                     return food
         else:
