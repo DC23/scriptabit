@@ -49,14 +49,14 @@ class HealthEffects(scriptabit.IPlugin):
             required=False,
             default=2.0,
             type=float,
-            help='Health Effects: Sun HP damage multiplier.')
+            help='Health Effects: Sun HP damage multiplier for vampire mode.')
 
         parser.add(
             '--moon-power',
             required=False,
             default=1.0,
             type=float,
-            help='Health Effects: Moonlight HP restoration multiplier.')
+            help='Health Effects: Moonlight HP restoration multiplier for vampire mode.')
 
         parser.add(
             '--health-drain',
@@ -205,6 +205,12 @@ class HealthEffects(scriptabit.IPlugin):
             int: Number of times the score went up.
             int: Number of times the score went down.
         """
+        if task['type'] == 'todo':
+            if task['completed']:
+                return float(task['value']) * float(task['priority']), 1, 0
+            else:
+                return 0, 0, 0
+
         if 'history' not in task:
             return 0, 0, 0
 
@@ -264,7 +270,9 @@ class HealthEffects(scriptabit.IPlugin):
         """
         def live():
             all_tasks = self._hs.get_tasks()
-            # pprint(all_tasks)
+            # all_tasks.extend(
+                # self._hs.get_tasks(
+                    # task_type=scriptabit.HabiticaTaskTypes.completed_todos))
             self.summarise_task_performance(all_tasks)
 
         def save():
@@ -307,7 +315,7 @@ class HealthEffects(scriptabit.IPlugin):
             self,
             x,
             a=50,
-            b=1.5,
+            b=0.5,
             k_x_positive=0.2,
             k_x_negative=4.8):
         """ Returns the logistic growth function value for a given input x.
@@ -381,6 +389,8 @@ class HealthEffects(scriptabit.IPlugin):
         print('Total up + down', count)
         print('total_delta', total_delta)
         print('avg_delta', avg_delta)
+        print('logistic fn(total delta)', self.logistic_growth(total_delta))
+        print('logistic fn(avg delta)', self.logistic_growth(avg_delta))
 
         return down, up, total_delta, avg_delta
 
@@ -402,7 +412,12 @@ class HealthEffects(scriptabit.IPlugin):
         elif self._config.vampire:
             return self.vampire()
         elif self._config.test:
-            return self.test()
+            try:
+                return self.test()
+            except Exception as e:
+                logging.getLogger(__name__).error(e)
+                import traceback
+                traceback.print_exc()
 
         # If no other functions ran, just print the help and exit
         self.__print_help()

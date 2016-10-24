@@ -261,7 +261,7 @@ def run_scriptabit(plugin_name=''):
                     except Exception as e:
                         logging.getLogger(__name__).error(
                             'Plugin Update failed')
-                        logging.getLogger(__name__).error(e)
+                        logging.getLogger(__name__).error(e, exc_info=True)
 
                     count += 1
 

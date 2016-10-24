@@ -100,12 +100,14 @@ class PetCare(scriptabit.IPlugin):
         self.__special_potions = [
             'Floral',
             'Thunderstorm',
+            'Spooky',
+            'Ghost',
         ]
 
         # augment the preferred foods with the special foods
         for potion in self.__base_potions:
             self.__preferred_foods[potion].append('Cake_{0}'.format(potion))
-            # TODO: other special foods
+            self.__preferred_foods[potion].append('Candy_{0}'.format(potion))
 
         # build a list of all foods, for the special potions
         self.__all_foods = []
