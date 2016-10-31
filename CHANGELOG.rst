@@ -272,3 +272,8 @@ Changelog
 
 * Fixed bug in `--any-pet-food` feeding option in pet-care plugin.
 
+1.12.2 (2016-10-31)
+-----------------------------------------
+
+* Added dry run support to armoire purchases
+* Added 2 second delay between repeated armoire purchases.

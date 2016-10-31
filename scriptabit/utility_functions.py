@@ -11,6 +11,7 @@ from __future__ import (
 from builtins import *
 import logging
 from pprint import pprint
+from time import sleep
 
 import configargparse
 from .dates import parse_date_local
@@ -264,8 +265,12 @@ class UtilityFunctions(object):
         """Purchase an item from the Enchanted Armoire"""
         logging.getLogger(__name__).debug("Checking the armoire...")
         for _ in range(self.__config.max_updates or 1):
-            data = self.__hs.buy_armoire()
+            if not self.__config.dry_run:
+                data = self.__hs.buy_armoire()
+            else:
+                data = {'message': "Dry run"}
             print(data['message'])
+            sleep(2)
 
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""
