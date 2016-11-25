@@ -10,6 +10,7 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import logging
+from datetime import datetime
 from pprint import pprint
 from time import sleep
 
@@ -214,6 +215,7 @@ class UtilityFunctions(object):
             text,
             notes='',
             heading_level=0,
+            append_time=True,
             tags=None,
             alias='scriptabit_notification_panel'):
         """ Creates or updates a notification (currently implemented as a
@@ -225,6 +227,7 @@ class UtilityFunctions(object):
             notes (str): the extra text/notes.
             heading_level (int): If > 0, Markdown heading syntax is
                 prepended to the message text.
+            append_time (bool): If True, a time stamp is appended to text.
             tags (list): Optional list of tags to be applied to
                 the notification.
             alias (str): the notification alias.
@@ -235,6 +238,9 @@ class UtilityFunctions(object):
         heading_level = min(heading_level, 6)
         if heading_level > 0:
             text = '#' * heading_level + ' ' + text
+
+        if append_time:
+            text = '{0} @ {1}'.format(text, datetime.now().strftime('%X %x'))
 
         task = {
             'alias': alias,
@@ -277,7 +283,9 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        data = self.__hs.buy_armoire()
-        pprint(data['message'])
+        tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.habits)
+        for t in tasks:
+            for h in t['history']:
+                print(parse_date_local(h['date']), h['value'])
         print("--------------------")
         print()
