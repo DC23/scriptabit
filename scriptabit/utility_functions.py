@@ -283,7 +283,9 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        data = self.__hs.buy_armoire()
-        pprint(data['message'])
+        tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.habits)
+        for t in tasks:
+            for h in t['history']:
+                print(parse_date_local(h['date']), h['value'])
         print("--------------------")
         print()
