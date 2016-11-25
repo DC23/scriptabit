@@ -277,3 +277,9 @@ Changelog
 
 * Added dry run support to armoire purchases
 * Added 2 second delay between repeated armoire purchases.
+
+1.12.3 (2016-11-25)
+-----------------------------------------
+
+* Made timestamp optional for all notification messages.
+
