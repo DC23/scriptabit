@@ -283,3 +283,8 @@ Changelog
 
 * Made timestamp optional for all notification messages.
 
+1.13.0 (2016-12-)
+-----------------------------------------
+
+* Added spell/skill casting function.
+

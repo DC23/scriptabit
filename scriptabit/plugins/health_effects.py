@@ -9,13 +9,9 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 import itertools
-import glob
 import logging
 import math
-import os
-import pickle
 from datetime import datetime, timedelta
-from pprint import pprint
 
 import pytz
 import scriptabit
@@ -56,7 +52,8 @@ class HealthEffects(scriptabit.IPlugin):
             required=False,
             default=1.0,
             type=float,
-            help='Health Effects: Moonlight HP restoration multiplier for vampire mode.')
+            help='Health Effects: Moonlight HP restoration\
+ multiplier for vampire mode.')
 
         parser.add(
             '--health-drain',
@@ -263,54 +260,6 @@ class HealthEffects(scriptabit.IPlugin):
 
         return counter.sum_delta, counter.up, counter.down
 
-    def test(self):
-        """ Health effects test function.
-
-        Could do anything depending on what I need to test.
-        """
-        def live():
-            all_tasks = self._hs.get_tasks()
-            # all_tasks.extend(
-                # self._hs.get_tasks(
-                    # task_type=scriptabit.HabiticaTaskTypes.completed_todos))
-            self.summarise_task_performance(all_tasks)
-
-        def save():
-            filename = './dc_sep_06.p'
-            all_tasks = self._hs.get_tasks()
-            with open(filename, 'wb') as f:
-                pickle.dump(all_tasks, f, pickle.HIGHEST_PROTOCOL)
-
-            self.summarise_task_performance(all_tasks)
-
-        def load(filename):
-            print()
-            print('------------------------------')
-            print(filename)
-            with open(filename, 'rb') as f:
-                all_tasks = pickle.load(f)
-
-            dailies = self.summarise_task_performance(
-                [t for t in all_tasks if t['type'] == 'daily'])
-
-            habits = self.summarise_task_performance(
-                [t for t in all_tasks if t['type'] == 'habit'])
-
-            pprint(dailies)
-            pprint(habits)
-
-        def load_all():
-            results = {}
-            for filename in glob.glob("*.p"):
-                results[filename] = load(filename)
-            pprint(results)
-
-        live()
-        # save()
-        # load_all()
-        # load('dc_sep_06.p')
-        return False
-
     def logistic_growth(
             self,
             x,
@@ -411,13 +360,13 @@ class HealthEffects(scriptabit.IPlugin):
             return self.regenerating()
         elif self._config.vampire:
             return self.vampire()
-        elif self._config.test:
-            try:
-                return self.test()
-            except Exception as e:
-                logging.getLogger(__name__).error(e)
-                import traceback
-                traceback.print_exc()
+        # elif self._config.test:
+            # try:
+                # return self.test()
+            # except Exception as e:
+                # logging.getLogger(__name__).error(e)
+                # import traceback
+                # traceback.print_exc()
 
         # If no other functions ran, just print the help and exit
         self.__print_help()

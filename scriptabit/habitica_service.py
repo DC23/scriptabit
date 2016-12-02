@@ -26,6 +26,50 @@ class HabiticaTaskTypes(Enum):
     rewards = 'rewards'
     completed_todos = 'completedTodos'
 
+class SpellIDs(Enum):
+    """ Spell/skill codes for casting.
+        *Mage*
+        fireball: "Burst of Flames"
+        mpHeal: "Ethereal Surge"
+        earth: "Earthquake"
+        frost: "Chilling Frost"
+
+        *Warrior*
+        smash: "Brutal Smash"
+        defensiveStance: "Defensive Stance"
+        valorousPresence: "Valorous Presence"
+        intimidate: "Intimidating Gaze"
+
+        *Rogue*
+        pickPocket: "Pickpocket"
+        backStab: "Backstab"
+        toolsOfTrade: "Tools of the Trade"
+        stealth: "Stealth"
+
+        *Healer*
+        heal: "Healing Light"
+        protectAura: "Protective Aura"
+        brightness: "Searing Brightness"
+        healAll: "Blessing"
+    """
+    burst_of_flames = 'fireball'
+    ethereal_surge = 'mpHeal'
+    earthquake = 'earth'
+    chilling_frost = 'frost'
+    brutal_smash = 'smash'
+    defensive_stance = 'defensiveStance'
+    valorous_presence = 'valorousPresence'
+    intimidating_gaze = 'intimidate'
+    pickpocket = 'pickPocket'
+    backstab = 'backStab'
+    tools_of_the_trade = 'toolsOfTrade'
+    stealth = 'stealth'
+    heal = 'heal'
+    protective_aura = 'protectAura'
+    searing_brightness = 'brightness'
+    blessing = 'healAll'
+
+
 class HabiticaService(object):
     """ Habitica API service interface. """
     def __init__(self, headers, base_url):
@@ -487,3 +531,34 @@ class HabiticaService(object):
         response.raise_for_status()
         return response.json()
 
+    def cast_skill_by_raw_spell_id(self, spellId, targetId=None):
+        """ Cast a skill using the raw Habitica API spell ID rather than the
+        enum.
+
+        Args:
+            spellId (str): The spell ID
+            targetId (UUID): Optional UUID of the spell target.
+                Required for targetted spells.
+
+        Returns:
+            dict: The Habitica response data.
+        """
+        request = 'user/class/cast/{0}'.format(spellId)
+        if targetId:
+            request += '?targetId={0}'.format(targetId)
+        response = self.__post(request)
+        response.raise_for_status()
+        return response.json()
+
+    def cast_skill(self, spellId, targetId=None):
+        """ Cast a skill.
+
+        Args:
+            spellId (SpellIDs): The spell ID
+            targetId (UUID): Optional UUID of the spell target.
+                Required for targetted spells.
+
+        Returns:
+            dict: The Habitica response data.
+        """
+        return self.cast_skill_by_raw_spell_id(spellId.value, targetId)
