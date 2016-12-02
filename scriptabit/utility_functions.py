@@ -94,6 +94,12 @@ class UtilityFunctions(object):
             help='''Purchase an item from the armoire''')
 
         parser.add(
+            '--list-tasks',
+            required=False,
+            action='store_true',
+            help='''List all tasks, in raw dictionary format.''')
+
+        parser.add(
             '-t',
             '--test',
             required=False,
@@ -137,6 +143,9 @@ class UtilityFunctions(object):
 
         if self.__config.buy_armoire:
             self.buy_armoire()
+
+        if self.__config.list_tasks:
+            self.list_tasks()
 
     def set_health(self, hp):
         """Sets the user health to the specified value
@@ -277,6 +286,13 @@ class UtilityFunctions(object):
                 data = {'message': "Dry run"}
             print(data['message'])
             sleep(2)
+
+    def list_tasks(self):
+        """Dumps all tasks"""
+        print('all tasks')
+        tasks = self.__hs.get_tasks()
+        for t in tasks:
+            pprint(t)
 
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""

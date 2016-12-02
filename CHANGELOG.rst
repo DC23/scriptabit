@@ -288,3 +288,7 @@ Changelog
 
 * Added spell/skill casting function.
 
+1.13.1 (2016-12-02)
+-----------------------------------------
+
+* Added list all tasks function
