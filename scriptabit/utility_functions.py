@@ -285,7 +285,7 @@ class UtilityFunctions(object):
         print("--------------------")
         tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.dailies)
         evening_teeth = [d for d in tasks if d['text'] == 'Evening: Brush Teeth'][0]
-        pprint(evening_teeth['id'])
+        # pprint(evening_teeth)
 
         data = self.__hs.cast_skill(SpellIDs.pickpocket, evening_teeth['id'])
         # data = self.__hs.cast_skill(SpellIDs.tools_of_the_trade)

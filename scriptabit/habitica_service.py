@@ -542,9 +542,10 @@ class HabiticaService(object):
         Returns:
             dict: The Habitica response data.
         """
-        params = {'targetId': targetId} if targetId else {}
-        response = self.__post(
-            'user/class/cast/{0}'.format(spellId.value),
-            data=params)
+        request = 'user/class/cast/{0}'.format(spellId.value)
+        if targetId:
+            request += '?targetId={0}'.format(targetId)
+        # params = {'targetId': targetId} if targetId else {}
+        response = self.__post(request)
         response.raise_for_status()
         return response.json()
