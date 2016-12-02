@@ -16,7 +16,7 @@ from time import sleep
 
 import configargparse
 from .dates import parse_date_local
-from .habitica_service import HabiticaTaskTypes
+from .habitica_service import HabiticaTaskTypes, SpellIDs
 
 class UtilityFunctions(object):
     """scriptabit utility functions.
@@ -283,9 +283,12 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.habits)
-        for t in tasks:
-            for h in t['history']:
-                print(parse_date_local(h['date']), h['value'])
+        tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.dailies)
+        evening_teeth = [d for d in tasks if d['text'] == 'Evening: Brush Teeth'][0]
+        pprint(evening_teeth['id'])
+
+        data = self.__hs.cast_skill(SpellIDs.pickpocket, evening_teeth['id'])
+        # data = self.__hs.cast_skill(SpellIDs.tools_of_the_trade)
+        pprint(data['success'])
         print("--------------------")
         print()
