@@ -531,6 +531,25 @@ class HabiticaService(object):
         response.raise_for_status()
         return response.json()
 
+    def cast_skill_by_raw_spell_id(self, spellId, targetId=None):
+        """ Cast a skill using the raw Habitica API spell ID rather than the
+        enum.
+
+        Args:
+            spellId (str): The spell ID
+            targetId (UUID): Optional UUID of the spell target.
+                Required for targetted spells.
+
+        Returns:
+            dict: The Habitica response data.
+        """
+        request = 'user/class/cast/{0}'.format(spellId)
+        if targetId:
+            request += '?targetId={0}'.format(targetId)
+        response = self.__post(request)
+        response.raise_for_status()
+        return response.json()
+
     def cast_skill(self, spellId, targetId=None):
         """ Cast a skill.
 
@@ -542,10 +561,4 @@ class HabiticaService(object):
         Returns:
             dict: The Habitica response data.
         """
-        request = 'user/class/cast/{0}'.format(spellId.value)
-        if targetId:
-            request += '?targetId={0}'.format(targetId)
-        # params = {'targetId': targetId} if targetId else {}
-        response = self.__post(request)
-        response.raise_for_status()
-        return response.json()
+        return self.cast_skill_by_raw_spell_id(spellId.value, targetId)
