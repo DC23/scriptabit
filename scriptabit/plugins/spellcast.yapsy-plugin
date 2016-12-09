@@ -1,0 +1,9 @@
+[Core]
+Name = spellcast
+Module = spellcast
+   
+[Documentation]
+Description = Spell, skill, and buff casting.
+Author = DC23
+Version = 1.0.0
+Website = 

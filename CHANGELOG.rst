@@ -292,3 +292,8 @@ Changelog
 -----------------------------------------
 
 * Added list all tasks function
+
+1.14.0 (2016-12-09)
+-----------------------------------------
+
+* Added spellcast plugin
