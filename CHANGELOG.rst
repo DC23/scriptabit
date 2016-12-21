@@ -297,3 +297,9 @@ Changelog
 -----------------------------------------
 
 * Added spellcast plugin
+
+1.14.1 (2016-12-21)
+-----------------------------------------
+
+* Added HP preservation option to spellcast plugin. This allows casting Blessing
+  spells that don't heal the player.

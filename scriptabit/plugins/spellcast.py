@@ -22,6 +22,7 @@ class Spellcast(scriptabit.IPlugin):
         Generally nothing to do here other than initialise any class attributes.
         """
         super().__init__()
+        self.current_hp = None
 
     @staticmethod
     def supports_dry_runs():
@@ -57,6 +58,14 @@ class Spellcast(scriptabit.IPlugin):
             default=None,
             type=str,
             help='cast a skill by API skill code')
+
+        parser.add(
+            '--preserve-user-hp',
+            required=False,
+            action='store_true',
+            help='''Preserves the user HP at the pre-spell level.
+This can be combined with Blessing to heal the party but not the user.''')
+
         return parser
 
     def activate(self):
@@ -107,6 +116,9 @@ class Spellcast(scriptabit.IPlugin):
         if skill and count:
             logging.getLogger(__name__).info(
                 'Casting up to %d of %s', count, skill)
+
+            self._store_hp()
+
             if not self._config.dry_run:
                 for _ in range(count):
                     try:
@@ -119,5 +131,21 @@ class Spellcast(scriptabit.IPlugin):
                     except:
                         break
 
+            self._restore_hp()
+
         # return False if finished, and True to be updated again.
         return False
+
+    def _store_hp(self):
+        'Store the current HP if required'
+        if self._config.preserve_user_hp:
+            self.current_hp = self._hs.get_stats()['hp']
+            logging.getLogger(__name__).info(
+                'Current HP: %f', self.current_hp)
+
+    def _restore_hp(self):
+        'Restore the current HP if required'
+        if self._config.preserve_user_hp:
+            logging.getLogger(__name__).info('Restoring HP: %f', self.current_hp)
+            if not self._config.dry_run:
+                self._hs.set_hp(self.current_hp)
