@@ -38,21 +38,34 @@ class TestUtilityFunctions(object):
             m.put('https://habitica.com/api/v3/user',
                   text=get_fake_stats(hp=39)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            assert uf.set_health(39) == 39
+            uf.set_health(39)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.hp=39'
 
     def test_inc_health(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(hp=30)[1])
-            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
-            assert uf.set_health(8, True) == 38
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(hp=38)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            uf.set_health(8, True)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.hp=38'
 
     def test_dec_health(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(hp=50)[1])
-            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
-            assert uf.set_health(-11, True) == 39
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(hp=39)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            uf.set_health(-11, True)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.hp=39'
 
     def test_set_mana(self):
         with requests_mock.mock() as m:
@@ -61,21 +74,34 @@ class TestUtilityFunctions(object):
             m.put('https://habitica.com/api/v3/user',
                   text=get_fake_stats(mp=9)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            assert uf.set_mana(9) == 9
+            uf.set_mana(9)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.mp=9'
 
     def test_inc_mana(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(mp=30)[1])
-            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
-            assert uf.set_mana(9, True) == 39
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(mp=39)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            uf.set_mana(9, True)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.mp=39'
 
     def test_dec_mana(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(mp=50)[1])
-            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
-            assert uf.set_mana(-11, True) == 39
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(mp=39)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            uf.set_mana(-11, True)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.mp=39'
 
     def test_set_xp(self):
         with requests_mock.mock() as m:
@@ -84,21 +110,34 @@ class TestUtilityFunctions(object):
             m.put('https://habitica.com/api/v3/user',
                   text=get_fake_stats(exp=39)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            assert uf.set_xp(39) == 39
+            uf.set_xp(39)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.exp=39'
 
     def test_inc_xp(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(exp=30)[1])
-            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
-            assert uf.set_xp(9, True) == 39
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(exp=39)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            uf.set_xp(9, True)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.exp=39'
 
     def test_dec_xp(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(exp=50)[1])
-            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
-            assert uf.set_xp(-11, True) == 39
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(exp=39)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            uf.set_xp(-11, True)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.exp=39'
 
     def test_set_gold(self):
         with requests_mock.mock() as m:
@@ -107,21 +146,34 @@ class TestUtilityFunctions(object):
             m.put('https://habitica.com/api/v3/user',
                   text=get_fake_stats(gp=9009)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            assert uf.set_gold(9009) == 9009
+            uf.set_gold(9009)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.gp=9009'
 
     def test_inc_gold(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(gp=30)[1])
-            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
-            assert uf.set_gold(9, True) == 39
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(gp=39)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            uf.set_gold(9, True)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.gp=39'
 
     def test_dec_gold(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(gp=50)[1])
-            uf = UtilityFunctions(MockConfig(dry_run=True), self.hs)
-            assert uf.set_gold(-11, True) == 39
+            m.put('https://habitica.com/api/v3/user',
+                  text=get_fake_stats(gp=39)[1])
+            uf = UtilityFunctions(MockConfig(), self.hs)
+            uf.set_gold(-11, True)
+            history = m.request_history
+            assert history[1].method == 'PUT'
+            assert history[1].text == 'stats.gp=39'
 
     def test_set_health_dry_run(self):
         with requests_mock.mock() as m:
