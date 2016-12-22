@@ -37,7 +37,7 @@ Plugin Baseclass
 Scriptabit
 ----------
 .. automodule:: scriptabit.scriptabit
-    :members: start_cli, __init_logging, __get_configuration, __get_plugin_manager, __list_plugins
+    :members: start_scriptabit, __init_logging, __get_configuration, __get_plugin_manager, __list_plugins
 
 Synchronisation
 ---------------
