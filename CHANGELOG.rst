@@ -303,3 +303,10 @@ Changelog
 
 * Added HP preservation option to spellcast plugin. This allows casting Blessing
   spells that don't heal the player.
+
+1.15.0 (2016-12-22)
+-----------------------------------------
+
+* Adding increment functions for XP, MP, HP. I already have direct set functions
+  but the new ones are easier when you just want to increment the values up or 
+  down.

@@ -211,7 +211,7 @@ amount.''')
         if not self.dry_run:
             self._hs.set_gp(max(0, self.__user_balance - gross_amount))
 
-        message = 'Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
+        message = ':moneybag: Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
         self.notify(message)
 
     def withdraw(self):
