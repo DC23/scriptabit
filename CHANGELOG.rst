@@ -310,3 +310,6 @@ Changelog
 * Adding increment functions for XP, MP, HP. I already have direct set functions
   but the new ones are easier when you just want to increment the values up or 
   down.
+* Expanding the banking feature to allow mana and health banks as well as gold.
+* Removed the bank name option, as it made supporting different bank types more 
+  complicated.

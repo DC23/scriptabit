@@ -33,6 +33,7 @@ class Banking(scriptabit.IPlugin):
         self.__bank_balance = 0
         self.__user_balance = 0
         self.__transaction_fee = 0
+        self.__bank_traits = None
         self.print_help = None
 
     def initialise(self, configuration, habitica_service, data_dir):
@@ -66,7 +67,7 @@ class Banking(scriptabit.IPlugin):
             required=False,
             default=0,
             type=int,
-            help='Banking: Deposit gold')
+            help='Banking: Deposit to the bank')
 
         parser.add(
             '-w',
@@ -74,7 +75,7 @@ class Banking(scriptabit.IPlugin):
             required=False,
             default=0,
             type=int,
-            help='Banking: Withdraw gold')
+            help='Banking: Withdraw from the bank')
 
         parser.add(
             '-b',
@@ -88,15 +89,9 @@ class Banking(scriptabit.IPlugin):
             required=False,
             default=0,
             type=int,
-            help='''Banking: Pay your taxes. Deducts the specified gold amount.
-If there is not enough gold in your main balance, it tries the bank.''')
-
-        parser.add(
-            '--bank-name',
-            required=False,
-            default=':moneybag: The Scriptabit Bank',
-            type=str,
-            help='Banking: Sets the bank name.')
+            help='''Banking: Pay your taxes. Only applies to the gold bank.
+Deducts the specified gold amount. If there is not enough gold in your main
+balance, it tries the bank.''')
 
         parser.add(
             '--bank-max-fee',
@@ -107,6 +102,14 @@ If there is not enough gold in your main balance, it tries the bank.''')
 Values up to 600 will make transactions very expensive, while going beyond
 600 will start to make small transactions cost more than the transaction
 amount.''')
+
+        parser.add(
+            '--bank-type',
+            required=False,
+            default='gold',
+            type=str,
+            choices=['gold', 'mana', 'health'],
+            help='Banking: select the type of bank.')
 
         self.print_help = parser.print_help
         return parser
@@ -131,24 +134,43 @@ amount.''')
         """
         super().update()
 
+        # determine the bank type and set the traits object
+        if self._config.bank_type == 'mana':
+            print('mana')
+            self.__bank_traits = None
+        elif self._config.bank_type == 'health':
+            print('health')
+            self.__bank_traits = None
+        else:
+            # assume gold
+            print('gold')
+            self.__bank_traits = {
+                'alias': 'scriptabit_banking',
+                'name': ':moneybag: The Scriptabit Bank',
+                'stat': 'gp',
+                'allow_tax': True,
+                'icon': ':moneybag:',
+            }
+
+
         # Get or create the banking task
-        self.__bank = self._hs.get_task(alias='scriptabit_banking')
+        self.__bank = self._hs.get_task(self.__bank_traits['alias'])
         if not self.__bank:
             logging.getLogger(__name__).info('Creating new bank task')
             tag = self._hs.create_tags(['scriptabit'])
             self.__bank = self._hs.create_task({
-                'alias': 'scriptabit_banking',
+                'alias': self.__bank_traits['alias'],
                 'attribute': 'per',
                 'priority': 1,
-                'text': self._config.bank_name,
+                'text': self.__bank_traits['name'],
                 'type': 'reward',
                 'tags': [tag[0]['id']],
-                'value': 0})
+                'value': 100})
 
         # Get the user and bank balances
         self.__bank_balance = Banking.get_balance_from_string(
             self.__bank['notes'])
-        self.__user_balance = self._hs.get_stats()['gp']
+        self.__user_balance = self._hs.get_stats()[self.__bank_traits['stat']]
 
         # Do the banking thing
         if self._config.bank_deposit > 0:
@@ -174,6 +196,9 @@ amount.''')
         """ Pays taxes, trying first from the main balance, and then from the
         bank.
         """
+        if not self.__bank_traits['allow_tax']:
+            return
+
         tax = self._config.bank_tax
 
         # subtract from user balance
@@ -209,9 +234,18 @@ amount.''')
 
         # subtract the gold from user balance
         if not self.dry_run:
-            self._hs.set_gp(max(0, self.__user_balance - gross_amount))
+            if self._config.bank_type == 'mana':
+                print('dep mana')
+            elif self._config.bank_type == 'health':
+                print('dep hp')
+            else:
+                print('dep gold')
+                self._hs.set_gp(max(0, self.__user_balance - gross_amount))
 
-        message = ':moneybag: Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
+        message = '{2} Deposit: {0}, Fee: {1}'.format(
+            nett_amount,
+            fee,
+            self.__bank_traits['icon'])
         self.notify(message)
 
     def withdraw(self):
@@ -228,9 +262,18 @@ amount.''')
 
         # add the gold to user balance
         if not self.dry_run:
-            self._hs.set_gp(self.__user_balance + nett_amount)
+            if self._config.bank_type == 'mana':
+                print('Withdraw mana')
+            elif self._config.bank_type == 'health':
+                print('Withdraw hp')
+            else:
+                print('Withdraw gold')
+                self._hs.set_gp(self.__user_balance + nett_amount)
 
-        message = ':moneybag: Withdrew: {0}, Fee: {1}'.format(nett_amount, fee)
+        message = '{2} Withdrew: {0}, Fee: {1}'.format(
+            nett_amount,
+            fee,
+            self.__bank_traits['icon'])
         self.notify(message)
 
     def update_bank_balance(self, new_balance):
