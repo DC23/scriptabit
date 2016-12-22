@@ -56,7 +56,9 @@ def __get_configuration(plugin_manager):
         The argparse compatible configuration object.
     """
 
-    extra_args = [UtilityFunctions.get_arg_parser()]
+    # create a temporary object to extract the arg parser additions
+    utility = UtilityFunctions(None, None)
+    extra_args = [utility.get_arg_parser()]
 
     # Plugins can define additional arguments
     for plugin_info in plugin_manager.getAllPlugins():

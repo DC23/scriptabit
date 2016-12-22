@@ -33,6 +33,7 @@ class Banking(scriptabit.IPlugin):
         self.__bank_balance = 0
         self.__user_balance = 0
         self.__transaction_fee = 0
+        self.__bank_traits = None
         self.print_help = None
 
     def initialise(self, configuration, habitica_service, data_dir):
@@ -66,7 +67,7 @@ class Banking(scriptabit.IPlugin):
             required=False,
             default=0,
             type=int,
-            help='Banking: Deposit gold')
+            help='Banking: Deposit to the bank')
 
         parser.add(
             '-w',
@@ -74,7 +75,7 @@ class Banking(scriptabit.IPlugin):
             required=False,
             default=0,
             type=int,
-            help='Banking: Withdraw gold')
+            help='Banking: Withdraw from the bank')
 
         parser.add(
             '-b',
@@ -88,15 +89,9 @@ class Banking(scriptabit.IPlugin):
             required=False,
             default=0,
             type=int,
-            help='''Banking: Pay your taxes. Deducts the specified gold amount.
-If there is not enough gold in your main balance, it tries the bank.''')
-
-        parser.add(
-            '--bank-name',
-            required=False,
-            default=':moneybag: The Scriptabit Bank',
-            type=str,
-            help='Banking: Sets the bank name.')
+            help='''Banking: Pay your taxes. Only applies to the gold bank.
+Deducts the specified gold amount. If there is not enough gold in your main
+balance, it tries the bank.''')
 
         parser.add(
             '--bank-max-fee',
@@ -107,6 +102,15 @@ If there is not enough gold in your main balance, it tries the bank.''')
 Values up to 600 will make transactions very expensive, while going beyond
 600 will start to make small transactions cost more than the transaction
 amount.''')
+
+        parser.add(
+            '-bt',
+            '--bank-type',
+            required=False,
+            default='gold',
+            type=str,
+            choices=['gold', 'mana', 'health'],
+            help='Banking: select the type of bank.')
 
         self.print_help = parser.print_help
         return parser
@@ -131,16 +135,51 @@ amount.''')
         """
         super().update()
 
+        stats = self._hs.get_stats()
+
+        # determine the bank type and set the traits object
+        if self._config.bank_type == 'mana':
+            self.__bank_traits = {
+                'alias': 'scriptabit_mana_bank',
+                'name': ':blue_heart: Mana Bank',
+                'stat': 'mp',
+                'allow_tax': False,
+                'icon': ':blue_heart:',
+                'min_user_balance': 0,
+                'max_user_balance': stats['maxMP'],
+            }
+        elif self._config.bank_type == 'health':
+            self.__bank_traits = {
+                'alias': 'scriptabit_health_bank',
+                'name': ':heart: Health Bank',
+                'stat': 'hp',
+                'allow_tax': False,
+                'icon': ':heart:',
+                'min_user_balance': 1,
+                'max_user_balance': stats['maxHealth'],
+            }
+        else:
+            # assume gold
+            self.__bank_traits = {
+                'alias': 'scriptabit_banking',
+                'name': ':moneybag: Gold Bank',
+                'stat': 'gp',
+                'allow_tax': True,
+                'icon': ':moneybag:',
+                'min_user_balance': 0,
+                'max_user_balance': False,
+            }
+
         # Get or create the banking task
-        self.__bank = self._hs.get_task(alias='scriptabit_banking')
+        self.__bank = self._hs.get_task(self.__bank_traits['alias'])
         if not self.__bank:
             logging.getLogger(__name__).info('Creating new bank task')
             tag = self._hs.create_tags(['scriptabit'])
             self.__bank = self._hs.create_task({
-                'alias': 'scriptabit_banking',
+                'alias': self.__bank_traits['alias'],
                 'attribute': 'per',
                 'priority': 1,
-                'text': self._config.bank_name,
+                'text': self.__bank_traits['name'],
                 'type': 'reward',
                 'tags': [tag[0]['id']],
                 'value': 0})
@@ -148,7 +187,7 @@ amount.''')
         # Get the user and bank balances
         self.__bank_balance = Banking.get_balance_from_string(
             self.__bank['notes'])
-        self.__user_balance = self._hs.get_stats()['gp']
+        self.__user_balance = stats[self.__bank_traits['stat']]
 
         # Do the banking thing
         if self._config.bank_deposit > 0:
@@ -174,6 +213,9 @@ amount.''')
         """ Pays taxes, trying first from the main balance, and then from the
         bank.
         """
+        if not self.__bank_traits['allow_tax']:
+            return
+
         tax = self._config.bank_tax
 
         # subtract from user balance
@@ -199,7 +241,7 @@ amount.''')
         """
         # Don't deposit more money than the user has
         gross_amount = min(
-            math.trunc(self.__user_balance),
+            math.trunc(self.__user_balance - self.__bank_traits['min_user_balance']),
             self._config.bank_deposit)
         fee = math.trunc(self.calculate_fee(gross_amount))
         nett_amount = max(0, gross_amount - fee)
@@ -207,11 +249,19 @@ amount.''')
         # update the bank balance
         self.update_bank_balance(self.__bank_balance + nett_amount)
 
-        # subtract the gold from user balance
+        # subtract from user balance
         if not self.dry_run:
-            self._hs.set_gp(max(0, self.__user_balance - gross_amount))
+            if self._config.bank_type == 'mana':
+                self._hs.set_mp(max(0, self.__user_balance - gross_amount))
+            elif self._config.bank_type == 'health':
+                self._hs.set_hp(max(0, self.__user_balance - gross_amount))
+            else:
+                self._hs.set_gp(max(0, self.__user_balance - gross_amount))
 
-        message = 'Deposit: {0}, Fee: {1}'.format(nett_amount, fee)
+        message = '{2} Deposit: {0}, Fee: {1}'.format(
+            nett_amount,
+            fee,
+            self.__bank_traits['icon'])
         self.notify(message)
 
     def withdraw(self):
@@ -219,6 +269,15 @@ amount.''')
         """
         # Don't withdraw more money than the bank has
         gross_amount = min(self.__bank_balance, self._config.bank_withdraw)
+
+        # If the traits supports a max user balance, don't withdraw more
+        # than that amount
+        if self.__bank_traits['max_user_balance']:
+            gross_amount = min(
+                max(0, self.__bank_traits['max_user_balance'] - self.__user_balance),
+                gross_amount)
+            print('capping withdrawal to ', gross_amount)
+
         fee = math.trunc(self.calculate_fee(gross_amount))
         nett_amount = max(0, gross_amount - fee)
 
@@ -226,11 +285,19 @@ amount.''')
         new_balance = max(0, self.__bank_balance - gross_amount)
         self.update_bank_balance(new_balance)
 
-        # add the gold to user balance
+        # add to user balance
         if not self.dry_run:
-            self._hs.set_gp(self.__user_balance + nett_amount)
+            if self._config.bank_type == 'mana':
+                self._hs.set_mp(self.__user_balance + nett_amount)
+            elif self._config.bank_type == 'health':
+                self._hs.set_hp(self.__user_balance + nett_amount)
+            else:
+                self._hs.set_gp(self.__user_balance + nett_amount)
 
-        message = ':moneybag: Withdrew: {0}, Fee: {1}'.format(nett_amount, fee)
+        message = '{2} Withdrew: {0}, Fee: {1}'.format(
+            nett_amount,
+            fee,
+            self.__bank_traits['icon'])
         self.notify(message)
 
     def update_bank_balance(self, new_balance):
@@ -254,7 +321,12 @@ amount.''')
         Returns:
             float: the transaction fee.
         """
-        # Diminishing returns exponential function, tuned to be expensive at
-        # amounts < 1000 gold, but to flatten quickly for amounts > 1000
-        limit = max(0, self._config.bank_max_fee)
-        return limit * (1 - math.exp(-0.0015 * amount))
+        if self._config.bank_type == 'mana':
+            return 20 * (1 - math.exp(-0.01 * amount))
+        elif self._config.bank_type == 'health':
+            return 5 * (1 - math.exp(-0.07 * amount))
+        else:
+            # Diminishing returns exponential function, tuned to be expensive at
+            # amounts < 1000 gold, but to flatten quickly for amounts > 1000
+            limit = max(0, self._config.bank_max_fee)
+            return limit * (1 - math.exp(-0.0015 * amount))

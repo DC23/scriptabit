@@ -32,8 +32,38 @@ class UtilityFunctions(object):
         self.__config = config
         self.__hs = habitica_service
 
-    @classmethod
-    def get_arg_parser(cls):
+        self.__stat_setters = [
+            {
+                'name': 'hp',
+                'type': float,
+                'default': -1.0,
+                'help': 'health points',
+                'setter': self.set_health,
+            },
+            {
+                'name': 'mp',
+                'type': float,
+                'default': -1.0,
+                'help': 'mana points',
+                'setter': self.set_mana,
+            },
+            {
+                'name': 'xp',
+                'type': int,
+                'default': -1,
+                'help': 'experience points',
+                'setter': self.set_xp,
+            },
+            {
+                'name': 'gp',
+                'type': float,
+                'default': -1.0,
+                'help': 'gold',
+                'setter': self.set_gold,
+            },
+        ]
+
+    def get_arg_parser(self):
         """Gets the argument parser containing Utility function CLI arguments.
 
         Returns:
@@ -49,37 +79,24 @@ class UtilityFunctions(object):
             action='store_true',
             help='''Print the user data''')
 
-        parser.add(
-            '-hp',
-            '--set-hp',
-            type=float,
-            default=-1.0,
-            required=False,
-            help='''If > 0, set the user's current HP''')
+        for stat in self.__stat_setters:
+            # The set arg
+            parser.add(
+                '-'+stat['name'],
+                '--set-'+stat['name'],
+                type=stat['type'],
+                default=stat['default'],
+                required=False,
+                help="If > 0, set the user's current {0}".format(stat['help']))
 
-        parser.add(
-            '-mp',
-            '--set-mp',
-            type=float,
-            default=-1.0,
-            required=False,
-            help='''If > 0, set the user's current MP (mana points)''')
-
-        parser.add(
-            '-xp',
-            '--set-xp',
-            type=int,
-            default=-1,
-            required=False,
-            help='''If > 0, set the user's current XP (experience points)''')
-
-        parser.add(
-            '-gp',
-            '--set-gp',
-            type=float,
-            default=-1.0,
-            required=False,
-            help='''If > 0, set the user's current gold (gold points)''')
+            # The increment/decrement arg
+            parser.add(
+                # '-'+stat['name'],
+                '--inc-'+stat['name'],
+                type=stat['type'],
+                default=0,
+                required=False,
+                help="Increment (positive values) or decrement (negative values) the user's current {0}".format(stat['help']))
 
         parser.add(
             '--delete-todos',
@@ -126,18 +143,6 @@ class UtilityFunctions(object):
         if self.__config.show_user_data:
             self.show_user_data()
 
-        if self.__config.set_hp >= 0:
-            self.set_health(self.__config.set_hp)
-
-        if self.__config.set_mp >= 0:
-            self.set_mana(self.__config.set_mp)
-
-        if self.__config.set_xp >= 0:
-            self.set_xp(self.__config.set_xp)
-
-        if self.__config.set_gp >= 0:
-            self.set_gold(self.__config.set_gp)
-
         if self.__config.delete_todos:
             self.delete_todos()
 
@@ -147,61 +152,80 @@ class UtilityFunctions(object):
         if self.__config.list_tasks:
             self.list_tasks()
 
-    def set_health(self, hp):
+        config_dict = vars(self.__config)
+
+        # dispatch any setters and incrementers
+        for stat in self.__stat_setters:
+            arg = config_dict['set_'+stat['name']]
+            if arg >= 0:
+                stat['setter'](arg)
+
+            inc_arg = config_dict['inc_'+stat['name']]
+            if inc_arg != 0:
+                stat['setter'](inc_arg, increment=True)
+
+    def __set_stat(
+            self,
+            name,
+            value,
+            hs_func,
+            lower_bound=0,
+            increment=False):
+        """Generic stat setter.
+
+        Args:
+            name (str): The stat name
+            value: the new value
+            hs_func: The HabiticaService method that will set the stat.
+            lower_bound: Lower bound on the set value
+            increment (bool): If true, the value is treated as an increment
+                instead of the new value
+
+        Returns:
+            The new stat value
+        """
+        old = self.__hs.get_stats()[name]
+        set_value = old + value if increment else value
+        set_value = max(lower_bound, set_value)
+        new = set_value if self.dry_run else hs_func(set_value)
+        logging.getLogger(__name__).info(
+            '%s changed from %f to %f',
+            name,
+            old,
+            new)
+        return new
+
+    def set_health(self, hp, increment=False):
         """Sets the user health to the specified value
 
         Returns:
             float: The new health points.
         """
-        old_hp = self.__hs.get_stats()['hp']
-        new_hp = hp if self.dry_run else self.__hs.set_hp(hp)
-        logging.getLogger(__name__).info(
-            'HP changed from %f to %f',
-            old_hp,
-            new_hp)
-        return new_hp
+        return self.__set_stat('hp', hp, self.__hs.set_hp, increment=increment)
 
-    def set_xp(self, xp):
+    def set_xp(self, xp, increment=False):
         """Sets the user experience points to the specified value.
 
         Returns:
             int: The new experience points.
         """
-        old_xp = self.__hs.get_stats()['exp']
-        new_xp = xp if self.dry_run else self.__hs.set_exp(xp)
-        logging.getLogger(__name__).info(
-            'XP changed from %f to %f',
-            old_xp,
-            new_xp)
-        return new_xp
+        return self.__set_stat('exp', xp, self.__hs.set_exp, increment=increment)
 
-    def set_mana(self, mp):
+    def set_mana(self, mp, increment=False):
         """Sets the user mana to the specified value
 
         Returns:
             float: The new mana points.
         """
-        old_mp = self.__hs.get_stats()['mp']
-        new_mp = mp if self.dry_run else self.__hs.set_mp(mp)
-        logging.getLogger(__name__).info(
-            'MP changed from %f to %f',
-            old_mp,
-            new_mp)
-        return new_mp
+        return self.__set_stat('mp', mp, self.__hs.set_mp, increment=increment)
 
-    def set_gold(self, gp):
+    def set_gold(self, gp, increment=False):
         """Sets the user gold to the specified value
 
         Returns:
             float: The new gold points.
         """
-        old = self.__hs.get_stats()['gp']
-        new = gp if self.dry_run else self.__hs.set_gp(gp)
-        logging.getLogger(__name__).info(
-            'Gold changed from %f to %f',
-            old,
-            new)
-        return new
+        return self.__set_stat('gp', gp, self.__hs.set_gp, increment=increment)
 
     def show_user_data(self):
         """Shows the user data"""
@@ -299,12 +323,5 @@ class UtilityFunctions(object):
         print()
         logging.getLogger(__name__).debug('Running test function')
         print("--------------------")
-        tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.dailies)
-        evening_teeth = [d for d in tasks if d['text'] == 'Evening: Brush Teeth'][0]
-        # pprint(evening_teeth)
-
-        data = self.__hs.cast_skill(SpellIDs.pickpocket, evening_teeth['id'])
-        # data = self.__hs.cast_skill(SpellIDs.tools_of_the_trade)
-        pprint(data['success'])
         print("--------------------")
         print()

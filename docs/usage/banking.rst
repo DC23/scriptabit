@@ -6,9 +6,9 @@ The banking plugin automates the
 allowing you to check your balance, and make deposits or withdrawals.
 
 The first time the banking plugin runs it will create a custom reward called
-`The Scriptabit Bank`. You can create a different name with the `--bank-name`
-command line argument, or by simply editing the name of the custom reward in
-Habitica once it has been created.
+`Gold Bank`.
+You can edit the name of the custom reward in Habitica once it has been created,
+but do not change the task alias.
 
 Do not delete the custom reward without first withdrawing all the gold, or your
 gold will be lost.
@@ -22,6 +22,24 @@ field in the reward).
 The primary advantage of using a bank is that the gold is not lost on death.
 However, to maintain some balance the scriptabit bank charges
 :ref:`banking-fees` on each transaction.
+
+Gold, Mana, and Health Banks
+++++++++++++++++++++++++++++
+
+Since version 1.15.0, scriptabit banking supports mana and health banks in 
+addition to the gold bank. These work identically to the gold bank except for 
+the following:
+
+- You must specify the bank type on the command line. ``sb-banking --bank-type mana``
+  or ``sb-banking --bank-type health``.
+- Each bank is stored in a separate custom reward.
+- Fees are charged on a different scale. Health fees have a max of 5, and mana
+  fees a max of 20. These are not adjustable through the program options.
+- Your health cannot be set below 1 or above 50. In fact, due to the fees, you 
+  probably can't get health above 49.
+- Mana withdrawals are capped so you cannot exceed your maximum mana (based on
+  intelligence).
+- The bank tax option is only available for the gold bank.
 
 Checking your balance
 +++++++++++++++++++++
@@ -66,6 +84,8 @@ you have is a simple way to withdraw all gold from the bank.
 
 Paying Taxes
 ++++++++++++
+
+*Note that taxes only work for gold banks, not mana or health*
 
 The banking plugin allows you to pay taxes. The gold will be deducted first from
 your gold balance and then from the bank if required. This may be of use to
