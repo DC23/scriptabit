@@ -46,50 +46,50 @@ class TestUtilityFunctions(object):
     def test_inc_health(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(hp=30)[1])
+                  text=get_fake_stats(hp=1)[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(hp=38)[1])
+                  text=get_fake_stats(hp=8)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_health(8, True)
+            uf.set_health(7, True)
             history = m.request_history
             assert history[1].method == 'PUT'
-            assert history[1].text == 'stats.hp=38'
+            assert history[1].text == 'stats.hp=8'
 
     def test_dec_health(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(hp=50)[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(hp=39)[1])
+                  text=get_fake_stats(hp=29)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_health(-11, True)
+            uf.set_health(-21, True)
             history = m.request_history
             assert history[1].method == 'PUT'
-            assert history[1].text == 'stats.hp=39'
+            assert history[1].text == 'stats.hp=29'
 
     def test_set_mana(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats()[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(mp=9)[1])
+                  text=get_fake_stats(mp=100)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_mana(9)
+            uf.set_mana(100)
             history = m.request_history
             assert history[1].method == 'PUT'
-            assert history[1].text == 'stats.mp=9'
+            assert history[1].text == 'stats.mp=100'
 
     def test_inc_mana(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats(mp=30)[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(mp=39)[1])
+                  text=get_fake_stats(mp=99)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_mana(9, True)
+            uf.set_mana(69, True)
             history = m.request_history
             assert history[1].method == 'PUT'
-            assert history[1].text == 'stats.mp=39'
+            assert history[1].text == 'stats.mp=99'
 
     def test_dec_mana(self):
         with requests_mock.mock() as m:
@@ -108,12 +108,12 @@ class TestUtilityFunctions(object):
             m.get('https://habitica.com/api/v3/user',
                   text=get_fake_stats()[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(exp=39)[1])
+                  text=get_fake_stats(exp=1009)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_xp(39)
+            uf.set_xp(1009)
             history = m.request_history
             assert history[1].method == 'PUT'
-            assert history[1].text == 'stats.exp=39'
+            assert history[1].text == 'stats.exp=1009'
 
     def test_inc_xp(self):
         with requests_mock.mock() as m:
@@ -130,14 +130,14 @@ class TestUtilityFunctions(object):
     def test_dec_xp(self):
         with requests_mock.mock() as m:
             m.get('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(exp=50)[1])
+                  text=get_fake_stats(exp=500)[1])
             m.put('https://habitica.com/api/v3/user',
-                  text=get_fake_stats(exp=39)[1])
+                  text=get_fake_stats(exp=120)[1])
             uf = UtilityFunctions(MockConfig(), self.hs)
-            uf.set_xp(-11, True)
+            uf.set_xp(-380, True)
             history = m.request_history
             assert history[1].method == 'PUT'
-            assert history[1].text == 'stats.exp=39'
+            assert history[1].text == 'stats.exp=120'
 
     def test_set_gold(self):
         with requests_mock.mock() as m:
