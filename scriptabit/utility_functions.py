@@ -79,6 +79,12 @@ class UtilityFunctions(object):
             action='store_true',
             help='''Print the user data''')
 
+        parser.add(
+            '--verbose',
+            required=False,
+            action='store_true',
+            help='''Specify verbose output''')
+
         for stat in self.__stat_setters:
             # The set arg
             parser.add(
