@@ -313,3 +313,8 @@ Changelog
 * Expanding the banking feature to allow mana and health banks as well as gold.
 * Removed the bank name option, as it made supporting different bank types more 
   complicated.
+
+1.16.0 (
+-----------------------------------------
+
+* New tasks plugin. Run with ``sb-tasks``.

@@ -81,7 +81,7 @@ negative values are red.''')
             required=False,
             default='all',
             type=str,
-            choices=['habits', 'dailys', 'todos', 'rewards', 'all'],
+            choices=['habits', 'dailies', 'todos', 'rewards', 'all'],
             help='Specify the task type to operate on')
 
         self._print_help = parser.print_help
@@ -160,9 +160,18 @@ negative values are red.''')
     def set_values(self):
         """Sets all specified task types to a given value"""
         logging.getLogger(__name__).debug(
-            'Setting all %s to value %d',
+            'Setting all %s to value %f',
             self.task_type_name,
             self._config.task_value)
+        tasks = self._hs.get_tasks(task_type=self.task_type)
+        for t in tasks:
+            t['value'] = self._config.task_value
+            print('Setting {0} to {1}'.format(
+                t['text'], self._config.task_value))
+            if not self.dry_run:
+                new_task = self._hs.update_task(t)
+                pprint(new_task)
+                sleep(1)
 
     def delete_tasks(self):
         """Deletes all user tasks"""

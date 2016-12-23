@@ -19,4 +19,4 @@ Options are:
 
 - ``--verbose``: Verbose output.
 - ``--task-type``: Specify the type of task to operate on. Values are `habits`,
-  `dailys`, `todos`, `rewards`, or `all`.
+  `dailies`, `todos`, `rewards`, or `all`.
