@@ -25,6 +25,8 @@ class Tasks(sb.IPlugin):
         Generally nothing to do here other than initialise any class attributes.
         """
         super().__init__()
+        self.task_type = None
+        self.task_type_name = None
         self._print_help = None
 
     @staticmethod
@@ -119,7 +121,15 @@ class Tasks(sb.IPlugin):
         is finished and the application should shut down.
         """
 
-        print(self._config.task_type)
+        # Convert the task type option to the HabiticaTaskTypes enum
+        if self._config.task_type == 'all':
+            # None is used in the HabiticaService API to indicate all tasks
+            self.task_type = None
+            self.task_type_name = 'tasks'
+        else:
+            self.task_type = sb.HabiticaTaskTypes.__members__[self._config.task_type]
+            self.task_type_name = self.task_type.value
+
         if self._config.list_tasks:
             self.list_tasks()
         elif self._config.delete_tasks:
@@ -133,18 +143,22 @@ class Tasks(sb.IPlugin):
 
     def delete_tasks(self):
         """Deletes all user tasks"""
-        logging.getLogger(__name__).debug('Deleting all tasks')
-        tasks = self._hs.get_tasks(task_type=sb.HabiticaTaskTypes.todos)
+        logging.getLogger(__name__).debug(
+            'Deleting all %s', self.task_type_name)
+
+        tasks = self._hs.get_tasks(task_type=self.task_type)
         for t in tasks:
             print('Deleting {0}'.format(t['text']))
             if not self.dry_run:
                 self._hs.delete_task(t)
+                sleep(1)
 
     def list_tasks(self):
         """Dumps all tasks"""
-        print('*** Listing All Tasks ***')
+        print('*** Listing {0} ***'.format(self.task_type_name))
         print()
-        tasks = self._hs.get_tasks()
+
+        tasks = self._hs.get_tasks(task_type=self.task_type)
         for t in tasks:
             if self._config.verbose:
                 pprint(t)
