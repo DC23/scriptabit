@@ -60,19 +60,13 @@ class Tasks(sb.IPlugin):
             action='store_true',
             help='''List all tasks.''')
 
-        # parser.add(
-            # '--buff-target',
-            # required=False,
-            # default=None,
-            # type=str,
-            # help='buff target UUID')
-
-        # parser.add(
-            # '--cast-skill',
-            # required=False,
-            # default=None,
-            # type=str,
-            # help='cast a skill by API skill code')
+        parser.add(
+            '--task-type',
+            required=False,
+            default='all',
+            type=str,
+            choices=['habits', 'dailys', 'todos', 'rewards', 'all'],
+            help='Specify the task type to operate on')
 
         self._print_help = parser.print_help
         return parser
