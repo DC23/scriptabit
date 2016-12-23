@@ -165,6 +165,10 @@ def start_trello():
     """ Command-line entry point for Trello """
     run_scriptabit('trello')
 
+def start_tasks():
+    """ Command-line entry point for Tasks plugin """
+    run_scriptabit('tasks')
+
 def run_scriptabit(plugin_name=''):
     """ Runs scriptabit.
 

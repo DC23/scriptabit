@@ -1,0 +1,9 @@
+[Core]
+Name = tasks
+Module = tasks
+   
+[Documentation]
+Description = Task manipulation functions
+Author = DC23
+Version = 1.0.0
+Website = 

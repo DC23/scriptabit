@@ -99,22 +99,10 @@ class UtilityFunctions(object):
                 help="Increment (positive values) or decrement (negative values) the user's current {0}".format(stat['help']))
 
         parser.add(
-            '--delete-todos',
-            required=False,
-            action='store_true',
-            help='''Delete all current To-do tasks''')
-
-        parser.add(
             '--buy-armoire',
             required=False,
             action='store_true',
             help='''Purchase an item from the armoire''')
-
-        parser.add(
-            '--list-tasks',
-            required=False,
-            action='store_true',
-            help='''List all tasks, in raw dictionary format.''')
 
         parser.add(
             '-t',
@@ -143,14 +131,8 @@ class UtilityFunctions(object):
         if self.__config.show_user_data:
             self.show_user_data()
 
-        if self.__config.delete_todos:
-            self.delete_todos()
-
         if self.__config.buy_armoire:
             self.buy_armoire()
-
-        if self.__config.list_tasks:
-            self.list_tasks()
 
         config_dict = vars(self.__config)
 
@@ -291,15 +273,6 @@ class UtilityFunctions(object):
             task,
             task_type=HabiticaTaskTypes.habits)
 
-    def delete_todos(self):
-        """Deletes all user todos"""
-        logging.getLogger(__name__).debug('Deleting all todos')
-        tasks = self.__hs.get_tasks(task_type=HabiticaTaskTypes.todos)
-        for t in tasks:
-            print('Deleting {0}'.format(t['text']))
-            if not self.dry_run:
-                self.__hs.delete_task(t)
-
     def buy_armoire(self):
         """Purchase an item from the Enchanted Armoire"""
         logging.getLogger(__name__).debug("Checking the armoire...")
@@ -310,13 +283,6 @@ class UtilityFunctions(object):
                 data = {'message': "Dry run"}
             print(data['message'])
             sleep(2)
-
-    def list_tasks(self):
-        """Dumps all tasks"""
-        print('all tasks')
-        tasks = self.__hs.get_tasks()
-        for t in tasks:
-            pprint(t)
 
     def __test(self):
         """A test function. Could do anything depending on what I am testing."""
