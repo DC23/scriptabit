@@ -49,16 +49,16 @@ class Tasks(sb.IPlugin):
         parser = super().get_arg_parser()
 
         parser.add(
-            '--delete-todos',
+            '--delete-tasks',
             required=False,
             action='store_true',
-            help='''Delete all current To-do tasks''')
+            help='''Delete all tasks''')
 
         parser.add(
             '--list-tasks',
             required=False,
             action='store_true',
-            help='''List all tasks, in raw dictionary format.''')
+            help='''List all tasks.''')
 
         # parser.add(
             # '--buff-target',
@@ -127,8 +127,8 @@ class Tasks(sb.IPlugin):
 
         if self._config.list_tasks:
             self.list_tasks()
-        elif self._config.delete_todos:
-            self.delete_todos()
+        elif self._config.delete_tasks:
+            self.delete_tasks()
         else:
             print()
             self.print_help()
@@ -136,9 +136,9 @@ class Tasks(sb.IPlugin):
         # return False if finished, and True to be updated again.
         return False
 
-    def delete_todos(self):
-        """Deletes all user todos"""
-        logging.getLogger(__name__).debug('Deleting all todos')
+    def delete_tasks(self):
+        """Deletes all user tasks"""
+        logging.getLogger(__name__).debug('Deleting all tasks')
         tasks = self._hs.get_tasks(task_type=sb.HabiticaTaskTypes.todos)
         for t in tasks:
             print('Deleting {0}'.format(t['text']))
