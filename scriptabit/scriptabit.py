@@ -201,6 +201,8 @@ def run_scriptabit(plugin_name=''):
             auth_tokens = load_habitica_authentication_credentials(
                 section=config.auth_section)
 
+            logging.getLogger(__name__).info('verbose mode: %s', config.verbose)
+
             # Habitica Service
             habitica_service = HabiticaService(
                 auth_tokens,

@@ -119,6 +119,7 @@ class Tasks(sb.IPlugin):
         is finished and the application should shut down.
         """
 
+        print(self._config.task_type)
         if self._config.list_tasks:
             self.list_tasks()
         elif self._config.delete_tasks:
@@ -141,7 +142,11 @@ class Tasks(sb.IPlugin):
 
     def list_tasks(self):
         """Dumps all tasks"""
-        print('all tasks')
+        print('*** Listing All Tasks ***')
+        print()
         tasks = self._hs.get_tasks()
         for t in tasks:
-            pprint(t)
+            if self._config.verbose:
+                pprint(t)
+            else:
+                print(t['text'])
