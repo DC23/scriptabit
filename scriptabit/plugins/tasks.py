@@ -63,6 +63,20 @@ class Tasks(sb.IPlugin):
             help='''List all tasks.''')
 
         parser.add(
+            '--set-values',
+            required=False,
+            action='store_true',
+            help='''Set task values. Positive numbers are blue,
+negative values are red.''')
+
+        parser.add(
+            '--task-value',
+            required=False,
+            default=0,
+            type=float,
+            help='''The value to use when setting task values''')
+
+        parser.add(
             '--task-type',
             required=False,
             default='all',
@@ -134,12 +148,21 @@ class Tasks(sb.IPlugin):
             self.list_tasks()
         elif self._config.delete_tasks:
             self.delete_tasks()
+        elif self._config.set_values:
+            self.set_values()
         else:
             print()
             self.print_help()
 
         # return False if finished, and True to be updated again.
         return False
+
+    def set_values(self):
+        """Sets all specified task types to a given value"""
+        logging.getLogger(__name__).debug(
+            'Setting all %s to value %d',
+            self.task_type_name,
+            self._config.task_value)
 
     def delete_tasks(self):
         """Deletes all user tasks"""
