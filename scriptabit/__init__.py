@@ -24,6 +24,7 @@ from .scriptabit import (
     start_pets,
     start_trello,
     start_tasks,
+    start_spellcast,
 )
 from .task import (
     Task,

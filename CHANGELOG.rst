@@ -319,3 +319,4 @@ Changelog
 
 * New tasks plugin. Run with ``sb-tasks``.
 * Added minimum requests version to setup.py.
+* Added entry point for spellcasting plugin ``sb-cast``.

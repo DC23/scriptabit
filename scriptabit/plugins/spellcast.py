@@ -57,6 +57,24 @@ class Spellcast(scriptabit.IPlugin):
             required=False,
             default=None,
             type=str,
+            choices=[
+                'fireball',
+                'mpHeal',
+                'earth',
+                'frost',
+                'smash',
+                'defensiveStance',
+                'valorousPresence',
+                'intimidate',
+                'pickPocket',
+                'backStab',
+                'toolsOfTrade',
+                'stealth',
+                'heal',
+                'protectAura',
+                'brightness',
+                'healAll',
+                ],
             help='cast a skill by API skill code')
 
         parser.add(
@@ -132,6 +150,8 @@ This can be combined with Blessing to heal the party but not the user.''')
                         break
 
             self._restore_hp()
+        else:
+            self._print_help()
 
         # return False if finished, and True to be updated again.
         return False

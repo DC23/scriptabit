@@ -145,6 +145,10 @@ def start_scriptabit():
     """ Command-line entry point for scriptabit """
     run_scriptabit()
 
+def start_spellcast():
+    """ Command-line entry point for spellcast plugin """
+    run_scriptabit('spellcast')
+
 def start_banking():
     """ Command-line entry point for banking """
     run_scriptabit('banking')

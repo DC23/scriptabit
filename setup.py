@@ -150,6 +150,7 @@ setup(
             'sb-pets = scriptabit:start_pets',
             'sb-trello = scriptabit:start_trello',
             'sb-tasks = scriptabit:start_tasks',
+            'sb-cast = scriptabit:start_spellcast',
         ],
     },
 
