@@ -27,7 +27,6 @@ class Tasks(sb.IPlugin):
         super().__init__()
         self.task_type = None
         self.task_type_name = None
-        self._print_help = None
 
     @staticmethod
     def supports_dry_runs():
@@ -70,13 +69,8 @@ class Tasks(sb.IPlugin):
             choices=['habits', 'dailies', 'todos', 'rewards', 'all'],
             help='Specify the task type to operate on')
 
-        self._print_help = parser.print_help
+        self.print_help = parser.print_help
         return parser
-
-    def print_help(self):
-        """ Print the help text """
-        if self._print_help:
-            self._print_help()
 
     def activate(self):
         """ Called by the plugin framework when a plugin is activated."""

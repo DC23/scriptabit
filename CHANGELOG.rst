@@ -320,3 +320,7 @@ Changelog
 * New tasks plugin. Run with ``sb-tasks``.
 * Added minimum requests version to setup.py.
 * Added entry point for spellcasting plugin ``sb-cast``.
+* Cleaned up argument parsing, so running a plugin entry-point with the --help
+  argument only shows help for that plugin.
+* Running ``scriptabit --help`` now only shows help for the main application
+  rather than all possible args from all plugins.

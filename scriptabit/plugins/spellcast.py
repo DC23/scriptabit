@@ -84,6 +84,8 @@ class Spellcast(scriptabit.IPlugin):
             help='''Preserves the user HP at the pre-spell level.
 This can be combined with Blessing to heal the party but not the user.''')
 
+        self.print_help = parser.print_help
+
         return parser
 
     def activate(self):

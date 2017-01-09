@@ -26,7 +26,6 @@ class PetCare(scriptabit.IPlugin):
         """
         super().__init__()
         self.__items = None
-        self.__print_help = None
         self.__any_food = False
 
         # Generate the reference lists
@@ -167,7 +166,7 @@ class PetCare(scriptabit.IPlugin):
             action='store_true',
             help='Allows feeding of magic pets')
 
-        self.__print_help = parser.print_help
+        self.print_help = parser.print_help
 
         return parser
 
@@ -232,7 +231,7 @@ class PetCare(scriptabit.IPlugin):
             return False
 
         # if no other options selected, print plugin specific help and exit
-        self.__print_help()
+        self.print_help()
 
         # return False if finished, and True to be updated again.
         return False

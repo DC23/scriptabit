@@ -52,6 +52,8 @@ class Sample(scriptabit.IPlugin):
             # type=float,
             # help='Sample plugin value')
 
+        self.print_help = parser.print_help
+
         return parser
 
     def activate(self):

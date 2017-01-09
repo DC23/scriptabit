@@ -128,6 +128,7 @@ If empty, then cards are only marked done when archived.''')
             help='''Synchronises task description/extra text field.
 The default is to only synchronise the task names.''')
 
+        self.print_help = parser.print_help
         return parser
 
     def initialise(self, configuration, habitica_service, data_dir):

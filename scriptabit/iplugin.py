@@ -37,6 +37,7 @@ class IPlugin(YapsyIPlugin):
         self._update_count = 0
         self._hs = None
         self._data_dir = None
+        self.print_help = None
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.

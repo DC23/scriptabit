@@ -24,7 +24,6 @@ class HealthEffects(scriptabit.IPlugin):
         """ Initialises the plugin.
         """
         super().__init__()
-        self.__print_help = None
         self.__stats = None
 
     def get_arg_parser(self):
@@ -73,7 +72,7 @@ class HealthEffects(scriptabit.IPlugin):
             action='store_true',
             help='Enables Vampire mode')
 
-        self.__print_help = parser.print_help
+        self.print_help = parser.print_help
 
         return parser
 
@@ -369,5 +368,5 @@ class HealthEffects(scriptabit.IPlugin):
                 # traceback.print_exc()
 
         # If no other functions ran, just print the help and exit
-        self.__print_help()
+        self.print_help()
         return False
