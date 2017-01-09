@@ -44,13 +44,14 @@ def __init_logging(logging_config_file):
     # Load the config
     logging.config.fileConfig(get_config_file(logging_config_file))
 
-def __get_configuration(plugin_manager):
+def __get_configuration(plugin=None):
     """ Builds and parses the hierarchical configuration from environment
     variables, configuration files, command-line arguments,
     and argument defaults.
 
     Args:
-        plugin_manager (yapsy.PluginManager): The plugin manager.
+        plugin: The optional plugin. If supplied, then the plugin arguments will
+            be added to the parsed arguments.
 
     Returns:
         The argparse compatible configuration object.
@@ -61,8 +62,8 @@ def __get_configuration(plugin_manager):
     extra_args = [utility.get_arg_parser()]
 
     # Plugins can define additional arguments
-    for plugin_info in plugin_manager.getAllPlugins():
-        plugin_arg_parser = plugin_info.plugin_object.get_arg_parser()
+    if plugin:
+        plugin_arg_parser = plugin.get_arg_parser()
         extra_args.append(plugin_arg_parser)
 
     config, _ = get_configuration(parents=extra_args)
@@ -138,7 +139,7 @@ def __init_config_and_plugin_manager():
         plugin_manager: The plugin manager.
     """
     plugin_manager = __get_plugin_manager()
-    config = __get_configuration(plugin_manager)
+    config = __get_configuration()
     return config, plugin_manager
 
 def start_scriptabit():
@@ -239,6 +240,10 @@ def run_scriptabit(plugin_name=''):
                 # Second, activate it
                 plugin_manager.activatePluginByName(config.run)
                 plugin = plugin_info.plugin_object
+
+                # Now replace our config object with one that contains
+                # args for the selected plugin
+                config = __get_configuration(plugin)
 
                 if config.dry_run:
                     if not plugin.supports_dry_runs():

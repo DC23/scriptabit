@@ -224,4 +224,4 @@ Note that plugins can still exit before the limit is reached.''')
 for plugins that run in the update loop. Note that plugins may ignore or limit
 this setting if the value is inappropriate for the specific plugin.''')
 
-    return parser.parse_args(), parser.print_help
+    return parser.parse_known_args()[0], parser.print_help
