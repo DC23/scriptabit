@@ -107,7 +107,7 @@ setup(
         'iso8601',
         'pytz',
         'py-trello',
-        'requests',
+        'requests>=2.4.2',
         'tzlocal',
         'yapsy',
     ],

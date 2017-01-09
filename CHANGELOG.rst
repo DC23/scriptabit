@@ -318,3 +318,4 @@ Changelog
 -----------------------------------------
 
 * New tasks plugin. Run with ``sb-tasks``.
+* Added minimum requests version to setup.py.
