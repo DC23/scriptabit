@@ -29,6 +29,8 @@ Example showing backstab being cast three times on a task::
 
 Options are:
 
-- ``--preserve-user-hp``: For spells that modify health, this option will preserve the
-  player's original health value. This only works with the Blessing skill (``healAll``),
-  allowing the player to heal the party but not themselves.
+- ``--preserve-user-hp``: For spells that modify health, this option will
+  preserve the player's original health value. This only works with the Blessing
+  skill (``healAll``), allowing the player to heal the party but not themselves.
+- ``-n N``: An optional count (defaults to 1). Skills will be cast N times, or
+  until mana is exhausted.
