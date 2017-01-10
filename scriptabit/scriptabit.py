@@ -44,16 +44,17 @@ def __init_logging(logging_config_file):
     # Load the config
     logging.config.fileConfig(get_config_file(logging_config_file))
 
-def __get_configuration(plugin_manager):
+def __get_configuration(plugin=None):
     """ Builds and parses the hierarchical configuration from environment
     variables, configuration files, command-line arguments,
     and argument defaults.
 
     Args:
-        plugin_manager (yapsy.PluginManager): The plugin manager.
+        plugin: The optional plugin. If supplied, then the plugin arguments will
+            be added to the parsed arguments.
 
     Returns:
-        The argparse compatible configuration object.
+        The argparse compatible configuration object and the help function
     """
 
     # create a temporary object to extract the arg parser additions
@@ -61,13 +62,11 @@ def __get_configuration(plugin_manager):
     extra_args = [utility.get_arg_parser()]
 
     # Plugins can define additional arguments
-    for plugin_info in plugin_manager.getAllPlugins():
-        plugin_arg_parser = plugin_info.plugin_object.get_arg_parser()
+    if plugin:
+        plugin_arg_parser = plugin.get_arg_parser()
         extra_args.append(plugin_arg_parser)
 
-    config, _ = get_configuration(parents=extra_args)
-
-    return config
+    return get_configuration(parents=extra_args)
 
 def __init_user_plugin_directory():
     """ Locates (and creates if necessary) the user plugin directory. """
@@ -135,15 +134,20 @@ def __init_config_and_plugin_manager():
 
     Returns:
         config: The program configuration.
+        help_function: A function for printing usage text.
         plugin_manager: The plugin manager.
     """
     plugin_manager = __get_plugin_manager()
-    config = __get_configuration(plugin_manager)
-    return config, plugin_manager
+    config, help_function = __get_configuration()
+    return config, help_function, plugin_manager
 
 def start_scriptabit():
     """ Command-line entry point for scriptabit """
     run_scriptabit()
+
+def start_spellcast():
+    """ Command-line entry point for spellcast plugin """
+    run_scriptabit('spellcast')
 
 def start_banking():
     """ Command-line entry point for banking """
@@ -165,6 +169,10 @@ def start_trello():
     """ Command-line entry point for Trello """
     run_scriptabit('trello')
 
+def start_tasks():
+    """ Command-line entry point for Tasks plugin """
+    run_scriptabit('tasks')
+
 def run_scriptabit(plugin_name=''):
     """ Runs scriptabit.
 
@@ -172,7 +180,10 @@ def run_scriptabit(plugin_name=''):
         plugin_name (str): The optional plugin. If supplied, then this plugin is
             executed regardless of the actual command line arguments.
     """
-    config, plugin_manager = __init_config_and_plugin_manager()
+    # TODO: This function is getting very messy. I should refactor to clean up
+    # the program flow.
+
+    config, help_function, plugin_manager = __init_config_and_plugin_manager()
 
     if plugin_name:
         config.run = plugin_name
@@ -197,6 +208,8 @@ def run_scriptabit(plugin_name=''):
             auth_tokens = load_habitica_authentication_credentials(
                 section=config.auth_section)
 
+            logging.getLogger(__name__).info('verbose mode: %s', config.verbose)
+
             # Habitica Service
             habitica_service = HabiticaService(
                 auth_tokens,
@@ -212,9 +225,12 @@ def run_scriptabit(plugin_name=''):
                                              config.habitica_api_url)
 
             if not config.run:
-                # Utility functions
-                utility = UtilityFunctions(config, habitica_service)
-                utility.run()
+                if config.help:
+                    help_function()
+                else:
+                    # Utility functions
+                    utility = UtilityFunctions(config, habitica_service)
+                    utility.run()
             else:
                 # Time to run the selected plugin
                 # First, find it
@@ -230,6 +246,17 @@ def run_scriptabit(plugin_name=''):
                 plugin_manager.activatePluginByName(config.run)
                 plugin = plugin_info.plugin_object
 
+                # Now replace our config object with one that contains
+                # args for the selected plugin
+                config, help_function = __get_configuration(plugin)
+
+                if config.help:
+                    if plugin.print_help:
+                        plugin.print_help()
+                    else:
+                        help_function()
+                    return
+
                 if config.dry_run:
                     if not plugin.supports_dry_runs():
                         raise PluginError('Dry run mode not supported')
@@ -237,6 +264,7 @@ def run_scriptabit(plugin_name=''):
                     logging.getLogger(__name__).info(
                         'Dry run mode: no changes will be written')
 
+                # initialise the selected plugin
                 data_dir = __init_user_plugin_directory()
                 logging.getLogger(__name__).debug(
                     'User plugin and data directory: %s', data_dir)
@@ -251,7 +279,7 @@ def run_scriptabit(plugin_name=''):
                     return (
                         updating and not
                         (config.max_updates > 0 and
-                         count >= config.max_updates))
+                        count >= config.max_updates))
 
                 while keep_updating():
                     logging.getLogger(__name__).info(

@@ -313,3 +313,17 @@ Changelog
 * Expanding the banking feature to allow mana and health banks as well as gold.
 * Removed the bank name option, as it made supporting different bank types more 
   complicated.
+
+1.16.0 (
+-----------------------------------------
+
+* New tasks plugin. Run with ``sb-tasks``.
+* Added minimum requests version to setup.py.
+* Added entry point for spellcasting plugin ``sb-cast``.
+* Cleaned up argument parsing, so running a plugin entry-point with the --help
+  argument only shows help for that plugin.
+* Running ``scriptabit --help`` now only shows help for the main application
+  rather than all possible args from all plugins.
+* Added documentation for spell casting.
+* Added fallback help display so that plugins that fail to define a ``print_help``
+  function will use the default help display.

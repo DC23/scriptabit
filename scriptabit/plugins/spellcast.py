@@ -46,17 +46,35 @@ class Spellcast(scriptabit.IPlugin):
         parser = super().get_arg_parser()
 
         parser.add(
-            '--buff-target',
+            '--target',
             required=False,
             default=None,
             type=str,
-            help='buff target UUID')
+            help='UUID of the spell target')
 
         parser.add(
             '--cast-skill',
             required=False,
             default=None,
             type=str,
+            choices=[
+                'fireball',
+                'mpHeal',
+                'earth',
+                'frost',
+                'smash',
+                'defensiveStance',
+                'valorousPresence',
+                'intimidate',
+                'pickPocket',
+                'backStab',
+                'toolsOfTrade',
+                'stealth',
+                'heal',
+                'protectAura',
+                'brightness',
+                'healAll',
+                ],
             help='cast a skill by API skill code')
 
         parser.add(
@@ -65,6 +83,8 @@ class Spellcast(scriptabit.IPlugin):
             action='store_true',
             help='''Preserves the user HP at the pre-spell level.
 This can be combined with Blessing to heal the party but not the user.''')
+
+        self.print_help = parser.print_help
 
         return parser
 
@@ -111,7 +131,7 @@ This can be combined with Blessing to heal the party but not the user.''')
         is finished and the application should shut down.
         """
         skill = self._config.cast_skill
-        target = self._config.buff_target
+        target = self._config.target
         count = self._config.max_updates or 1
         if skill and count:
             logging.getLogger(__name__).info(
@@ -132,6 +152,8 @@ This can be combined with Blessing to heal the party but not the user.''')
                         break
 
             self._restore_hp()
+        else:
+            self._print_help()
 
         # return False if finished, and True to be updated again.
         return False

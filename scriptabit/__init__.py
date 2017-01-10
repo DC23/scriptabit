@@ -23,6 +23,8 @@ from .scriptabit import (
     start_health,
     start_pets,
     start_trello,
+    start_tasks,
+    start_spellcast,
 )
 from .task import (
     Task,

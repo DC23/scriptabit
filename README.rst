@@ -117,6 +117,7 @@ application name:
 - `sb-health` is a shortcut for `scriptabit --run health_effects`
 - `sb-pets` is a shortcut for `scriptabit --run pet_care`
 - `sb-trello` is a shortcut for `scriptabit --run trello`
+- `sb-tasks` is a shortcut for `scriptabit --run tasks`
 
 When using the shortcuts, all other command-line arguments are the same as when
 running `scriptabit`.

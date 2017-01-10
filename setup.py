@@ -63,7 +63,7 @@ setup(
         #   4 - Beta
         #   5 - Production/Stable
         #   6 - Mature
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
 
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
@@ -107,7 +107,7 @@ setup(
         'iso8601',
         'pytz',
         'py-trello',
-        'requests',
+        'requests>=2.4.2',
         'tzlocal',
         'yapsy',
     ],
@@ -149,6 +149,8 @@ setup(
             'sb-health = scriptabit:start_health',
             'sb-pets = scriptabit:start_pets',
             'sb-trello = scriptabit:start_trello',
+            'sb-tasks = scriptabit:start_tasks',
+            'sb-cast = scriptabit:start_spellcast',
         ],
     },
 

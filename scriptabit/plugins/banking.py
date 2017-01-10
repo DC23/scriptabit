@@ -112,6 +112,14 @@ amount.''')
             choices=['gold', 'mana', 'health'],
             help='Banking: select the type of bank.')
 
+        # parser.add(
+            # '--bank-health-xp-limit',
+            # required=False,
+            # default='100',
+            # type=int,
+            # help='''Banking: Health deposits are only allowed if progress to the
+# next level is less than the given percentage.''')
+
         self.print_help = parser.print_help
         return parser
 

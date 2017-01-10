@@ -138,6 +138,7 @@ def get_configuration(basename='scriptabit.cfg', parents=None):
 
     parser = configargparse.ArgParser(
         formatter_class=configargparse.ArgumentDefaultsRawHelpFormatter,
+        add_help=False,
         parents=parents or [],
         default_config_files=[
             resource_filename(
@@ -224,4 +225,11 @@ Note that plugins can still exit before the limit is reached.''')
 for plugins that run in the update loop. Note that plugins may ignore or limit
 this setting if the value is inappropriate for the specific plugin.''')
 
-    return parser.parse_args(), parser.print_help
+    parser.add(
+        '-h',
+        '--help',
+        required=False,
+        action='store_true',
+        help='''Print help''')
+
+    return parser.parse_known_args()[0], parser.print_help
