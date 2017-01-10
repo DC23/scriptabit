@@ -46,11 +46,11 @@ class Spellcast(scriptabit.IPlugin):
         parser = super().get_arg_parser()
 
         parser.add(
-            '--buff-target',
+            '--target',
             required=False,
             default=None,
             type=str,
-            help='buff target UUID')
+            help='UUID of the spell target')
 
         parser.add(
             '--cast-skill',
