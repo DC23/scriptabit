@@ -180,6 +180,9 @@ def run_scriptabit(plugin_name=''):
         plugin_name (str): The optional plugin. If supplied, then this plugin is
             executed regardless of the actual command line arguments.
     """
+    # TODO: This function is getting very messy. I should refactor to clean up
+    # the program flow.
+
     config, help_function, plugin_manager = __init_config_and_plugin_manager()
 
     if plugin_name:
@@ -249,53 +252,55 @@ def run_scriptabit(plugin_name=''):
 
                 if config.help:
                     plugin.print_help()
-                else:
-                    if config.dry_run:
-                        if not plugin.supports_dry_runs():
-                            raise PluginError('Dry run mode not supported')
+                    return
 
+                if config.dry_run:
+                    if not plugin.supports_dry_runs():
+                        raise PluginError('Dry run mode not supported')
+
+                    logging.getLogger(__name__).info(
+                        'Dry run mode: no changes will be written')
+
+                # initialise the selected plugin
+                data_dir = __init_user_plugin_directory()
+                logging.getLogger(__name__).debug(
+                    'User plugin and data directory: %s', data_dir)
+                plugin.initialise(config, habitica_service, data_dir)
+
+                # Finally, run it
+                updating = True
+                count = 0
+
+                def keep_updating():
+                    """ Test for whether another update is required """
+                    return (
+                        updating and not
+                        (config.max_updates > 0 and
+                        count >= config.max_updates))
+
+                while keep_updating():
+                    logging.getLogger(__name__).info(
+                        "%s update %d @ %s",
+                        config.run, count, datetime.now().strftime("%c"))
+
+                    try:
+                        updating = plugin.update()
+                    except Exception as e:
+                        logging.getLogger(__name__).error(
+                            'Plugin Update failed')
+                        logging.getLogger(__name__).error(e, exc_info=True)
+
+                    count += 1
+
+                    # Only sleep if we have another update pending
+                    if keep_updating():
                         logging.getLogger(__name__).info(
-                            'Dry run mode: no changes will be written')
+                            "Sleeping for %f minutes",
+                            plugin.update_interval_minutes())
+                        sleep(plugin.update_interval_seconds())
 
-                    data_dir = __init_user_plugin_directory()
-                    logging.getLogger(__name__).debug(
-                        'User plugin and data directory: %s', data_dir)
-                    plugin.initialise(config, habitica_service, data_dir)
-
-                    # Finally, run it
-                    updating = True
-                    count = 0
-
-                    def keep_updating():
-                        """ Test for whether another update is required """
-                        return (
-                            updating and not
-                            (config.max_updates > 0 and
-                            count >= config.max_updates))
-
-                    while keep_updating():
-                        logging.getLogger(__name__).info(
-                            "%s update %d @ %s",
-                            config.run, count, datetime.now().strftime("%c"))
-
-                        try:
-                            updating = plugin.update()
-                        except Exception as e:
-                            logging.getLogger(__name__).error(
-                                'Plugin Update failed')
-                            logging.getLogger(__name__).error(e, exc_info=True)
-
-                        count += 1
-
-                        # Only sleep if we have another update pending
-                        if keep_updating():
-                            logging.getLogger(__name__).info(
-                                "Sleeping for %f minutes",
-                                plugin.update_interval_minutes())
-                            sleep(plugin.update_interval_seconds())
-
-                    print()
-                    logging.getLogger(__name__).info("** %s done", config.run)
+                print()
+                logging.getLogger(__name__).info("** %s done", config.run)
 
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)
