@@ -248,10 +248,13 @@ def run_scriptabit(plugin_name=''):
 
                 # Now replace our config object with one that contains
                 # args for the selected plugin
-                config, _ = __get_configuration(plugin)
+                config, help_function = __get_configuration(plugin)
 
                 if config.help:
-                    plugin.print_help()
+                    if plugin.print_help:
+                        plugin.print_help()
+                    else:
+                        help_function()
                     return
 
                 if config.dry_run:

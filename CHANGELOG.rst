@@ -324,3 +324,6 @@ Changelog
   argument only shows help for that plugin.
 * Running ``scriptabit --help`` now only shows help for the main application
   rather than all possible args from all plugins.
+* Added documentation for spell casting.
+* Added fallback help display so that plugins that fail to define a ``print_help``
+  function will use the default help display.
