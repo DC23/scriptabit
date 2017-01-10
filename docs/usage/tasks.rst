@@ -18,5 +18,6 @@ The supported task features are:
 Options are:
 
 - ``--verbose``: Verbose output.
+- ``--show-uuid``: Show the task UUID when listing tasks.
 - ``--task-type``: Specify the type of task to operate on. Values are `habits`,
   `dailies`, `todos`, `rewards`, or `all`.

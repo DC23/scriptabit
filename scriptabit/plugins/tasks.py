@@ -69,6 +69,12 @@ class Tasks(sb.IPlugin):
             choices=['habits', 'dailies', 'todos', 'rewards', 'all'],
             help='Specify the task type to operate on')
 
+        parser.add(
+            '--show-uuid',
+            required=False,
+            action='store_true',
+            help='''Show the task UUID. Useful for finding spell targets.''')
+
         self.print_help = parser.print_help
         return parser
 
@@ -121,7 +127,8 @@ class Tasks(sb.IPlugin):
             self.task_type = None
             self.task_type_name = 'tasks'
         else:
-            self.task_type = sb.HabiticaTaskTypes.__members__[self._config.task_type]
+            self.task_type = sb.HabiticaTaskTypes.__members__[
+                self._config.task_type]
             self.task_type_name = self.task_type.value
 
         if self._config.list_tasks:
@@ -156,5 +163,7 @@ class Tasks(sb.IPlugin):
         for t in tasks:
             if self._config.verbose:
                 pprint(t)
+            elif self._config.show_uuid:
+                print('{0} ({1})'.format(t['text'], t['id']))
             else:
                 print(t['text'])

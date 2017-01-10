@@ -13,10 +13,11 @@ Example command line::
     sb-cast --cast-skill toolsOfTrade
 
 You can obtain the UUID of a task by using the tasks plugin
-to list tasks with the ``verbose`` flag::
+to list tasks with the ``show-uuid`` or ``verbose`` flags::
 
-    sb-task --list-tasks --verbose
+    sb-task --list-tasks --show-uuid
 
+If using the ``verbose`` flag, all information will be displayed.
 The ``id`` or ``_id`` field contains the required value.
 
 For casting skills on other party members, you can obtain the player UUID from
