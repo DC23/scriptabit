@@ -131,7 +131,7 @@ This can be combined with Blessing to heal the party but not the user.''')
         is finished and the application should shut down.
         """
         skill = self._config.cast_skill
-        target = self._config.buff_target
+        target = self._config.target
         count = self._config.max_updates or 1
         if skill and count:
             logging.getLogger(__name__).info(
