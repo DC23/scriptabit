@@ -62,6 +62,12 @@ class Tasks(sb.IPlugin):
             help='''List all tasks.''')
 
         parser.add(
+            '--list-tags',
+            required=False,
+            action='store_true',
+            help='''List all tags.''')
+
+        parser.add(
             '--task-type',
             required=False,
             default='all',
@@ -100,15 +106,6 @@ class Tasks(sb.IPlugin):
         """
         super().initialise(configuration, habitica_service, data_dir)
 
-    def update_interval_minutes(self):
-        """ Indicates the required update interval in minutes.
-
-        Returns: float: The required update interval in minutes.
-        """
-        # minimum update frequency of once every 1 minute, or whatever the
-        # user specified
-        return max(5, self._config.update_frequency)
-
     def update(self):
         """ This update method will be called once on every update cycle,
         with the frequency determined by the value returned from
@@ -135,6 +132,8 @@ class Tasks(sb.IPlugin):
             self.list_tasks()
         elif self._config.delete_tasks:
             self.delete_tasks()
+        elif self._config.list_tags:
+            self.list_tags()
         else:
             print()
             self.print_help()
@@ -167,3 +166,15 @@ class Tasks(sb.IPlugin):
                 print('{0} ({1})'.format(t['text'], t['id']))
             else:
                 print(t['text'])
+
+    def list_tags(self):
+        """Lists all tags"""
+        print('*** Listing tags ***')
+        print()
+
+        tags = self._hs.get_tags()
+        for t in tags:
+            if self._config.verbose:
+                pprint(t)
+            else:
+                print(t['name'])
