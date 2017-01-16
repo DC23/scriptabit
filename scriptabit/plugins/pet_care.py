@@ -50,25 +50,6 @@ class PetCare(scriptabit.IPlugin):
         # special potions, or rare list is by default a quest pet
         # self.__quest_pets = [
             # 'Armadillo',
-            # 'SeaTurtle',
-            # 'Axolotl',
-            # 'Treeling',
-            # 'Falcon',
-            # 'Snail',
-            # 'Monkey',
-            # 'Sabretooth',
-            # 'Unicorn',
-            # 'Snake',
-            # 'Frog',
-            # 'Horse',
-            # 'Cheetah',
-            # '',
-            # '',
-            # '',
-            # '',
-            # '',
-            # '',
-        # ]
 
         self.__preferred_foods = {
             'Base': ['Meat'],
@@ -101,6 +82,9 @@ class PetCare(scriptabit.IPlugin):
             'Thunderstorm',
             'Spooky',
             'Ghost',
+            'RoyalPurple',
+            'Holly',
+            'Peppermint',
         ]
 
         # augment the preferred foods with the special foods
