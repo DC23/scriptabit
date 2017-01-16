@@ -470,6 +470,16 @@ class HabiticaService(object):
 
         return return_tags
 
+    def delete_tags(self, tags):
+        """ Delete a list of tag objects.
+
+        Args:
+            tags (list): The list of tag objects.
+        """
+        for t in tags:
+            response = self.__delete('tags/{0}'.format(t['id']))
+            response.raise_for_status()
+
     def delete_checklist_item(self, task_id, item_id):
         """ Delete a checklist item.
 

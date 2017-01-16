@@ -74,6 +74,12 @@ class Tasks(sb.IPlugin):
             help='''List unused tags.''')
 
         parser.add(
+            '--delete-unused-tags',
+            required=False,
+            action='store_true',
+            help='''Delete unused tags.''')
+
+        parser.add(
             '--task-type',
             required=False,
             default='all',
@@ -142,6 +148,13 @@ class Tasks(sb.IPlugin):
             self.list_tags()
         elif self._config.list_unused_tags:
             self.list_unused_tags()
+        elif self._config.delete_unused_tags:
+            if self._config.dry_run:
+                logging.getLogger(__name__).debug(
+                    "Dry run, falling back to listing unused tags")
+                self.list_unused_tags()
+            else:
+                self.delete_unused_tags()
         else:
             print()
             self.print_help()
@@ -185,6 +198,16 @@ class Tasks(sb.IPlugin):
         """Lists unused tags"""
         print('*** Listing unused tags ***')
         print()
+        self.__print_tags(self.__get_unused_tags().values())
+
+    def delete_unused_tags(self):
+        """Deletes unused tags"""
+        print('*** Deleting unused tags ***')
+        print()
+        self._hs.delete_tags(self.__get_unused_tags().values())
+
+    def __get_unused_tags(self):
+        """gets the dictionary of unused tags"""
         tags = self._hs.get_tags()
         tasks = self._hs.get_tasks()
 
@@ -204,7 +227,7 @@ class Tasks(sb.IPlugin):
                     del unused_tags[tag['id']]
                     break
 
-        self.__print_tags(unused_tags.values())
+        return unused_tags
 
     def __print_tags(self, tags):
         """ print the supplied list of tags.
@@ -212,8 +235,11 @@ class Tasks(sb.IPlugin):
         Args:
             tags (list): The tags to print
         """
-        for t in tags:
-            if self._config.verbose:
-                pprint(t)
-            else:
-                print(t['name'])
+        if not tags:
+            print("No tags")
+        else:
+            for t in tags:
+                if self._config.verbose:
+                    pprint(t)
+                else:
+                    print(t['name'])
