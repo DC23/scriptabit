@@ -187,7 +187,7 @@ class CsvTasks(scriptabit.IPlugin):
     @staticmethod
     def __parse_bool(csv_value):
         """parse a bool from a string value"""
-        if not csv_value or csv_value.lower() == 'false':
+        if not csv_value or csv_value.lower() in ['0', 'false']:
             return 'false'
         return 'true'
 

@@ -14,6 +14,15 @@ The supported task features are:
   of the tasks is made. Otherwise just the names are listed.
 - ``--delete-tasks``
   Deletes all tasks of the specified type.
+- ``--list-tags``
+  List all tags.
+- ``--list-unused-tags``
+  List all tags that are not assigned to any tasks.
+- ``--delete-unused-tags``
+  Delete all tags that are not assigned to any tasks. Note that if the
+  ``dry-run`` flag is also given, this will revert to simply listing the unused
+  tags.
+    
 
 Options are:
 
@@ -21,3 +30,5 @@ Options are:
 - ``--show-uuid``: Show the task UUID when listing tasks.
 - ``--task-type``: Specify the type of task to operate on. Values are `habits`,
   `dailies`, `todos`, `rewards`, or `all`.
+- ``--dry-run``: List the actions that would be carried out, but don't change
+  anything on the server.
