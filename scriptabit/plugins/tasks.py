@@ -68,6 +68,12 @@ class Tasks(sb.IPlugin):
             help='''List all tags.''')
 
         parser.add(
+            '--list-unused-tags',
+            required=False,
+            action='store_true',
+            help='''List unused tags.''')
+
+        parser.add(
             '--task-type',
             required=False,
             default='all',
@@ -134,6 +140,8 @@ class Tasks(sb.IPlugin):
             self.delete_tasks()
         elif self._config.list_tags:
             self.list_tags()
+        elif self._config.list_unused_tags:
+            self.list_unused_tags()
         else:
             print()
             self.print_help()
@@ -171,8 +179,39 @@ class Tasks(sb.IPlugin):
         """Lists all tags"""
         print('*** Listing tags ***')
         print()
+        self.__print_tags(self._hs.get_tags())
 
+    def list_unused_tags(self):
+        """Lists unused tags"""
+        print('*** Listing unused tags ***')
+        print()
         tags = self._hs.get_tags()
+        tasks = self._hs.get_tasks()
+
+        # simple m*n first implementation. No need to do something fancier
+        # unless this is too slow
+
+        # first, assume that all tags are unused
+        unused_tags = {t['id']:t for t in tags}
+
+        # Then, try to disprove that assumption by finding at least one task
+        # that uses the tag
+        for tag in tags:
+            for task in tasks:
+                if tag['id'] in task['tags']:
+                    logging.getLogger(__name__).debug(
+                        'tag %s is used', tag['name'])
+                    del unused_tags[tag['id']]
+                    break
+
+        self.__print_tags(unused_tags.values())
+
+    def __print_tags(self, tags):
+        """ print the supplied list of tags.
+
+        Args:
+            tags (list): The tags to print
+        """
         for t in tags:
             if self._config.verbose:
                 pprint(t)
