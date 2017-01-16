@@ -41,34 +41,13 @@ class PetCare(scriptabit.IPlugin):
             'Wolf',
         ]
 
-        # TODO: other rare pets
         self.__rare_pets = [
             'Wolf-Veteran',
+            'Mammoth-Base',
+            'JackOLantern-Base',
+            'Turkey-Base',
+            'BearCub-Polar',
         ]
-
-        # I don't need this list. Any pet that is not in the base pets,
-        # special potions, or rare list is by default a quest pet
-        # self.__quest_pets = [
-            # 'Armadillo',
-            # 'SeaTurtle',
-            # 'Axolotl',
-            # 'Treeling',
-            # 'Falcon',
-            # 'Snail',
-            # 'Monkey',
-            # 'Sabretooth',
-            # 'Unicorn',
-            # 'Snake',
-            # 'Frog',
-            # 'Horse',
-            # 'Cheetah',
-            # '',
-            # '',
-            # '',
-            # '',
-            # '',
-            # '',
-        # ]
 
         self.__preferred_foods = {
             'Base': ['Meat'],
@@ -96,13 +75,6 @@ class PetCare(scriptabit.IPlugin):
             'Golden',
         ]
 
-        self.__special_potions = [
-            'Floral',
-            'Thunderstorm',
-            'Spooky',
-            'Ghost',
-        ]
-
         # augment the preferred foods with the special foods
         for potion in self.__base_potions:
             self.__preferred_foods[potion].append('Cake_{0}'.format(potion))
@@ -112,9 +84,6 @@ class PetCare(scriptabit.IPlugin):
         self.__all_foods = []
         for f in self.__preferred_foods.values():
             self.__all_foods.extend(f)
-
-        for potion in self.__special_potions:
-            self.__preferred_foods[potion] = self.__all_foods
 
     def get_arg_parser(self):
         """Gets the argument parser containing any CLI arguments for the plugin.
@@ -266,7 +235,8 @@ class PetCare(scriptabit.IPlugin):
             animal (str): The animal type.
             potion (str): The potion type.
         """
-        return potion in self.__special_potions
+        return not self.is_rare_pet(pet, animal, potion) and \
+                potion not in self.__base_potions
 
     def is_rare_pet(self, pet, animal, potion):
         """ Is this a rare pet?
@@ -315,7 +285,7 @@ class PetCare(scriptabit.IPlugin):
 
         for p, q in self.__items['hatchingPotions'].items():
             if (base and p in self.__base_potions) or\
-                    (magic and p in self.__special_potions):
+                    (magic and p not in self.__base_potions):
                 hp[p] = q
 
         return hp
@@ -425,9 +395,10 @@ class PetCare(scriptabit.IPlugin):
                 If no suitable food is available, then None is returned.
         """
         # split the pet name
-        _, potion = pet.split('-')
+        animal, potion = pet.split('-')
 
-        if self.__any_food:
+        # magic pets eat any food
+        if self.__any_food or self.is_magic_pet(pet, animal, potion):
             for food, quantity in self.__items['food'].items():
                 if quantity > 0:
                     return food

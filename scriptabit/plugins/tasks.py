@@ -62,6 +62,24 @@ class Tasks(sb.IPlugin):
             help='''List all tasks.''')
 
         parser.add(
+            '--list-tags',
+            required=False,
+            action='store_true',
+            help='''List all tags.''')
+
+        parser.add(
+            '--list-unused-tags',
+            required=False,
+            action='store_true',
+            help='''List unused tags.''')
+
+        parser.add(
+            '--delete-unused-tags',
+            required=False,
+            action='store_true',
+            help='''Delete unused tags.''')
+
+        parser.add(
             '--task-type',
             required=False,
             default='all',
@@ -100,15 +118,6 @@ class Tasks(sb.IPlugin):
         """
         super().initialise(configuration, habitica_service, data_dir)
 
-    def update_interval_minutes(self):
-        """ Indicates the required update interval in minutes.
-
-        Returns: float: The required update interval in minutes.
-        """
-        # minimum update frequency of once every 1 minute, or whatever the
-        # user specified
-        return max(5, self._config.update_frequency)
-
     def update(self):
         """ This update method will be called once on every update cycle,
         with the frequency determined by the value returned from
@@ -135,6 +144,17 @@ class Tasks(sb.IPlugin):
             self.list_tasks()
         elif self._config.delete_tasks:
             self.delete_tasks()
+        elif self._config.list_tags:
+            self.list_tags()
+        elif self._config.list_unused_tags:
+            self.list_unused_tags()
+        elif self._config.delete_unused_tags:
+            if self._config.dry_run:
+                logging.getLogger(__name__).debug(
+                    "Dry run, falling back to listing unused tags")
+                self.list_unused_tags()
+            else:
+                self.delete_unused_tags()
         else:
             print()
             self.print_help()
@@ -167,3 +187,59 @@ class Tasks(sb.IPlugin):
                 print('{0} ({1})'.format(t['text'], t['id']))
             else:
                 print(t['text'])
+
+    def list_tags(self):
+        """Lists all tags"""
+        print('*** Listing tags ***')
+        print()
+        self.__print_tags(self._hs.get_tags())
+
+    def list_unused_tags(self):
+        """Lists unused tags"""
+        print('*** Listing unused tags ***')
+        print()
+        self.__print_tags(self.__get_unused_tags().values())
+
+    def delete_unused_tags(self):
+        """Deletes unused tags"""
+        print('*** Deleting unused tags ***')
+        print()
+        self._hs.delete_tags(self.__get_unused_tags().values())
+
+    def __get_unused_tags(self):
+        """gets the dictionary of unused tags"""
+        tags = self._hs.get_tags()
+        tasks = self._hs.get_tasks()
+
+        # simple m*n first implementation. No need to do something fancier
+        # unless this is too slow
+
+        # first, assume that all tags are unused
+        unused_tags = {t['id']:t for t in tags}
+
+        # Then, try to disprove that assumption by finding at least one task
+        # that uses the tag
+        for tag in tags:
+            for task in tasks:
+                if tag['id'] in task['tags']:
+                    logging.getLogger(__name__).debug(
+                        'tag %s is used', tag['name'])
+                    del unused_tags[tag['id']]
+                    break
+
+        return unused_tags
+
+    def __print_tags(self, tags):
+        """ print the supplied list of tags.
+
+        Args:
+            tags (list): The tags to print
+        """
+        if not tags:
+            print("No tags")
+        else:
+            for t in tags:
+                if self._config.verbose:
+                    pprint(t)
+                else:
+                    print(t['name'])

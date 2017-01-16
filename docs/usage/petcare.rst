@@ -45,7 +45,7 @@ Feed preferred foods to standard pets only::
 
 Feed any food to quest pets only::
 
-    sb-pets --feed-pets --no-base-pets --quest-pets
+    sb-pets --feed-pets --no-base-pets --quest-pets --any-pet-food
 
 Hatch all available standard pets::
     

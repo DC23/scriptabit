@@ -1,0 +1,7 @@
+name,description,type,difficulty,attribute,up,down,value,tags
+a task,first task,todo,easy,strength,,,,a
+a daily,daily do,daily,hard,str,,,,"a,b,c"
+up and down,up and down,habit,medium,con,1,1,,b
+up only,,habit,,,1,0,,
+down only,,habit,,,0,1,,
+a reward,should cost 10 gold,reward,hard,,,,10,

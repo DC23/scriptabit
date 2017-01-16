@@ -308,13 +308,13 @@ Changelog
 -----------------------------------------
 
 * Adding increment functions for XP, MP, HP. I already have direct set functions
-  but the new ones are easier when you just want to increment the values up or 
+  but the new ones are easier when you just want to increment the values up or
   down.
 * Expanding the banking feature to allow mana and health banks as well as gold.
-* Removed the bank name option, as it made supporting different bank types more 
+* Removed the bank name option, as it made supporting different bank types more
   complicated.
 
-1.16.0 (
+1.16.0 (sometime in January 2017)
 -----------------------------------------
 
 * New tasks plugin. Run with ``sb-tasks``.
@@ -327,3 +327,15 @@ Changelog
 * Added documentation for spell casting.
 * Added fallback help display so that plugins that fail to define a ``print_help``
   function will use the default help display.
+
+1.17.0 (Monday January 16, 2017)
+-----------------------------------------
+
+* Changed pet_care logic so it detects quest and magic pets implicitly. This
+  means I don't need to manually update the code for new quest or magic pets.
+* Added tag management features to ``sb-tasks``. You can now list tags, list
+  unused tags, and delete unused tags. I didn't add a function to delete a tag
+  by name as this is trivial to do in the web app.
+* Fixed the issue in 1.16.0 where plugin names would log as "None".
+* Added sample task CSV file showing the required layout for ``sb-csv``
+* Updated documentation for pet care and tasks.

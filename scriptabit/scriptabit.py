@@ -243,7 +243,7 @@ def run_scriptabit(plugin_name=''):
                     raise PluginError('plugin %s not found' % config.run)
 
                 # Second, activate it
-                plugin_manager.activatePluginByName(config.run)
+                plugin_manager.activatePluginByName(plugin_info.name)
                 plugin = plugin_info.plugin_object
 
                 # Now replace our config object with one that contains
@@ -284,7 +284,7 @@ def run_scriptabit(plugin_name=''):
                 while keep_updating():
                     logging.getLogger(__name__).info(
                         "%s update %d @ %s",
-                        config.run, count, datetime.now().strftime("%c"))
+                        plugin_info.name, count, datetime.now().strftime("%c"))
 
                     try:
                         updating = plugin.update()
@@ -303,7 +303,7 @@ def run_scriptabit(plugin_name=''):
                         sleep(plugin.update_interval_seconds())
 
                 print()
-                logging.getLogger(__name__).info("** %s done", config.run)
+                logging.getLogger(__name__).info("** %s done", plugin_info.name)
 
     except Exception as exception:
         logging.getLogger(__name__).error(exception, exc_info=True)
