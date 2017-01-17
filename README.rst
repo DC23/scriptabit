@@ -134,6 +134,17 @@ application name:
 When using the shortcuts, all other command-line arguments are the same as when
 running `scriptabit`.
 
+The Notification Panel
+----------------------
+
+By default, most scriptabit operations update a scoreless habit in Habitica with
+some status information. This can be useful when you have some functions running
+in an update loop.
+
+The use of this panel can be controlled with the ``use-notification-panel``
+argument, either on the command line or by setting a value into the
+scriptabit.cfg file. Set to 0 or False to suppress the panel.
+
 Writing Plugins
 ---------------
 
