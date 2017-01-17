@@ -3,20 +3,32 @@ Readme
 
 Python scripting and scenarios for Habitica.
 
-.. image:: https://travis-ci.org/DC23/scriptabit.svg?branch=master
+.. image:: https://img.shields.io/travis/DC23/scriptabit.svg
     :target: https://travis-ci.org/DC23/scriptabit
+    :alt: Travis CI
 
 .. image:: https://readthedocs.org/projects/scriptabit/badge/?version=latest
     :target: http://scriptabit.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. image:: https://img.shields.io/pypi/v/scriptabit.svg
+    :target: https://pypi.python.org/pypi/scriptabit
+    :alt: PyPI
+
+.. image:: https://img.shields.io/pypi/l/scriptabit.svg
+    :target: https://opensource.org/licenses/Apache-2.0
+    :alt: Apache 2.0 License
+
+.. image:: https://img.shields.io/pypi/pyversions/scriptabit.svg
+    :target: https://github.com/DC23/scriptabit
 
 * Free software: Apache 2.0
 * Homepage: https://github.com/DC23/scriptabit
 * Documentation: https://scriptabit.readthedocs.org
 * Version: 1.17.0
 
-**Note** that apart from bugs, I don't use the GitHub issue list for
-planning. Task and feature planning is carried out in a private
+**Note** You can use the Github issues for bugs and feature requests, however
+most task and feature planning is carried out in a private
 `Trello <https://trello.com>`_ board. Access can be provided on request.
 
 Installation
