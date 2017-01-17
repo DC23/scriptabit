@@ -11,13 +11,13 @@ Python scripting and scenarios for Habitica.
     :target: http://scriptabit.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://img.shields.io/pypi/v/scriptabit.svg
-    :target: https://pypi.python.org/pypi/scriptabit
-    :alt: PyPI
-
 .. image:: https://img.shields.io/pypi/l/scriptabit.svg
     :target: https://opensource.org/licenses/Apache-2.0
     :alt: Apache 2.0 License
+
+.. image:: https://img.shields.io/pypi/v/scriptabit.svg
+    :target: https://pypi.python.org/pypi/scriptabit
+    :alt: PyPI
 
 .. image:: https://img.shields.io/pypi/pyversions/scriptabit.svg
     :target: https://github.com/DC23/scriptabit
