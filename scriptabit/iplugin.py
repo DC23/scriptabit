@@ -97,9 +97,18 @@ class IPlugin(YapsyIPlugin):
         """
         logging.getLogger(__name__).info(message)
 
-        panel = kwargs.pop('panel', True)
+        # The decision on the update panel is a function of 3 things:
+        # whether the panel arg is true,
+        # whether the global panel flag is true,
+        # and whether it is a dry run or not.
+        panel = kwargs.pop('panel', True) and \
+            self._config.use_notification_panel and not \
+            self.dry_run
 
-        if panel and not self.dry_run:
+        print('notification panel: ', self._config.use_notification_panel)
+        print('panel: ', panel)
+
+        if panel:
             UtilityFunctions.upsert_notification(
                 self._hs,
                 text=message,

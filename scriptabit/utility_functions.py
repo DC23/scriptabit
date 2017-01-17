@@ -117,6 +117,20 @@ class UtilityFunctions(object):
             action='store_true',
             help='''Run the current test function''')
 
+        def str2bool(v):
+            "argparser does not have good support for boolean args :("
+            return v.lower() in ('yes', 'true', '1')
+
+        parser.register('type', 'bool', str2bool)
+
+        parser.add(
+            '--use-notification-panel',
+            required=False,
+            type=str2bool,
+            default='1',
+            choices=['yes', 'no', 'true', 'false', 1, 0],
+            help='Controls whether the notification panel in Habitica will be updated or not')
+
         return parser
 
     @property

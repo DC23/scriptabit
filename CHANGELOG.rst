@@ -344,4 +344,5 @@ Changelog
 -----------------------------------------
 
 * Very minor changes to PyPI metadata and README file.
-* Made the update and creation of the notification panel optional.
+* Made the update and creation of the notification panel optional. Use the
+  `use-notification-panel` command line argument to control the behaviour.

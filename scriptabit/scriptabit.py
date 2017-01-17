@@ -209,6 +209,8 @@ def run_scriptabit(plugin_name=''):
                 section=config.auth_section)
 
             logging.getLogger(__name__).info('verbose mode: %s', config.verbose)
+            logging.getLogger(__name__).debug('Use notification panel: %s',
+                                              config.use_notification_panel)
 
             # Habitica Service
             habitica_service = HabiticaService(
