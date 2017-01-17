@@ -339,3 +339,9 @@ Changelog
 * Fixed the issue in 1.16.0 where plugin names would log as "None".
 * Added sample task CSV file showing the required layout for ``sb-csv``
 * Updated documentation for pet care and tasks.
+
+1.17.2 (Tuesday January 17, 2017) 
+-----------------------------------------
+
+* Very minor changes to PyPI metadata and README file.
+* Made the update and creation of the notification panel optional.
