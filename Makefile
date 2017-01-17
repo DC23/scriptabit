@@ -99,7 +99,7 @@ pdf: latex
 alldocs: html latex pdf
 
 .PHONY: register
-register: 
+register:
 	python setup.py register
 
 .PHONY: upload

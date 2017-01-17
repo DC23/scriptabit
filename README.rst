@@ -20,7 +20,7 @@ Python scripting and scenarios for Habitica.
     :alt: PyPI
 
 .. image:: https://img.shields.io/pypi/pyversions/scriptabit.svg
-    :target: https://github.com/DC23/scriptabit
+    :target: https://www.python.org
 
 * Free software: Apache 2.0
 * Homepage: https://github.com/DC23/scriptabit
