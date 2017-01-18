@@ -287,12 +287,10 @@ The default is to only synchronise the task names.''')
             ':mailbox_with_mail:' if total else ':mailbox_with_no_mail:',
             total)
 
-        if not self.dry_run:
-            UtilityFunctions.upsert_notification(
-                self._hs,
-                text=text,
-                notes=str(sync_stats),
-                heading_level=0)
+        self.notify(
+            message=text,
+            notes=str(sync_stats),
+            heading_level=0)
 
     @staticmethod
     def __load_authentication_credentials(

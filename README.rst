@@ -134,6 +134,29 @@ application name:
 When using the shortcuts, all other command-line arguments are the same as when
 running `scriptabit`.
 
+Common Options
+==============
+
+Notification Panel
+++++++++++++++++++
+
+By default, most scriptabit operations update a scoreless habit in Habitica with
+some status information. This can be useful when you have some functions running
+in an update loop.
+
+The use of this panel can be controlled with the ``use-notification-panel``
+argument, either on the command line or by setting a value into the
+scriptabit.cfg file. Set to 0 or False to suppress the panel.
+
+Habitica Tags
++++++++++++++
+
+By default, scriptabit applies the `scriptabit` tag to all the tasks it creates
+in Habitica. This behaviour can be controlled with the ``--tags`` option. It
+accepts a comma-separated list of tags.
+
+To disable the use of tags, set the option to an empty string: ``--tags ""``
+
 Writing Plugins
 ---------------
 

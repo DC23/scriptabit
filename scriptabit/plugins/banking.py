@@ -182,14 +182,14 @@ amount.''')
         self.__bank = self._hs.get_task(self.__bank_traits['alias'])
         if not self.__bank:
             logging.getLogger(__name__).info('Creating new bank task')
-            tag = self._hs.create_tags(['scriptabit'])
+            tags = self._hs.create_tags(self._config.tags)
             self.__bank = self._hs.create_task({
                 'alias': self.__bank_traits['alias'],
                 'attribute': 'per',
                 'priority': 1,
                 'text': self.__bank_traits['name'],
                 'type': 'reward',
-                'tags': [tag[0]['id']],
+                'tags': [t['id'] for t in tags],
                 'value': 0})
 
         # Get the user and bank balances

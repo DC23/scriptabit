@@ -91,18 +91,25 @@ class IPlugin(YapsyIPlugin):
             notes (str): the extra text/notes.
             heading_level (int): If > 0, Markdown heading syntax is
                 prepended to the message text.
-            tags (list): Optional list of tags to be applied to
-                the notification.
             alias (str): the notification alias.
         """
         logging.getLogger(__name__).info(message)
 
-        panel = kwargs.pop('panel', True)
+        # The decision on the update panel is a function of 3 things:
+        # whether the panel arg is true,
+        # whether the global panel flag is true,
+        # and whether it is a dry run or not.
+        panel = kwargs.pop('panel', True) and \
+            self._config.use_notification_panel and not \
+            self.dry_run
 
-        if panel and not self.dry_run:
+        print('tags: ', self._config.tags)
+
+        if panel:
             UtilityFunctions.upsert_notification(
                 self._hs,
                 text=message,
+                tags=self._config.tags,
                 **kwargs)
 
     def activate(self):

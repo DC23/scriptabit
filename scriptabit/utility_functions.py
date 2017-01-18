@@ -117,6 +117,32 @@ class UtilityFunctions(object):
             action='store_true',
             help='''Run the current test function''')
 
+        def str2bool(v):
+            "argparser does not have good support for boolean args :("
+            return v.lower() in ('yes', 'true', '1')
+
+        def csv2list(v):
+            "argparse does not deal gracefully with comma separated list args"
+            if not v:
+                return []
+            else:
+                return v.split(',')
+
+        parser.add(
+            '--use-notification-panel',
+            required=False,
+            type=str2bool,
+            default='1',
+            choices=['yes', 'no', 'true', 'false', 1, 0],
+            help='Controls whether the notification panel in Habitica will be updated or not')
+
+        parser.add(
+            '--tags',
+            required=False,
+            type=csv2list,
+            default='scriptabit',
+            help='Specify the tags that will be applied to new Habitica tasks. Set to an empty string for no tags.')
+
         return parser
 
     @property
@@ -271,7 +297,6 @@ class UtilityFunctions(object):
             'notes': notes,
             }
 
-        tags = tags or ['scriptabit']
         tags = habitica_service.create_tags(tags)
         task['tags'] = [t['id'] for t in tags]
 
