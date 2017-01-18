@@ -183,7 +183,6 @@ class HealthEffects(scriptabit.IPlugin):
         # Notifications
         self.notify(
             msg.format(hp=delta_per_hour),
-            tags=['scriptabit', 'vampire'],
             alias='vampire_notification_panel')
 
         return True

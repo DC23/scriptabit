@@ -190,6 +190,10 @@ def run_scriptabit(plugin_name=''):
 
     __init_logging(config.logging_config)
     logging.getLogger(__name__).info('scriptabit version %s', __version__)
+    logging.getLogger(__name__).info('verbose mode: %s', config.verbose)
+    logging.getLogger(__name__).debug('Use notification panel: %s',
+                                        config.use_notification_panel)
+    logging.getLogger(__name__).debug('Task tags: %s', config.tags)
 
     if config.version:
         return
@@ -207,10 +211,6 @@ def run_scriptabit(plugin_name=''):
             # user credentials
             auth_tokens = load_habitica_authentication_credentials(
                 section=config.auth_section)
-
-            logging.getLogger(__name__).info('verbose mode: %s', config.verbose)
-            logging.getLogger(__name__).debug('Use notification panel: %s',
-                                              config.use_notification_panel)
 
             # Habitica Service
             habitica_service = HabiticaService(

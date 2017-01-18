@@ -346,3 +346,6 @@ Changelog
 * Very minor changes to PyPI metadata and README file.
 * Made the update and creation of the notification panel optional. Use the
   `use-notification-panel` command line argument to control the behaviour.
+* Made the task tags configurable. Use the ``--tags`` argument to pass a comma
+  separated list of tags that will be used with any task created in Habitica. If
+  you use ``--tags ""`` then no tags will be created or applied.

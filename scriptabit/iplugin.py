@@ -91,8 +91,6 @@ class IPlugin(YapsyIPlugin):
             notes (str): the extra text/notes.
             heading_level (int): If > 0, Markdown heading syntax is
                 prepended to the message text.
-            tags (list): Optional list of tags to be applied to
-                the notification.
             alias (str): the notification alias.
         """
         logging.getLogger(__name__).info(message)
@@ -105,13 +103,13 @@ class IPlugin(YapsyIPlugin):
             self._config.use_notification_panel and not \
             self.dry_run
 
-        print('notification panel: ', self._config.use_notification_panel)
-        print('panel: ', panel)
+        print('tags: ', self._config.tags)
 
         if panel:
             UtilityFunctions.upsert_notification(
                 self._hs,
                 text=message,
+                tags=self._config.tags,
                 **kwargs)
 
     def activate(self):
