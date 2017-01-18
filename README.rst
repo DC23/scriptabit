@@ -134,9 +134,6 @@ application name:
 When using the shortcuts, all other command-line arguments are the same as when
 running `scriptabit`.
 
-Common Options
-==============
-
 Notification Panel
 ++++++++++++++++++
 
