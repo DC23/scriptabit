@@ -61,6 +61,13 @@ class UtilityFunctions(object):
                 'help': 'gold',
                 'setter': self.set_gold,
             },
+            {
+                'name': 'level',
+                'type': int,
+                'default': -1,
+                'help': 'character level',
+                'setter': self.set_level,
+            },
         ]
 
     def get_arg_parser(self):
@@ -97,7 +104,6 @@ class UtilityFunctions(object):
 
             # The increment/decrement arg
             parser.add(
-                # '-'+stat['name'],
                 '--inc-'+stat['name'],
                 type=stat['type'],
                 default=0,
@@ -240,6 +246,14 @@ class UtilityFunctions(object):
             float: The new gold points.
         """
         return self.__set_stat('gp', gp, self.__hs.set_gp, increment=increment)
+
+    def set_level(self, level, increment=False):
+        """Sets the user level to the specified value
+
+        Returns:
+            float: The new gold points.
+        """
+        return self.__set_stat('lvl', level, self.__hs.set_lvl, increment=increment)
 
     def show_user_data(self):
         """Shows the user data"""
