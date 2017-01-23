@@ -8,9 +8,10 @@ Basic user stats can be displayed with the ``--show-user-data``
 
     ``scriptabit -sud``
 
-Additionally, gold, mana, health, and experience points can all be modified with scriptabit.
-The ``set`` commands set the values directly, while the ``increment`` commands
-add or subtract the specified amount from the current value.
+Additionally, gold, mana, health, experience points, and character level can all
+be modified with scriptabit.  The ``set`` commands set the values directly,
+while the ``increment`` commands add or subtract the specified amount from the
+current value.
 
 The ``set`` commands all have the form ``--set-XX``, where XX is one of:
 
@@ -18,9 +19,9 @@ The ``set`` commands all have the form ``--set-XX``, where XX is one of:
 - hp: health points
 - mp: mana points
 - xp: experience points
+- level: character level
 
-The ``increment`` commands all have the form ``--inc-XX``, using the same 2-letter
-codes.
+The ``increment`` commands all have the form ``--inc-XX``, using the same codes.
 
 Example 1: subtract 10 health points
 ====================================
