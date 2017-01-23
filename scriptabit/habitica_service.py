@@ -412,6 +412,23 @@ class HabiticaService(object):
         response.raise_for_status()
         return response.json()['data']['stats']['exp']
 
+    def set_lvl(self, lvl):
+        """ Sets the user's character level.
+        Note that XP will be reset to 0.
+
+        Args:
+            lvl (int): The new level.
+
+        Returns:
+            lvl: The new character level, extracted from the JSON response data.
+        """
+        if lvl < 0:
+            raise ArgumentOutOfRangeError("lvl < 0")
+
+        response = self.__put('user', {'stats.lvl': lvl, 'stats.exp': 0})
+        response.raise_for_status()
+        return response.json()['data']['stats']['lvl']
+
     def set_gp(self, gp):
         """ Sets the user's gold (gp).
 

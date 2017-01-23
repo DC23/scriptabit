@@ -349,3 +349,9 @@ Changelog
 * Made the task tags configurable. Use the ``--tags`` argument to pass a comma
   separated list of tags that will be used with any task created in Habitica. If
   you use ``--tags ""`` then no tags will be created or applied.
+
+1.18.0 (Monday January 23, 2017) 
+-----------------------------------------
+
+* Implemented character level set and increment/decrement.
+
