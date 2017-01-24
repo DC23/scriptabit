@@ -6,6 +6,7 @@ from __future__ import (
     unicode_literals,
 )
 from builtins import *
+import sys
 import json
 import pytest
 import requests
@@ -39,10 +40,14 @@ class TestTaskMap(object):
 
     def test_persist_task_mapping(self):
         expected = TaskMap()
-        tasks = [MockTask(_id=i) for i in range(4)]
+        tasks = [
+            MockTask(_id='aaa'),
+            MockTask(_id='bbb'),
+            MockTask(_id='ccc'),
+            MockTask(_id='ddd')]
         expected.map(tasks[0], tasks[1])
         expected.map(tasks[2], tasks[3])
-        filename = NamedTemporaryFile(suffix='.pickle')
+        filename = NamedTemporaryFile(suffix='.tm')
         expected.persist(filename.name)
         actual = TaskMap(filename.name)
 

@@ -8,7 +8,9 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+from builtins import str as text
 
+import sys
 import json
 from bidict import bidict, DuplicationBehavior
 
@@ -27,11 +29,20 @@ class TaskMap(object):
         # try to load from the file, defaulting to empty bidict if the load
         # fails for any reason
         try:
+            self.__bidict = bidict()
             with open(filename, 'r') as f:
-                task_dict = json.load(f)
-                self.__bidict = bidict(task_dict)
+                self.__bidict = bidict(json.load(f))
         except:
             self.__bidict = bidict()
+
+    def __map(self, a, b):
+        """ Associate two ID strings """
+        self.__bidict.put(
+            a,
+            b,
+            on_dup_key=DuplicationBehavior.RAISE,
+            on_dup_val=DuplicationBehavior.RAISE,
+            on_dup_kv=DuplicationBehavior.RAISE)
 
     def persist(self, filename):
         """ Persist the TaskMap instance to a file.
@@ -40,7 +51,15 @@ class TaskMap(object):
             filename (str): The destination file name.
         """
         with open(filename, 'w') as f:
-            json.dump(dict(self.__bidict), f)
+            if sys.version_info < (3, 0):
+                x = json.dumps(dict(self.__bidict),
+                               encoding='UTF-8',
+                               ensure_ascii=False)
+            else:
+                x = json.dumps(dict(self.__bidict),
+                               ensure_ascii=False)
+
+            f.write(x)
 
     def map(self, src, dst):
         """ Create a mapping between a source and destination task.
@@ -49,12 +68,7 @@ class TaskMap(object):
             src (Task): The source task.
             dst (Task): The destination task.
         """
-        self.__bidict.put(
-            src.id,
-            dst.id,
-            on_dup_key=DuplicationBehavior.RAISE,
-            on_dup_val=DuplicationBehavior.RAISE,
-            on_dup_kv=DuplicationBehavior.RAISE)
+        self.__map(src.id, dst.id)
 
     def unmap(self, src_id):
         """ Delete a mapping.
