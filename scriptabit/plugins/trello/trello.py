@@ -22,7 +22,7 @@ from scriptabit import (
     HabiticaTaskService,
     TaskMap,
     TaskSync,
-    UtilityFunctions)
+    )
 
 from trello import TrelloClient
 from trello.util import create_oauth_token
@@ -178,10 +178,14 @@ The default is to only synchronise the task names.''')
         self.__task_map_file = os.path.join(
             self._data_dir,
             self._config.trello_data_file)
+        logging.getLogger(__name__).debug(
+            'TaskMap file: %s', self.__task_map_file)
 
         self.__data_file = os.path.join(
             self._data_dir,
             self._config.trello_data_file+'_extra')
+        logging.getLogger(__name__).debug(
+            'Sync data file: %s', self.__data_file)
 
         self.__load_persistent_data()
 
@@ -235,16 +239,8 @@ The default is to only synchronise the task names.''')
                 elif l.name in self._config.trello_done_lists:
                     done_lists.append(l)
 
-        # some additional information on the source boards and lists
-        message = 'Syncing the following lists'
-        for l in sync_lists:
-            message += '\n   {0}.{1}'.format(l.board.name, l.name)
-        message += '\nTreating cards in the following lists as completed'
-        for l in done_lists:
-            message += '\n   {0}.{1}'.format(l.board.name, l.name)
-        logging.getLogger(__name__).debug(message)
-
         # Load the task map from disk
+        logging.getLogger(__name__).debug('Loading task map')
         task_map = TaskMap(self.__task_map_file)
 
         # Create the services
@@ -269,6 +265,7 @@ The default is to only synchronise the task names.''')
         # Checkpoint the sync data
         self.__data.last_sync = sync.last_sync
         if not self.dry_run:
+            logging.getLogger(__name__).debug('Saving task map')
             task_map.persist(self.__task_map_file)
             self.__save_persistent_data()
 
