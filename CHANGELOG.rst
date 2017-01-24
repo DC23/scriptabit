@@ -355,3 +355,9 @@ Changelog
 
 * Implemented character level set and increment/decrement.
 
+2.0.0 ()
+-----------------------------------------
+
+* Fixed issues in trello sync. Unfortunately they require a complete reset of
+  sync data.
+
