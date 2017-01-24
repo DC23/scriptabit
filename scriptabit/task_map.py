@@ -9,7 +9,7 @@ from __future__ import (
     unicode_literals)
 from builtins import *
 
-import pickle
+import json
 from bidict import bidict, DuplicationBehavior
 
 
@@ -27,8 +27,9 @@ class TaskMap(object):
         # try to load from the file, defaulting to empty bidict if the load
         # fails for any reason
         try:
-            with open(filename, 'rb') as f:
-                self.__bidict = pickle.load(f)
+            with open(filename, 'r') as f:
+                task_dict = json.load(f)
+                self.__bidict = bidict(task_dict)
         except:
             self.__bidict = bidict()
 
@@ -38,8 +39,8 @@ class TaskMap(object):
         Args:
             filename (str): The destination file name.
         """
-        with open(filename, 'wb') as f:
-            pickle.dump(self.__bidict, f, pickle.HIGHEST_PROTOCOL)
+        with open(filename, 'w') as f:
+            json.dump(dict(self.__bidict), f)
 
     def map(self, src, dst):
         """ Create a mapping between a source and destination task.
