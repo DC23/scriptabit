@@ -9,9 +9,12 @@ from __future__ import (
     print_function,
     unicode_literals)
 from builtins import *
+
 import logging
 import os
 import pickle
+import sys
+
 from configparser import ConfigParser, NoOptionError
 from datetime import datetime, timedelta
 import pytz
@@ -283,10 +286,14 @@ The default is to only synchronise the task names.''')
         text = '{0} {1} Trello Tasks Updated'.format(
             ':mailbox_with_mail:' if total else ':mailbox_with_no_mail:',
             total)
+        notes = str(sync_stats)
+
+        if sys.version_info < (3, 0):
+            notes = unicode(notes)
 
         self.notify(
             message=text,
-            notes=str(sync_stats),
+            notes=notes,
             heading_level=0)
 
     @staticmethod
