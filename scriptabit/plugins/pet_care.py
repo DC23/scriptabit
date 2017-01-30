@@ -135,6 +135,12 @@ class PetCare(scriptabit.IPlugin):
             action='store_true',
             help='Allows feeding of magic pets')
 
+        parser.add(
+            '--no-raise',
+            required=False,
+            action='store_true',
+            help='When feeding pets, this flag prevents them being raised to mounts')
+
         self.print_help = parser.print_help
 
         return parser
@@ -318,6 +324,12 @@ class PetCare(scriptabit.IPlugin):
             # also exists), so we check for the presence of a mount.
             if growth > 0:
                 has_mount = self.__items['mounts'].get(pet, False)
+
+                # if the no-raise flag is true, then we skip pets that are near
+                # to being raised to mounts
+                if self._config.no_raise and growth >= 45:
+                    continue
+
                 if not (feedable_only and has_mount):
                     animal, potion = pet.split('-')
                     if base and self.is_base_pet(pet, animal, potion):

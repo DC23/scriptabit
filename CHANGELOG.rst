@@ -340,7 +340,7 @@ Changelog
 * Added sample task CSV file showing the required layout for ``sb-csv``
 * Updated documentation for pet care and tasks.
 
-1.17.2 (Tuesday January 17, 2017) 
+1.17.2 (Tuesday January 17, 2017)
 -----------------------------------------
 
 * Very minor changes to PyPI metadata and README file.
@@ -350,17 +350,20 @@ Changelog
   separated list of tags that will be used with any task created in Habitica. If
   you use ``--tags ""`` then no tags will be created or applied.
 
-1.18.0 (Monday January 23, 2017) 
+1.18.0 (Monday January 23, 2017)
 -----------------------------------------
 
 * Implemented character level set and increment/decrement.
 
-2.0.0 ()
+2.0.0 (Monday January 30, 2017)
 -----------------------------------------
 
+* Bumped to major version 2 because of the breaking change in Trello sync.
 * Fixed issues in trello sync. Unfortunately they require a complete reset of
   sync data. See the README.rst for details.
 * CSV task uploader now recognizes "difficulty" as a column header, as well as
   "priority". Documentation changed to document "difficulty", as "priority" is
   deprecated and only preserved for backwards compatibility.
+* Added scaling option for basic user stats.
+* Added option to prevent pet raising to mounts during batch feeding.
 

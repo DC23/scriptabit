@@ -26,6 +26,7 @@ the batch operations. They are:
   The default is to exclude quest pets.
 - `magic-pets`: If supplied, magic potion pets will be included in batch
   operations. The default is to exclude magic potion pets.
+- `no-raise`: If supplied, pets will not be raised to mounts during feeding.
 
 Note that apart from the flags described above, you cannot control the order in
 which pets are fed. Each pet will be repeatedly offered food until either the
@@ -42,6 +43,10 @@ use `scriptabit --run pet_care` instead of `sb-pets`.
 Feed preferred foods to standard pets only::
 
     sb-pets --feed-pets
+
+Feed preferred foods to standard pets but do not raise to mounts::
+
+    sb-pets --feed-pets --no-raise
 
 Feed any food to quest pets only::
 

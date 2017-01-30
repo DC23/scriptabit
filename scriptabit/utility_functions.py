@@ -110,6 +110,14 @@ class UtilityFunctions(object):
                 required=False,
                 help="Increment (positive values) or decrement (negative values) the user's current {0}".format(stat['help']))
 
+            # The scaling argument
+            parser.add(
+                '--scale-'+stat['name'],
+                type=float,
+                default=0,
+                required=False,
+                help="Scales(multiplies) the user's current {0} by the given value".format(stat['help']))
+
         parser.add(
             '--buy-armoire',
             required=False,
@@ -174,15 +182,18 @@ class UtilityFunctions(object):
 
         config_dict = vars(self.__config)
 
-        # dispatch any setters and incrementers
+        # dispatch any setters, incrementers, and scaling args
         for stat in self.__stat_setters:
             arg = config_dict['set_'+stat['name']]
+            inc_arg = config_dict['inc_'+stat['name']]
+            scale_arg = config_dict['scale_'+stat['name']]
+
             if arg >= 0:
                 stat['setter'](arg)
-
-            inc_arg = config_dict['inc_'+stat['name']]
-            if inc_arg != 0:
+            elif inc_arg != 0:
                 stat['setter'](inc_arg, increment=True)
+            elif scale_arg != 0:
+                stat['setter'](scale_arg, scale=True)
 
     def __set_stat(
             self,
@@ -190,7 +201,8 @@ class UtilityFunctions(object):
             value,
             hs_func,
             lower_bound=0,
-            increment=False):
+            increment=False,
+            scale=False):
         """Generic stat setter.
 
         Args:
@@ -200,12 +212,20 @@ class UtilityFunctions(object):
             lower_bound: Lower bound on the set value
             increment (bool): If true, the value is treated as an increment
                 instead of the new value
+            scale (bool): If true, the current value is scaled by `value`.
 
         Returns:
             The new stat value
         """
         old = self.__hs.get_stats()[name]
-        set_value = old + value if increment else value
+
+        if increment:
+            set_value = old + value
+        elif scale:
+            set_value = old * value
+        else:
+            set_value = value
+
         set_value = max(lower_bound, set_value)
         new = set_value if self.dry_run else hs_func(set_value)
         logging.getLogger(__name__).info(
@@ -215,45 +235,70 @@ class UtilityFunctions(object):
             new)
         return new
 
-    def set_health(self, hp, increment=False):
+    def set_health(self, hp, increment=False, scale=False):
         """Sets the user health to the specified value
 
         Returns:
             float: The new health points.
         """
-        return self.__set_stat('hp', hp, self.__hs.set_hp, increment=increment)
+        return self.__set_stat(
+            'hp',
+            hp,
+            self.__hs.set_hp,
+            increment=increment,
+            scale=scale)
 
-    def set_xp(self, xp, increment=False):
+    def set_xp(self, xp, increment=False, scale=False):
         """Sets the user experience points to the specified value.
 
         Returns:
             int: The new experience points.
         """
-        return self.__set_stat('exp', xp, self.__hs.set_exp, increment=increment)
+        return self.__set_stat(
+            'exp',
+            xp,
+            self.__hs.set_exp,
+            increment=increment,
+            scale=scale)
 
-    def set_mana(self, mp, increment=False):
+    def set_mana(self, mp, increment=False, scale=False):
         """Sets the user mana to the specified value
 
         Returns:
             float: The new mana points.
         """
-        return self.__set_stat('mp', mp, self.__hs.set_mp, increment=increment)
+        return self.__set_stat(
+            'mp',
+            mp,
+            self.__hs.set_mp,
+            increment=increment,
+            scale=scale)
 
-    def set_gold(self, gp, increment=False):
+    def set_gold(self, gp, increment=False, scale=False):
         """Sets the user gold to the specified value
 
         Returns:
             float: The new gold points.
         """
-        return self.__set_stat('gp', gp, self.__hs.set_gp, increment=increment)
+        return self.__set_stat(
+            'gp',
+            gp,
+            self.__hs.set_gp,
+            increment=increment,
+            scale=scale)
 
-    def set_level(self, level, increment=False):
+    def set_level(self, level, increment=False, scale=False):
         """Sets the user level to the specified value
 
         Returns:
             float: The new gold points.
         """
-        return self.__set_stat('lvl', level, self.__hs.set_lvl, increment=increment)
+        return self.__set_stat(
+            'lvl',
+            level,
+            self.__hs.set_lvl,
+            increment=increment,
+            scale=scale)
 
     def show_user_data(self):
         """Shows the user data"""
