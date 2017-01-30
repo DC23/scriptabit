@@ -355,9 +355,10 @@ Changelog
 
 * Implemented character level set and increment/decrement.
 
-2.0.0 ()
+2.0.0 (Monday January 30, 2017)
 -----------------------------------------
 
+* Bumped to major version 2 because of the breaking change in Trello sync.
 * Fixed issues in trello sync. Unfortunately they require a complete reset of
   sync data. See the README.rst for details.
 * CSV task uploader now recognizes "difficulty" as a column header, as well as
