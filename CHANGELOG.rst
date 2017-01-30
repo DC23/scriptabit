@@ -364,4 +364,5 @@ Changelog
 * CSV task uploader now recognizes "difficulty" as a column header, as well as
   "priority". Documentation changed to document "difficulty", as "priority" is
   deprecated and only preserved for backwards compatibility.
+* Added scaling option for basic user stats.
 
