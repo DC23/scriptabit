@@ -12,9 +12,8 @@ from builtins import *
 
 import logging
 import os
-import pickle
 import sys
-
+import json
 from configparser import ConfigParser, NoOptionError
 from datetime import datetime, timedelta
 import pytz
@@ -46,10 +45,42 @@ class Trello(scriptabit.IPlugin):
 
     class PersistentData(object):
         """ Data that needs to be persisted. """
-        def __init__(self):
-            # If we have no stored last sync time, then use a two day window
-            # for catching new & completed tasks
-            self.last_sync = datetime.now(tz=pytz.utc) - timedelta(days=2)
+
+        # The persistent time format string. Relying on locale default format
+        # is problematic when the file is shared between systems as they may
+        # have different locale settings.
+        TIME_FORMAT = '%Y %m %d %H:%M:%S %Z%z'
+
+        def __init__(self, filename=None):
+            try:
+                with open(filename, 'r') as f:
+                    # If I need more data then I might need to serialise as
+                    # a dictionary of key/value pairs.
+                    self.last_sync = datetime.strptime(
+                        json.load(f),
+                        self.TIME_FORMAT)
+            except Exception as e:
+                if filename:
+                    logging.getLogger(__name__).warning(e)
+
+                # If we have no stored last sync time, then use a two day window
+                # for catching new & completed tasks
+                self.last_sync = datetime.now(tz=pytz.utc) - timedelta(days=2)
+
+        def save(self, filename):
+            """ Saves the persistent data """
+            with open(filename, 'w') as f:
+                if sys.version_info < (3, 0):
+                    x = json.dumps(
+                        self.last_sync.strftime(self.TIME_FORMAT),
+                        encoding='UTF-8',
+                        ensure_ascii=False)
+                else:
+                    x = json.dumps(
+                        self.last_sync.strftime(self.TIME_FORMAT),
+                        ensure_ascii=False)
+
+                f.write(x)
 
     def __init__(self):
         """ Initialises the plugin.
@@ -194,17 +225,11 @@ The default is to only synchronise the task names.''')
 
     def __load_persistent_data(self):
         """ Loads the persistent data """
-        try:
-            with open(self.__data_file, 'rb') as f:
-                self.__data = pickle.load(f)
-        except:
-            self.__data = Trello.PersistentData()
+        self.__data = Trello.PersistentData(filename=self.__data_file)
 
     def __save_persistent_data(self):
         """ Saves the persistent data """
-        if not self.dry_run:
-            with open(self.__data_file, 'wb') as f:
-                pickle.dump(self.__data, f, pickle.HIGHEST_PROTOCOL)
+        self.__data.save(self.__data_file)
 
     def update_interval_minutes(self):
         """ Indicates the required update interval in minutes.
