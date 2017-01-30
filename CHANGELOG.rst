@@ -359,5 +359,8 @@ Changelog
 -----------------------------------------
 
 * Fixed issues in trello sync. Unfortunately they require a complete reset of
-  sync data.
+  sync data. See the README.rst for details.
+* CSV task uploader now recognizes "difficulty" as a column header, as well as
+  "priority". Documentation changed to document "difficulty", as "priority" is
+  deprecated and only preserved for backwards compatibility.
 
