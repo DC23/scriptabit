@@ -340,7 +340,7 @@ Changelog
 * Added sample task CSV file showing the required layout for ``sb-csv``
 * Updated documentation for pet care and tasks.
 
-1.17.2 (Tuesday January 17, 2017) 
+1.17.2 (Tuesday January 17, 2017)
 -----------------------------------------
 
 * Very minor changes to PyPI metadata and README file.
@@ -350,7 +350,7 @@ Changelog
   separated list of tags that will be used with any task created in Habitica. If
   you use ``--tags ""`` then no tags will be created or applied.
 
-1.18.0 (Monday January 23, 2017) 
+1.18.0 (Monday January 23, 2017)
 -----------------------------------------
 
 * Implemented character level set and increment/decrement.
