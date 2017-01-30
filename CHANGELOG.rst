@@ -365,4 +365,5 @@ Changelog
   "priority". Documentation changed to document "difficulty", as "priority" is
   deprecated and only preserved for backwards compatibility.
 * Added scaling option for basic user stats.
+* Added option to prevent pet raising to mounts during batch feeding.
 
