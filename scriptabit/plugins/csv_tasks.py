@@ -116,7 +116,13 @@ class CsvTasks(scriptabit.IPlugin):
                     if 'description' in row.keys():
                         task['notes'] = row['description']
 
+                    # We need to handle priority or difficulty in the input
+                    # header row
                     if 'priority' in row.keys():
+                        task['priority'] = self.__parse_enum(
+                            Difficulty,
+                            row['priority'])
+                    elif 'difficulty' in row.keys():
                         task['priority'] = self.__parse_enum(
                             Difficulty,
                             row['difficulty'])

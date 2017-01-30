@@ -33,7 +33,7 @@ The CSV file must have a first row header, with the following columns:
 - name (required): Values are used for the task name.
 - type (required): Values must be either habit, daily, or todo.
 - description (optional): Values used as the extra notes.
-- priority (optional): The task difficulty. Values should be one of trivial, easy, medium, or hard.
+- difficulty (optional): The task difficulty. Values should be one of trivial, easy, medium, or hard.
 - attribute (optional): Values should be one of strength, intelligence, constitution, or perception.
 - tags (optional): Values should be a comma-separated list of tag names for each task. Leave the entry blank if you don't want tags applied to a task.
 - up (optional): This value is only used for habits. Any text at all here means the habit will have an up button.
