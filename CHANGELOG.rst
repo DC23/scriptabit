@@ -315,7 +315,7 @@ Changelog
   complicated.
 
 1.16.0 (sometime in January 2017)
------------------------------------------
+---------------------------------
 
 * New tasks plugin. Run with ``sb-tasks``.
 * Added minimum requests version to setup.py.
@@ -329,7 +329,7 @@ Changelog
   function will use the default help display.
 
 1.17.0 (Monday January 16, 2017)
------------------------------------------
+--------------------------------
 
 * Changed pet_care logic so it detects quest and magic pets implicitly. This
   means I don't need to manually update the code for new quest or magic pets.
@@ -341,7 +341,7 @@ Changelog
 * Updated documentation for pet care and tasks.
 
 1.17.2 (Tuesday January 17, 2017)
------------------------------------------
+---------------------------------
 
 * Very minor changes to PyPI metadata and README file.
 * Made the update and creation of the notification panel optional. Use the
@@ -351,12 +351,12 @@ Changelog
   you use ``--tags ""`` then no tags will be created or applied.
 
 1.18.0 (Monday January 23, 2017)
------------------------------------------
+--------------------------------
 
 * Implemented character level set and increment/decrement.
 
 2.0.0 (Monday January 30, 2017)
------------------------------------------
+-------------------------------
 
 * Bumped to major version 2 because of the breaking change in Trello sync.
 * Fixed issues in trello sync. Unfortunately they require a complete reset of
@@ -367,3 +367,7 @@ Changelog
 * Added scaling option for basic user stats.
 * Added option to prevent pet raising to mounts during batch feeding.
 
+2.0.1 (Wednesday February 01, 2017)         
+-----------------------------------
+
+* Fixed the ``no-raise`` option for pet feeding.

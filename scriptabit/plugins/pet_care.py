@@ -378,6 +378,8 @@ class PetCare(scriptabit.IPlugin):
                     if growth > 0:
                         # growth > 0 indicates that the pet is still hungry
                         food = self.get_food_for_pet(pet)
+                    elif self._config.no_raise and growth >= 45:
+                        break
                     else:
                         # growth <= 0 (-1 actually) indicates that the
                         # pet became a mount
