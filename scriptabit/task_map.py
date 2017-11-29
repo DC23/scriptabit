@@ -11,7 +11,7 @@ from builtins import *
 
 import sys
 import json
-from bidict import bidict, DuplicationBehavior
+from bidict import bidict, DuplicationPolicy
 
 
 class TaskMap(object):
@@ -39,9 +39,9 @@ class TaskMap(object):
         self.__bidict.put(
             a,
             b,
-            on_dup_key=DuplicationBehavior.RAISE,
-            on_dup_val=DuplicationBehavior.RAISE,
-            on_dup_kv=DuplicationBehavior.RAISE)
+            on_dup_key=DuplicationPolicy.RAISE,
+            on_dup_val=DuplicationPolicy.RAISE,
+            on_dup_kv=DuplicationPolicy.RAISE)
 
     def persist(self, filename):
         """ Persist the TaskMap instance to a file.
