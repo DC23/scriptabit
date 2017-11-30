@@ -371,3 +371,8 @@ Changelog
 -----------------------------------
 
 * Fixed the ``no-raise`` option for pet feeding.
+
+2.0.2 (Thursday November 30, 2017)
+----------------------------------
+
+* bidict compatibility fix from nightscape.
