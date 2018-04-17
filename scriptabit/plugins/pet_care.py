@@ -375,11 +375,11 @@ class PetCare(scriptabit.IPlugin):
                     logging.getLogger(__name__).info(
                         '%s (%d): %s', pet, growth, response['message'])
 
-                    if growth > 0:
+                    if self._config.no_raise and growth >= 45:
+                        break
+                    elif growth > 0:
                         # growth > 0 indicates that the pet is still hungry
                         food = self.get_food_for_pet(pet)
-                    elif self._config.no_raise and growth >= 45:
-                        break
                     else:
                         # growth <= 0 (-1 actually) indicates that the
                         # pet became a mount
