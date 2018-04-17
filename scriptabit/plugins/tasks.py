@@ -167,10 +167,13 @@ class Tasks(sb.IPlugin):
 
         tasks = self._hs.get_tasks(task_type=self.task_type)
         for t in tasks:
-            print('Deleting {0}'.format(t['text']))
-            if not self.dry_run:
-                self._hs.delete_task(t)
-                sleep(1)
+            if 'challenge' in t and 'id' in t['challenge']:
+                print('Skipping challenge task {0}'.format(t['text']))
+            else:
+                print('Deleting {0}'.format(t['text']))
+                if not self.dry_run:
+                    self._hs.delete_task(t)
+                    sleep(1)
 
     def list_tasks(self):
         """Dumps all tasks"""

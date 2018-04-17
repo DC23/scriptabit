@@ -64,6 +64,11 @@ class HabiticaTask(Task):
         except KeyError:
             pass
 
+    @property
+    def is_challenge(self):
+        """ Returns True is this is a challenge task. """
+        return 'challenge' in self.__task_dict and \
+            'id' in self.__task_dict['challenge']
 
     @property
     def task_dict(self):

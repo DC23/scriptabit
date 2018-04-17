@@ -53,7 +53,7 @@ class SpellIDs(Enum):
         healAll: "Blessing"
     """
     burst_of_flames = 'fireball'
-    ethereal_surge = 'mpHeal'
+    ethereal_surge = 'mpheal'
     earthquake = 'earth'
     chilling_frost = 'frost'
     brutal_smash = 'smash'
