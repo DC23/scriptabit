@@ -44,7 +44,7 @@ class PyTest(TestCommand):
 
 setup(
     name='scriptabit',
-    version='2.0.2',
+    version='2.1.0',
     description='Python scripting for Habitica via the API',
     long_description=long_description,
     url='https://github.com/DC23/scriptabit',
