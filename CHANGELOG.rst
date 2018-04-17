@@ -367,7 +367,7 @@ Changelog
 * Added scaling option for basic user stats.
 * Added option to prevent pet raising to mounts during batch feeding.
 
-2.0.1 (Wednesday February 01, 2017)         
+2.0.1 (Wednesday February 01, 2017)
 -----------------------------------
 
 * Fixed the ``no-raise`` option for pet feeding.
@@ -376,3 +376,11 @@ Changelog
 ----------------------------------
 
 * bidict compatibility fix from nightscape.
+
+2.1.0 (Tuesday April 17, 2018)
+----------------------------------
+
+* Fixed issue #44: no-raise option not working for pet feeding.
+* Fixed issue #47: bad request caused by attempting to hatch a magic quest pet
+  (this is an invalid combination).
+* Fixed code for breaking API change in bidict (yes, another one).
