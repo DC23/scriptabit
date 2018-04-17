@@ -384,3 +384,8 @@ Changelog
 * Fixed issue #47: bad request caused by attempting to hatch a magic quest pet
   (this is an invalid combination).
 * Fixed code for breaking API change in bidict (yes, another one).
+
+2.1.1 (Tuesday April 17, 2018)
+----------------------------------
+
+* Added code to prevent the attempt to delete tasks that belong to a challenge.
