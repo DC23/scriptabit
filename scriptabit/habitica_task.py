@@ -56,6 +56,15 @@ class HabiticaTask(Task):
         else:
             self.existing_checklist_items = []
 
+        # April 2018: the API now complains if you update a task with the 
+        # collapsechecklist field present. Rather than sort out the reason, 
+        # I remove the field as it serves no relevant purpose.
+        try:
+            del task_dict['collapseChecklist']
+        except KeyError:
+            pass
+
+
     @property
     def task_dict(self):
         """ Gets the internal task dictionary. """

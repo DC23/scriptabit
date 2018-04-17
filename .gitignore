@@ -21,3 +21,4 @@ scriptabit.log
 setuptools-*
 scriptabit_logging.cfg
 vtest/
+.pytest_cache/

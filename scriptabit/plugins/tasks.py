@@ -13,8 +13,6 @@ from time import sleep
 from pprint import pprint
 import logging
 
-# from .dates import parse_date_local
-# from .habitica_service import HabiticaTaskTypes, SpellIDs
 import scriptabit as sb
 
 class Tasks(sb.IPlugin):
