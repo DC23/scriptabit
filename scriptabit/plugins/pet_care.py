@@ -211,46 +211,62 @@ class PetCare(scriptabit.IPlugin):
         # return False if finished, and True to be updated again.
         return False
 
-    def is_base_pet(self, pet, animal, potion):
+    def is_quest_egg(self, egg):
+        """ Is this a quest egg?
+
+        In the current API, magic and base pets share the same core set of eggs,
+        so anything not in that list is assumed to be a quest egg.
+
+        Args:
+            egg (str): The egg name.
+        """
+        return egg not in self.__base_pets
+
+    def is_magic_potion(self, potion):
+        """ Is this a magic potion?
+
+        In the current API, any potion not in the core list of standard potions
+        is a magic potion.
+
+        Args:
+            potion (str): The potion name.
+        """
+        return potion not in self.__base_potions
+
+    def is_base_pet(self, pet):
         """ Is this a base pet?
 
         Args:
             pet (str): The full pet name.
-            animal (str): The animal type.
-            potion (str): The potion type.
         """
+        animal, potion = pet.split('-')
         return animal in self.__base_pets and potion in self.__base_potions
 
-    def is_quest_pet(self, pet, animal, potion):
+    def is_quest_pet(self, pet):
         """ Is this a quest pet?
 
         Args:
             pet (str): The full pet name.
-            animal (str): The animal type.
-            potion (str): The potion type.
         """
-        return not (self.is_base_pet(pet, animal, potion)
-                    or self.is_magic_pet(pet, animal, potion)
-                    or self.is_rare_pet(pet, animal, potion))
+        return not (self.is_base_pet(pet)
+                    or self.is_magic_pet(pet)
+                    or self.is_rare_pet(pet))
 
-    def is_magic_pet(self, pet, animal, potion):
+    def is_magic_pet(self, pet):
         """ Is this a magic pet?
 
         Args:
             pet (str): The full pet name.
-            animal (str): The animal type.
-            potion (str): The potion type.
         """
-        return not self.is_rare_pet(pet, animal, potion) and \
+        animal, potion = pet.split('-')
+        return not self.is_rare_pet(pet) and \
                 potion not in self.__base_potions
 
-    def is_rare_pet(self, pet, animal, potion):
+    def is_rare_pet(self, pet):
         """ Is this a rare pet?
 
         Args:
             pet (str): The full pet name.
-            animal (str): The animal type.
-            potion (str): The potion type.
         """
         return pet in self.__rare_pets
 
@@ -331,14 +347,13 @@ class PetCare(scriptabit.IPlugin):
                     continue
 
                 if not (feedable_only and has_mount):
-                    animal, potion = pet.split('-')
-                    if base and self.is_base_pet(pet, animal, potion):
+                    if base and self.is_base_pet(pet):
                         pets.append(pet)
-                    elif magic and self.is_magic_pet(pet, animal, potion):
+                    elif magic and self.is_magic_pet(pet):
                         pets.append(pet)
-                    elif quest and self.is_quest_pet(pet, animal, potion):
+                    elif quest and self.is_quest_pet(pet):
                         pets.append(pet)
-                    elif rare and self.is_rare_pet(pet, animal, potion):
+                    elif rare and self.is_rare_pet(pet):
                         pets.append(pet)
 
         return pets
@@ -540,6 +555,9 @@ class PetCare(scriptabit.IPlugin):
                 if potential_pet in current_pets:
                     # logging.getLogger(__name__).debug(
                         # "Can't hatch %s, already have one", potential_pet)
+                    continue
+                if self.is_quest_egg(egg) and self.is_magic_potion(potion):
+                    # this is not a valid combination
                     continue
 
                 try:
