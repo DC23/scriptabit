@@ -390,6 +390,8 @@ class PetCare(scriptabit.IPlugin):
                     logging.getLogger(__name__).info(
                         '%s (%d): %s', pet, growth, response['message'])
 
+                    # Doh: this test needs to be first, or it gets masked by the 
+                    # growth > 0 test.
                     if self._config.no_raise and growth >= 45:
                         break
                     elif growth > 0:
