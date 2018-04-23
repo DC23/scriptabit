@@ -31,23 +31,6 @@ Python scripting and scenarios for Habitica.
 most task and feature planning is carried out in a private
 `Trello <https://trello.com>`_ board. Access can be provided on request.
 
-Trello Synchronisation Note
----------------------------
-
-In this version, an important part of Trello synchronisation has changed. For
-Trello synchronisation to work, you need to 
-
-* delete all the current Trello synced tasks from Habitica, 
-* delete the synchronisation data files
-* Run sb-trello once more
-
-This will recreate all the tasks and regenerate the data files. These steps can
-be done with this sequence of commands::
-
-    sb-tasks --delete-tasks --task-type todos
-    rm scriptabit_plugins/trello_habitica_sync_data*
-    sb-trello -n 1
-
 Installation
 ------------
 To install the latest release from `PyPI <https://pypi.python.org/pypi>`_::
