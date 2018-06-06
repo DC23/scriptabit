@@ -30,7 +30,7 @@ class SpellIDs(Enum):
     """ Spell/skill codes for casting.
         *Mage*
         fireball: "Burst of Flames"
-        mpHeal: "Ethereal Surge"
+        mpheal: "Ethereal Surge"
         earth: "Earthquake"
         frost: "Chilling Frost"
 
