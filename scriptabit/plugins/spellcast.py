@@ -59,7 +59,7 @@ class Spellcast(scriptabit.IPlugin):
             type=str,
             choices=[
                 'fireball',
-                'mpHeal',
+                'mpheal',
                 'earth',
                 'frost',
                 'smash',
