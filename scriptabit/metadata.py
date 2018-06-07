@@ -5,4 +5,4 @@ elsewhere.
 
 __author__ = 'DC23'
 __email__ = 'jugglindan@gmail.com'
-__version__ = '2.1.1'
+__version__ = '2.1.2'
