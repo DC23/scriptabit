@@ -389,3 +389,8 @@ Changelog
 ----------------------------------
 
 * Added code to prevent the attempt to delete tasks that belong to a challenge.
+
+2.1.2 (Thursday June 07, 2018)
+----------------------------------
+
+* Fixed issue #45: ethereal surge spell cast not working.
